@@ -3,6 +3,7 @@ module com.example.csit228capstonesirjaysimulator {
     requires javafx.fxml;
 
     requires com.almasb.fxgl.all;
+    requires java.sql;
 
     opens com.example.csit228capstonesirjaysimulator to javafx.fxml;
     exports com.example.csit228capstonesirjaysimulator;
