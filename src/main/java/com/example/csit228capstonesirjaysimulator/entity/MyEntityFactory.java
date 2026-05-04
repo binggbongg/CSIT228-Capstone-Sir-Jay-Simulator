@@ -12,8 +12,8 @@ public class MyEntityFactory implements EntityFactory {
     @Spawns("student")
     public Entity newStudent(SpawnData data){
         Texture texture = FXGL.texture("rainbow.jpg");
-        texture.setFitHeight(100);
-        texture.setFitWidth(100);
+        texture.setFitHeight(150);
+        texture.setFitWidth(150);
 
         return FXGL.entityBuilder(data)
                 .type(EntityType.STUDENT)

@@ -32,7 +32,7 @@ public class GameLevelApp extends GameApplication {
         FXGL.getGameWorld().addEntityFactory(factory);
         int rows = 3;
         int cols = 3;
-        int spacing = 150;
+        int spacing = 200;
 
         double startX = (getAppWidth() - (cols - 1) * spacing) / 2.0;
         double startY = (getAppHeight() - (rows - 1) * spacing) / 2.0;
