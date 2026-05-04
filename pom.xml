@@ -76,7 +76,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.csit228capstonesirjaysimulator/com.example.csit228capstonesirjaysimulator.SirSeratoApp
+                                com.example.csit228capstonesirjaysimulator/com.example.csit228capstonesirjaysimulator.application.GameLevelApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
