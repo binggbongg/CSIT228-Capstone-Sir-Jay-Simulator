@@ -1,6 +1,12 @@
 package com.example.csit228capstonesirjaysimulator.database;
 
+import com.example.csit228capstonesirjaysimulator.entity.ScoreRecord;
+
+import javax.xml.transform.Result;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.csit228capstonesirjaysimulator.database.DatabaseConnection.getConnection;
 
 public class UserDatabaseService {
@@ -69,4 +75,24 @@ public class UserDatabaseService {
         }
         return null;
     }
+
+    public List<ScoreRecord> getLeaderboard() {
+        String query = "SELECT name, score FROM scores ORDER BY score DESC LIMIT 10";
+        List<ScoreRecord> scores = new ArrayList<>();
+        try (Connection conn = getConnection();
+            PreparedStatement st = conn.prepareStatement(query);
+            ResultSet rs = st.executeQuery()){
+            while(rs.next()){
+               String name = rs.getString("name");
+               int score = rs.getInt("score");
+               scores.add(new ScoreRecord(name, score));
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return scores;
+    }
+
 }

@@ -8,6 +8,7 @@ module com.example.csit228capstonesirjaysimulator {
     requires com.almasb.fxgl.entity;
     requires com.almasb.fxgl.core;
     requires java.sql;
+    requires annotations;
 
     opens assets.textures;
     opens assets.sounds;
@@ -25,4 +26,6 @@ module com.example.csit228capstonesirjaysimulator {
     // Exports/Opens for other application sub-packages
     exports com.example.csit228capstonesirjaysimulator.application;
     opens com.example.csit228capstonesirjaysimulator.application to javafx.fxml;
+    exports com.example.csit228capstonesirjaysimulator.scene;
+    opens com.example.csit228capstonesirjaysimulator.scene to javafx.fxml;
 }

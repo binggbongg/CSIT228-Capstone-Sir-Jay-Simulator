@@ -32,9 +32,11 @@ public class GameLevelApp extends GameApplication {
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setHeight(720);
         gameSettings.setWidth(1280);
-        gameSettings.setTitle("Cool and Normal part of game duh");
+        gameSettings.setTitle("Sir Serato Simulator");
 //        gameSettings.setDeveloperMenuEnabled(true);
         // turn developer menu on for debugging stuff
+        gameSettings.setMainMenuEnabled(true);
+        gameSettings.setSceneFactory(new MenuFactory());
     }
 
     @Override
