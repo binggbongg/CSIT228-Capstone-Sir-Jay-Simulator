@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Sir Serator Logo](docs/logo_not_final.png)
+![Sir Serator Logo](src/main/resources/assets/textures/logo_not_final.png)
 
 (_to-do: change current pic to final logo of game_)
 </div>
