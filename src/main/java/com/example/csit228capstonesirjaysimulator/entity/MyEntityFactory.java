@@ -12,13 +12,17 @@ public class MyEntityFactory implements EntityFactory {
     @Spawns("student")
     public Entity newStudent(SpawnData data){
         Texture texture = FXGL.texture("rainbow.jpg");
-        texture.setFitHeight(100);
-        texture.setFitWidth(100);
+        texture.setFitHeight(150);
+        texture.setFitWidth(150);
+
+        boolean isRight = data.get("isRightSide");
 
         return FXGL.entityBuilder(data)
                 .type(EntityType.STUDENT)
                 .viewWithBBox(texture)
+                .zIndex(10)
                 .collidable()
+                .with("isRightSide", isRight)
                 .with(new StudentComponent())
                 .build();
     }
