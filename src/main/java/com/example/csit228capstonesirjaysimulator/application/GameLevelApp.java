@@ -57,6 +57,14 @@ public class GameLevelApp extends GameApplication {
         livesText.setFont(Font.font("verdana", 24));
         livesText.textProperty().bind(getip("lives").asString());
         getGameScene().addUINode(livesText);
+
+        Text multText = new Text();
+        multText.setTranslateX(350);
+        multText.setTranslateY(100);
+        multText.setFill(Color.BLACK);
+        multText.setFont(Font.font("verdana", 24));
+        multText.textProperty().bind(getip("mult").asString());
+        getGameScene().addUINode(multText);
     }
 
     @Override

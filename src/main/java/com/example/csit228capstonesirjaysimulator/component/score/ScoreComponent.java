@@ -21,9 +21,15 @@ public class ScoreComponent {
 
     public void correctGuess(){
         int streak = FXGL.geti("streak");
-        mult = FXGL.geti("mult");
-        if(streak > 5){
-            FXGL.set("mult", mult+1);
+        //mult = FXGL.geti("mult");
+        if(streak > 10){
+            FXGL.set("mult", 5);
+        } else if(streak > 7){
+            FXGL.set("mult", 4);
+        } else if(streak > 5){
+            FXGL.set("mult", 3);
+        } else if(streak > 3){
+            FXGL.set("mult", 2);
         }
         FXGL.set("streak", streak+1);
     }
