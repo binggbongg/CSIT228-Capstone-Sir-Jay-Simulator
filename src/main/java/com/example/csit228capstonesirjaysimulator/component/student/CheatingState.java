@@ -4,7 +4,8 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import javafx.util.Duration;
 
 public class CheatingState extends StudentState{
-
+    boolean sharpEyeBonus = true;
+    Duration bonus = Duration.seconds(1.5);
     public CheatingState(StudentComponent student){
         super(student);
         this.duration = Duration.seconds(FXGLMath.random(2, 6));
@@ -13,6 +14,7 @@ public class CheatingState extends StudentState{
 
     @Override
     public void onUpdate(double tpf) {
+        if(timer.elapsed(bonus)) sharpEyeBonus = false;
         if(timer.elapsed(duration)){
             getStudent().changeState(new IdleState(getStudent()));
         }
@@ -24,7 +26,7 @@ public class CheatingState extends StudentState{
         super.playSound("correct.mp3");
         // later on add mechanics for sharpEyeBonus
         scoreComponent.correctGuess();
-        scoreComponent.updateScore(false);
+        scoreComponent.updateScore(sharpEyeBonus);
         // reset it to idle
         getStudent().changeState(new IdleState(getStudent()));
     }
