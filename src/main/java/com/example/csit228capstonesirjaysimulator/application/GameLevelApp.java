@@ -4,10 +4,12 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.SpawnData;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,6 +24,9 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 
 public class GameLevelApp extends GameApplication {
     private final MyEntityFactory factory = new MyEntityFactory();
+    private boolean isRight;
+    private Button leftButton;
+    private Button rightButton;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -35,6 +40,31 @@ public class GameLevelApp extends GameApplication {
     @Override
     protected void initUI(){
         //temporary ui for score checking
+        showScoreText();
+        setupButtons();
+        updateRoomView(isRight);
+    }
+
+    private void setupButtons(){
+        leftButton = new Button();
+        rightButton = new Button();
+
+        leftButton.setText("<");
+        leftButton.setTranslateX(60);
+        leftButton.setTranslateY(360);
+
+        rightButton.setText(">");
+        rightButton.setTranslateX(1200);
+        rightButton.setTranslateY(360);
+
+        rightButton.setOnAction(e -> updateRoomView(true));
+        leftButton.setOnAction(e -> updateRoomView(false));
+
+        getGameScene().addUINode(leftButton);
+        getGameScene().addUINode(rightButton);
+    }
+
+    private void showScoreText(){
         Text scoreText = new Text("SCORE");
         scoreText.setTranslateX(50);
         scoreText.setTranslateY(100);
@@ -77,20 +107,43 @@ public class GameLevelApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        isRight = false;
         FXGL.getGameWorld().addEntityFactory(factory);
-        int rows = 3;
-        int cols = 3;
-        int spacing = 200;
 
-        double startX = (getAppWidth() - (cols - 1) * spacing) / 2.0;
-        double startY = (getAppHeight() - (rows - 1) * spacing) / 2.0;
+        spawnStudentGrid(false);
+        spawnStudentGrid(true);
 
-        startX -= 60;
-        startY -= 60;
+        // setting initial state (left side of classroom)
+        updateRoomView(false);
+    }
+
+    private void updateRoomView(boolean isRightSide) {
+        isRight = isRightSide;
+
+        String filename = (isRight) ? "teacherView_rightSide.PNG" : "teacherView_leftSide.PNG";
+        FXGL.getGameScene().setBackgroundRepeat(filename);
+
+        FXGL.getGameWorld().getEntitiesByType(EntityType.STUDENT).forEach(e -> {
+            boolean studentIsRight = e.getBoolean("isRightSide");
+            e.setVisible(studentIsRight == isRightSide);
+        });
+
+        if(leftButton != null && rightButton != null) {
+            leftButton.setVisible(isRight);
+            rightButton.setVisible(!isRight);
+        }
+    }
+
+    private void spawnStudentGrid(boolean isRight) {
+        int rows = 3, cols = 3, spacing = 150;
+        double startX = (getAppWidth() - (cols - 1) * spacing) / 2.0 - 60;
+        double startY = (getAppHeight() - (rows - 1) * spacing) / 2.0 - 60;
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                spawn("student", startX + (c * spacing), startY + (r * spacing));
+                // We pass the boolean "isRightSide" into the SpawnData
+                spawn("student", new SpawnData(startX + (c * spacing), startY + (r * spacing))
+                        .put("isRightSide", isRight));
             }
         }
     }
@@ -111,9 +164,10 @@ public class GameLevelApp extends GameApplication {
 
         for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
             // Check if the mouse point is inside the entity's current bounding box
-            if (e.getBoundingBoxComponent().isWithin(x, y, x, y)) {
-                System.out.println("Manual hit detected on student!");
+            if (e.isVisible() && e.getBoundingBoxComponent().isWithin(x, y, x, y)) {
+                System.out.println("student is hit");
                 e.getComponent(StudentComponent.class).onProctorClick();
+                break;
             }
         }
     }
