@@ -22,7 +22,9 @@ public class CheatingState extends StudentState{
     public void onAction() {
         System.out.println("yes this is a cheater!! Not Good");
         super.playSound("correct.mp3");
-
+        // later on add mechanics for sharpEyeBonus
+        scoreComponent.correctGuess();
+        scoreComponent.updateScore(false);
         // reset it to idle
         getStudent().changeState(new IdleState(getStudent()));
     }

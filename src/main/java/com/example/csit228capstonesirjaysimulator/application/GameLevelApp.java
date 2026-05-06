@@ -9,6 +9,11 @@ import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGL.getInput;
@@ -25,6 +30,41 @@ public class GameLevelApp extends GameApplication {
         gameSettings.setTitle("Cool and Normal part of game duh");
 //        gameSettings.setDeveloperMenuEnabled(true);
         // turn developer menu on for debugging stuff
+    }
+
+    @Override
+    protected void initUI(){
+        //temporary ui for score checking
+        Text scoreText = new Text("SCORE");
+        scoreText.setTranslateX(50);
+        scoreText.setTranslateY(100);
+        scoreText.setFill(Color.BLACK);
+        scoreText.setFont(Font.font("verdana", 24));
+        getGameScene().addUINode(scoreText);
+
+        Text scoreVarText = new Text();
+        scoreVarText.setTranslateX(150);
+        scoreVarText.setTranslateY(100);
+        scoreVarText.setFill(Color.BLACK);
+        scoreVarText.setFont(Font.font("verdana", 24));
+        scoreVarText.textProperty().bind(getip("score").asString());
+        getGameScene().addUINode(scoreVarText);
+
+        Text livesText = new Text();
+        livesText.setTranslateX(300);
+        livesText.setTranslateY(100);
+        livesText.setFill(Color.BLACK);
+        livesText.setFont(Font.font("verdana", 24));
+        livesText.textProperty().bind(getip("lives").asString());
+        getGameScene().addUINode(livesText);
+    }
+
+    @Override
+    protected void initGameVars(Map<String, Object> vars){
+        vars.put("score", 0);
+        vars.put("lives", 3);
+        vars.put("mult", 1);
+        vars.put("streak", 0);
     }
 
     @Override
