@@ -23,5 +23,6 @@ public class IdleState extends StudentState {
     public void onAction() {
         System.out.println("student not cheating! state is idle");
         super.playSound("wrong.mp3");
+        scoreComponent.wrongGuess();
     }
 }

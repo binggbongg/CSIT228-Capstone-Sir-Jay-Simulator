@@ -22,7 +22,7 @@ public class SuspiciousState extends StudentState {
     public void onAction() {
         System.out.println("student not cheating! state is idle");
         super.playSound("wrong.mp3");
-
+        scoreComponent.wrongGuess();
         // change back to idle state
         getStudent().changeState(new IdleState(getStudent()));
     }

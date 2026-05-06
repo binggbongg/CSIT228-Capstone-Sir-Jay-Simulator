@@ -4,17 +4,20 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.time.LocalTimer;
 
+import com.example.csit228capstonesirjaysimulator.component.score.ScoreComponent;
 import javafx.util.Duration;
 
 public abstract class StudentState {
     private StudentComponent student;
     protected LocalTimer timer;
     protected Duration duration;
+    protected ScoreComponent scoreComponent;
 
     public StudentState(StudentComponent student){
         this.student = student;
         this.timer = FXGL.newLocalTimer();
         this.timer.capture();
+        this.scoreComponent = new ScoreComponent();
     }
 
     public StudentComponent getStudent(){
