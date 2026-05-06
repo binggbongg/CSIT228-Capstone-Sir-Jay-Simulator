@@ -15,10 +15,14 @@ public class MyEntityFactory implements EntityFactory {
         texture.setFitHeight(150);
         texture.setFitWidth(150);
 
+        boolean isRight = data.get("isRightSide");
+
         return FXGL.entityBuilder(data)
                 .type(EntityType.STUDENT)
                 .viewWithBBox(texture)
+                .zIndex(10)
                 .collidable()
+                .with("isRightSide", isRight)
                 .with(new StudentComponent())
                 .build();
     }
