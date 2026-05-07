@@ -49,12 +49,12 @@ falsely accuse a student of cheating, so make sure to double-check!
 The game is set at endless mode, challenging players to set high scores to be shown in the leaderboard.
 Below are the different actions triggered to gain or lose points.
 
-| Action                 | Base Points       |
-|:-----------------------|:------------------| 
-| Catch student cheating | <samp>+120</samp> | 
-| Sharp Eye Bonus | <samp>+267</samp> |
-| False Accusation | <samp>-250</samp> |
-| Student got away with cheating | <samp>-120</samp> |
+| Action                 | Base Points          |
+|:-----------------------|:---------------------| 
+| Catch student cheating | <samp>+120</samp>    | 
+| Sharp Eye Bonus | <samp>+267</samp>    |
+| False Accusation | <samp>-1 LIFE</samp> |
+| Student got away with cheating | <samp>-150</samp>    |
 
 ### ⋆˚࿔ Score Multiplier
 As you catch students cheating without making any mistakes, your **score multiplier** increases.

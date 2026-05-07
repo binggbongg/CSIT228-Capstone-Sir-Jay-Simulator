@@ -4,7 +4,7 @@ import com.almasb.fxgl.dsl.FXGL;
 
 public class ScoreComponent {
     int mult = 1;
-    final int success = 120, sharpEye = 200;
+    final int success = 120, sharpEye = 267, fail = 150;
 
     public void updateScore(boolean sharpEyeBonus) {
         int sc = FXGL.geti("score");
@@ -12,6 +12,12 @@ public class ScoreComponent {
         if(sharpEyeBonus) FXGL.set("score", sc + (sharpEye * mult));
         else FXGL.set("score", sc + (success * mult));
     }
+
+    public void failToCatch(){
+        int sc = FXGL.geti("score");
+        FXGL.set("score", sc - fail);
+    }
+
     public void wrongGuess(){
         int lives = FXGL.geti("lives");
         FXGL.set("lives", lives-1);
@@ -22,7 +28,9 @@ public class ScoreComponent {
     public void correctGuess(){
         int streak = FXGL.geti("streak");
         //mult = FXGL.geti("mult");
-        if(streak > 10){
+        if(streak > 67){
+            FXGL.set("mult", 100);
+        } else if(streak > 10){
             FXGL.set("mult", 5);
         } else if(streak > 7){
             FXGL.set("mult", 4);

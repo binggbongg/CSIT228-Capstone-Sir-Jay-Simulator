@@ -207,9 +207,11 @@ public class GameLevelApp extends GameApplication {
 
     private void handleSpacebar(){
         // shush all students
-        for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
-            StudentComponent s = e.getComponent(StudentComponent.class);
-            s.changeState(new IdleState(s));
+        if(FXGL.geti("streak") > 6){
+            for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
+                StudentComponent s = e.getComponent(StudentComponent.class);
+                s.changeState(new IdleState(s));
+            }
         }
     }
 }

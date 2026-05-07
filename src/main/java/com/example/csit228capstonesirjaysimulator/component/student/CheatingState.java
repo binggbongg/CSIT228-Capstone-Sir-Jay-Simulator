@@ -16,6 +16,7 @@ public class CheatingState extends StudentState{
     public void onUpdate(double tpf) {
         if(timer.elapsed(bonus)) sharpEyeBonus = false;
         if(timer.elapsed(duration)){
+            scoreComponent.failToCatch();
             getStudent().changeState(new IdleState(getStudent()));
         }
     }
