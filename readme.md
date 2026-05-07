@@ -49,13 +49,12 @@ falsely accuse a student of cheating, so make sure to double-check!
 The game is set at endless mode, challenging players to set high scores to be shown in the leaderboard.
 Below are the different actions triggered to gain or lose points.
 
-| Action                 | Base Points         |
-|:-----------------------|:--------------------| 
-| Catch student cheating | <samp>+500</samp>   | 
-| Sharp Eye Bonus | <samp>+1,000</samp> |
-| Intercept Notes | <samp>+300</samp>   |
-| False Accusation | <samp>-1,000</samp> |
-| Student got away with cheating | <samp>-200</samp>   |
+| Action                 | Base Points       |
+|:-----------------------|:------------------| 
+| Catch student cheating | <samp>+120</samp> | 
+| Sharp Eye Bonus | <samp>+267</samp> |
+| False Accusation | <samp>-250</samp> |
+| Student got away with cheating | <samp>-120</samp> |
 
 ### ⋆˚࿔ Score Multiplier
 As you catch students cheating without making any mistakes, your **score multiplier** increases.
@@ -64,11 +63,11 @@ As you catch students cheating without making any mistakes, your **score multipl
 * **3x Multiplier**: Activated when catching 5 students in a row
 * **4x Multiplier**: Activated when catching 7 students in a row
 * **5x Multiplier**: Activated when catching 10 students in a row
-
+* **100x Multiplier**: Activated when catching 67 students in a row
 ---
 ## 📎Controls
 * <kbd>Left Click</kbd> - Catch a cheater or interact with requests.
-* <kbd>Spacebar</kbd> - "Shush" the class to reduce noise.
+* <kbd>E</kbd> - "Shush" the class to reduce noise. You can only shush students when you have a streak of 6 students.
 * <kbd>Esc</kbd> - Pause the simulation.
 ---
 ## 📎Project Details
