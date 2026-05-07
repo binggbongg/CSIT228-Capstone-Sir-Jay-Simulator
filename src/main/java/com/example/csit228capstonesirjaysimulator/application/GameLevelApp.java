@@ -5,11 +5,15 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.input.Input;
+import com.almasb.fxgl.input.UserAction;
+import com.example.csit228capstonesirjaysimulator.component.student.IdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -157,6 +161,33 @@ public class GameLevelApp extends GameApplication {
             System.out.println("Mouse is clicking");
             handleMouseClick();
         });
+
+        Input input = FXGL.getInput();
+
+        UserAction switchScreenRight = new UserAction("Switch Screen Right"){
+            @Override
+            protected void onAction(){
+                updateRoomView(true);
+            }
+        };
+
+        UserAction switchScreenLeft = new UserAction("Switch Screen Left"){
+            @Override
+            protected void onAction(){
+                updateRoomView(false);
+            }
+        };
+
+        UserAction shushStudents = new UserAction("PAGHILOM!") {
+            @Override
+            protected void onAction(){
+                handleSpacebar();
+            }
+        };
+
+        input.addAction(switchScreenLeft, KeyCode.A);
+        input.addAction(switchScreenRight, KeyCode.D);
+        input.addAction(shushStudents, KeyCode.E);
     }
 
     private void handleMouseClick() {
@@ -171,6 +202,14 @@ public class GameLevelApp extends GameApplication {
                 e.getComponent(StudentComponent.class).onProctorClick();
                 break;
             }
+        }
+    }
+
+    private void handleSpacebar(){
+        // shush all students
+        for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
+            StudentComponent s = e.getComponent(StudentComponent.class);
+            s.changeState(new IdleState(s));
         }
     }
 }
