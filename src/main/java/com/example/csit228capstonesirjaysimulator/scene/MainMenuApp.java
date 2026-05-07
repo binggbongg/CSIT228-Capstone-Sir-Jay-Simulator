@@ -39,7 +39,7 @@ public class MainMenuApp extends FXGLMenu {
             System.out.println("CLICKING LEADERBOARD");
 
             getContentRoot().setEffect(new GaussianBlur(50));
-            FXGL.getSceneService().pushSubScene(new LeaderboardSubScene(getContentRoot()));
+            FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot()));
         });
         btnExit.setOnAction(e -> fireExit());
 

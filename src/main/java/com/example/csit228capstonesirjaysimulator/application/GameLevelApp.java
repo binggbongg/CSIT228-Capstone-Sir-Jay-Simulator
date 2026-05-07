@@ -11,6 +11,7 @@ import com.example.csit228capstonesirjaysimulator.component.student.IdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
+import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
@@ -121,6 +122,16 @@ public class GameLevelApp extends GameApplication {
 
         // setting initial state (left side of classroom)
         updateRoomView(false);
+
+        getip("lives").addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() <= 0) {
+                showGameOver();
+            }
+        });
+    }
+
+    private void showGameOver(){
+        FXGL.getSceneService().pushSubScene(new FinishScene());
     }
 
     private void updateRoomView(boolean isRightSide) {

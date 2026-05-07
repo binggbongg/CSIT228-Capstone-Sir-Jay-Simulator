@@ -17,11 +17,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import java.util.List;
 
-public class LeaderboardSubScene extends SubScene {
+public class LeaderboardScene extends SubScene {
     private VBox listContainer;
     private javafx.scene.Node parentRoot;
 
-    public LeaderboardSubScene(javafx.scene.Node parentRoot) {
+    public LeaderboardScene(javafx.scene.Node parentRoot) {
         this.parentRoot = parentRoot;
 
         Rectangle rect = new Rectangle(600, 650);
