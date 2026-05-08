@@ -2,13 +2,19 @@ package com.example.csit228capstonesirjaysimulator.component.student;
 
 import com.almasb.fxgl.core.math.FXGLMath;
 
+import com.almasb.fxgl.dsl.FXGL;
 import javafx.util.Duration;
 
 public class IdleState extends StudentState {
 
     public IdleState(StudentComponent student){
         super(student);
-        this.duration = Duration.seconds(FXGLMath.random(7, 45));
+        int cap = 30, sc = FXGL.geti("score");
+        // adjust if score is greater than 5000
+        if(sc > 20_000) cap = 15;
+        else if(sc > 10_000) cap = 20;
+
+        this.duration = Duration.seconds(FXGLMath.random(7, cap));
         student.setHue(0);
     }
 
