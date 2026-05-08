@@ -16,6 +16,7 @@ public class ScoreComponent {
     public void failToCatch(){
         int sc = FXGL.geti("score");
         FXGL.set("score", sc - fail);
+        FXGL.set("mult", 1);
     }
 
     public void wrongGuess(){

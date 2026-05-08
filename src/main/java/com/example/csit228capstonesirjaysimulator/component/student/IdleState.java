@@ -8,7 +8,7 @@ public class IdleState extends StudentState {
 
     public IdleState(StudentComponent student){
         super(student);
-        this.duration = Duration.seconds(FXGLMath.random(7, 12));
+        this.duration = Duration.seconds(FXGLMath.random(7, 45));
         student.setHue(0);
     }
 
