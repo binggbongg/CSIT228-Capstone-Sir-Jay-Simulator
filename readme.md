@@ -2,9 +2,8 @@
 
 <div align="center">
 
-![Sir Serator Logo](src/main/resources/assets/textures/logo_not_final.png)
+![Sir Serator Logo](src/main/resources/assets/textures/logo.png)
 
-(_to-do: change current pic to final logo of game_)
 </div>
 
 ---
@@ -67,6 +66,8 @@ As you catch students cheating without making any mistakes, your **score multipl
 ---
 ## 📎Controls
 * <kbd>Left Click</kbd> - Catch a cheater or interact with requests.
+* <kbd>A</kbd> - View the left side of the classroom.
+* <kbd>D</kbd> - View the right side of the classroom.
 * <kbd>E</kbd> - "Shush" the class to reduce noise. You can only shush students when you have a streak of 6 students.
 * <kbd>Esc</kbd> - Pause the simulation.
 ---
