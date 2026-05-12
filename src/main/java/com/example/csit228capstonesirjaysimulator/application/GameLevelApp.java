@@ -48,7 +48,6 @@ public class GameLevelApp extends GameApplication {
 
     @Override
     protected void initUI(){
-        //temporary ui for score checking
         showScoreText();
         setupButtons();
         updateRoomView(isRight);
@@ -92,51 +91,61 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void showScoreText(){
+        Image dashboardImg = new Image("assets/textures/game-screen_dashboard.png");
+        ImageView gameDashboard = new ImageView(dashboardImg);
+
+        gameDashboard.setFitWidth(600);
+        gameDashboard.setPreserveRatio(true);
+        gameDashboard.setTranslateX(-30);
+        gameDashboard.setTranslateY(-20);
+
+        getGameScene().addUINode(gameDashboard);
+
         Font jelleeScore = Font.loadFont(getClass().getResourceAsStream("/fonts/Jellee-Roman.ttf"), 30);
         Font jelleeBody = Font.loadFont(getClass().getResourceAsStream("/fonts/Jellee-Roman.ttf"), 12);
         Font jelleeHeading = Font.loadFont(getClass().getResourceAsStream("/fonts/Jellee-Roman.ttf"), 24);
 
         Text scoreText = new Text("SCORE");
         scoreText.setTranslateX(50);
-        scoreText.setTranslateY(75);
-        scoreText.setFill(Color.WHITE);
+        scoreText.setTranslateY(125);
+        scoreText.setFill(Color.BLACK);
         scoreText.setFont(jelleeBody);
         getGameScene().addUINode(scoreText);
 
         Text scoreVarText = new Text();
         scoreVarText.setTranslateX(50);
-        scoreVarText.setTranslateY(106);
-        scoreVarText.setFill(Color.WHITE);
+        scoreVarText.setTranslateY(156);
+        scoreVarText.setFill(Color.BLACK);
         scoreVarText.setFont(jelleeScore);
         scoreVarText.textProperty().bind(getip("score").asString());
         getGameScene().addUINode(scoreVarText);
 
         Text livesText = new Text("LIVES");
         livesText.setTranslateX(200);
-        livesText.setTranslateY(75);
-        livesText.setFill(Color.WHITE);
+        livesText.setTranslateY(125);
+        livesText.setFill(Color.BLACK);
         livesText.setFont(jelleeBody);
         getGameScene().addUINode(livesText);
 
         Text livesVarText = new Text();
         livesVarText.setTranslateX(200);
-        livesVarText.setTranslateY(100);
-        livesVarText.setFill(Color.WHITE);
+        livesVarText.setTranslateY(150);
+        livesVarText.setFill(Color.BLACK);
         livesVarText.setFont(jelleeHeading);
         livesVarText.textProperty().bind(getip("lives").asString());
         getGameScene().addUINode(livesVarText);
 
         Text multText = new Text("MULTIPLIER");
         multText.setTranslateX(300);
-        multText.setTranslateY(75);
-        multText.setFill(Color.WHITE);
+        multText.setTranslateY(125);
+        multText.setFill(Color.BLACK);
         multText.setFont(jelleeBody);
         getGameScene().addUINode(multText);
 
         Text multVarText = new Text();
         multVarText.setTranslateX(300);
-        multVarText.setTranslateY(100);
-        multVarText.setFill(Color.WHITE);
+        multVarText.setTranslateY(150);
+        multVarText.setFill(Color.BLACK);
         multVarText.setFont(jelleeHeading);
         multVarText.textProperty().bind(getip("mult").asString());
         getGameScene().addUINode(multVarText);
