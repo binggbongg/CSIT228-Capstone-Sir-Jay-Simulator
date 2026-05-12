@@ -31,6 +31,15 @@ import static com.almasb.fxgl.dsl.FXGL.getInput;
 import static com.almasb.fxgl.dsl.FXGL.onBtnDown;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 
+
+
+import com.example.csit228capstonesirjaysimulator.database.Sessionstats;
+import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
+import com.example.csit228capstonesirjaysimulator.database.MissionRepository;
+
+import java.time.Instant;
+import java.util.List;
+
 public class GameLevelApp extends GameApplication {
     private final MyEntityFactory factory = new MyEntityFactory();
     private boolean isRight;
@@ -41,6 +50,11 @@ public class GameLevelApp extends GameApplication {
     private Image streakIconNormal;
     private Image streakIconAngry;
     private Image streakIconAngrier;
+
+    private Sessionstats sessionStats;
+    private long sessionStart;
+
+    private List<Mission<?>> sessionMissions;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -195,6 +209,12 @@ public class GameLevelApp extends GameApplication {
         vars.put("mult", 1);
         vars.put("streak", 0);
         vars.put("isLocked", false);
+
+        vars.put("sessionCheatersCaught",0);
+        vars.put("sessionFalseAccusations",0);
+        vars.put("sessionTotalAttempts",0);
+        vars.put("sessionTotalCorrect",0);
+        vars.put("sessionDuration",0.0);
     }
 
     @Override
@@ -204,6 +224,15 @@ public class GameLevelApp extends GameApplication {
 
         spawnStudentGrid(false);
         spawnStudentGrid(true);
+
+        sessionStats = new Sessionstats();
+        sessionStart = Instant.now().getEpochSecond();
+
+        sessionMissions = MissionRepository.getInstance().loadGlobalMissions();
+        FXGL.getWorldProperties().setValue("sessionMissions", sessionMissions);
+
+
+
 
         // setting initial state (left side of classroom)
         updateRoomView(false);
@@ -221,6 +250,10 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void showGameOver(){
+        long now      = Instant.now().getEpochSecond();
+        double secs   = now - sessionStart;
+        FXGL.getWorldProperties().setValue("sessionDuration", secs);
+
         FXGL.getSceneService().pushSubScene(new FinishScene());
     }
 
@@ -343,4 +376,52 @@ public class GameLevelApp extends GameApplication {
             FXGL.set("streak", 0);
         }
     }
+
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnCheaterCaught() {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 1 || m.getMissionId() == 2) {
+                ((Mission<Integer>) m).increment();
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnStreak(int streak) {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 3)
+                ((Mission<Integer>) m).setCurrent(streak);
+            else if (m.getMissionId() == 4)
+                ((Mission<Integer>) m).setCurrent(streak);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnScore(int score) {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 6)
+                ((Mission<Integer>) m).setCurrent(score);
+            else if (m.getMissionId() == 7)
+                ((Mission<Integer>) m).setCurrent(score);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnMultiplier(int mult) {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 8 && mult >= 3)
+                ((Mission<Boolean>) m).complete();
+            else if (m.getMissionId() == 9 && mult >= 5)
+                ((Mission<Boolean>) m).complete();
+        }
+    }
+
+
+
+
 }

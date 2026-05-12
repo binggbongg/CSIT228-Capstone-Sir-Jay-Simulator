@@ -52,10 +52,12 @@ public class MainMenuApp extends FXGLMenu {
         btnPlay.setOnMouseClicked( e -> {
             System.out.println("Play button clicked");
             btnPlay.getParent().requestFocus();
-            IntroCutScene cutScene = new IntroCutScene(() -> {
-                fireNewGame();
-            });
-            FXGL.getSceneService().pushSubScene(cutScene);
+
+            FXGL.getSceneService().pushSubScene(new ProfileSelectScene(getContentRoot(), () -> {
+                IntroCutScene cutScene = new IntroCutScene(() -> fireNewGame());
+                FXGL.getSceneService().pushSubScene(cutScene);
+            }));
+
         });
 
         btnLeaderboard.setOnMouseClicked(e -> {
