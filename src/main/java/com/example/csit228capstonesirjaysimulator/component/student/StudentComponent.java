@@ -1,18 +1,12 @@
 package com.example.csit228capstonesirjaysimulator.component.student;
 
 import com.almasb.fxgl.entity.component.Component;
-import javafx.scene.Node;
 import javafx.scene.effect.ColorAdjust;
 
 public class StudentComponent extends Component {
     private StudentState state;
     private ColorAdjust currentColor = new ColorAdjust();
     // color adjust not official. change field to animation component class once sprite sheet is done.
-
-    @Override
-    public void onAdded() {
-        changeState(new IdleState(this));
-    }
 
     @Override
     public void onUpdate(double tpf) {

@@ -1,6 +1,5 @@
 package com.example.csit228capstonesirjaysimulator.component.student;
 
-import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.time.LocalTimer;
 

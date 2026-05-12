@@ -23,6 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
@@ -157,6 +160,7 @@ public class GameLevelApp extends GameApplication {
         vars.put("lives", 3);
         vars.put("mult", 1);
         vars.put("streak", 0);
+        vars.put("isLocked", false);
     }
 
     @Override
@@ -182,7 +186,13 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void updateRoomView(boolean isRightSide) {
+        if (FXGL.getb("isLocked")) {
+            System.out.println("Movement locked! Help the student first.");
+            return;
+        }
+
         isRight = isRightSide;
+        FXGL.getWorldProperties().setValue("isRight", isRightSide);
 
         String filename = (isRight) ? "teacherView_rightSide.PNG" : "teacherView_leftSide.PNG";
         FXGL.getGameScene().setBackgroundRepeat(filename);
@@ -203,11 +213,30 @@ public class GameLevelApp extends GameApplication {
         double startX = (getAppWidth() - (cols - 1) * spacing) / 2.0 - 60;
         double startY = (getAppHeight() - (rows - 1) * spacing) / 2.0 - 60;
 
+        List<Integer> seatIndices = new ArrayList<>();
+        for (int i = 0; i < (rows * cols); i++) {
+            seatIndices.add(i);
+        }
+
+        Collections.shuffle(seatIndices);
+        List<Integer> distractorSeats = seatIndices.subList(0, 1);
+
+        int currentSeat = 0;
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                // We pass the boolean "isRightSide" into the SpawnData
-                spawn("student", new SpawnData(startX + (c * spacing), startY + (r * spacing))
-                        .put("isRightSide", isRight));
+                double x = startX + (c * spacing);
+                double y = startY + (r * spacing);
+
+                SpawnData data = new SpawnData(x, y).put("isRightSide", isRight);
+
+                // 4. Decide which entity type to spawn based on our shuffled list
+                if (distractorSeats.contains(currentSeat)) {
+                    spawn("distractor", data);
+                } else {
+                    spawn("student", data);
+                }
+
+                currentSeat++;
             }
         }
     }
@@ -266,9 +295,10 @@ public class GameLevelApp extends GameApplication {
     private void handleSpacebar(){
         // shush all students
         if(FXGL.geti("streak") > 6){
+            System.out.println("Shush is activated");
             for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
                 StudentComponent s = e.getComponent(StudentComponent.class);
-                s.changeState(new IdleState(s));
+                if(s != null) s.changeState(new IdleState(s));
             }
         }
     }
