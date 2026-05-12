@@ -35,6 +35,12 @@ public class GameLevelApp extends GameApplication {
     private final MyEntityFactory factory = new MyEntityFactory();
     private boolean isRight;
     private ImageView leftButton, rightButton, pauseButton;
+    private ImageView streakIndicator;
+
+    // Preloaded streak images
+    private Image streakIconNormal;
+    private Image streakIconAngry;
+    private Image streakIconAngrier;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -150,6 +156,36 @@ public class GameLevelApp extends GameApplication {
         multVarText.setFont(jelleeHeading);
         multVarText.textProperty().bind(getip("mult").asString());
         getGameScene().addUINode(multVarText);
+
+        // Streak indicator ImageView
+        streakIconNormal = new Image("assets/textures/sir_serato-icon.png");
+        streakIconAngry = new Image("assets/textures/sir_serato-icon-angry.png");
+        streakIconAngrier = new Image("assets/textures/sir_serato-icon-angrier.png");
+
+        streakIndicator = new ImageView(streakIconNormal);
+        streakIndicator.setFitWidth(80);
+        streakIndicator.setPreserveRatio(true);
+        streakIndicator.setTranslateX(400);
+        streakIndicator.setTranslateY(100);
+
+        getGameScene().addUINode(streakIndicator);
+    }
+
+    /**
+     * Updates the streak indicator image based on the current streak value.
+     * - streak > 6: sir_serato-icon-angrier.png
+     * - streak > 3: sir_serato-icon-angry.png
+     * - streak <= 3 (less than 6): sir_serato-icon.png
+     */
+
+    private void updateStreakIndicator(int streak) {
+        if (streak > 6) {
+            streakIndicator.setImage(streakIconAngrier);
+        } else if (streak > 3) {
+            streakIndicator.setImage(streakIconAngry);
+        } else {
+            streakIndicator.setImage(streakIconNormal);
+        }
     }
 
     @Override
@@ -176,6 +212,11 @@ public class GameLevelApp extends GameApplication {
             if (newValue.intValue() <= 0) {
                 showGameOver();
             }
+        });
+
+        // Listen for streak changes and update the visual indicator
+        getip("streak").addListener((observable, oldValue, newValue) -> {
+            updateStreakIndicator(newValue.intValue());
         });
     }
 
@@ -298,6 +339,8 @@ public class GameLevelApp extends GameApplication {
                 StudentComponent s = e.getComponent(StudentComponent.class);
                 if(s != null) s.changeState(new IdleState(s));
             }
+            streakIndicator.setImage(streakIconNormal);
+            FXGL.set("streak", 0);
         }
     }
 }
