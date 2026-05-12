@@ -33,8 +33,7 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 public class GameLevelApp extends GameApplication {
     private final MyEntityFactory factory = new MyEntityFactory();
     private boolean isRight;
-    private ImageView leftButton;
-    private ImageView rightButton;
+    private ImageView leftButton, rightButton, pauseButton;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -57,9 +56,11 @@ public class GameLevelApp extends GameApplication {
 
     private void setupButtons(){
 
+        Image pauseBtnImg = new Image("assets/textures/button-pause.png");
         Image leftBtnImg = new Image("assets/textures/button-left.png");
         Image rightBtnImg = new Image("assets/textures/button-right.png");
 
+        pauseButton = new ImageView(pauseBtnImg);
         leftButton = new ImageView(leftBtnImg);
         rightButton = new ImageView(rightBtnImg);
 
@@ -67,6 +68,11 @@ public class GameLevelApp extends GameApplication {
         leftButton.setPreserveRatio(true);
         rightButton.setFitWidth(50);
         rightButton.setPreserveRatio(true);
+
+        pauseButton.setFitWidth(50);
+        pauseButton.setPreserveRatio(true);
+
+        // TODO Make Overlay for Pause Button
 
         leftButton.setOnMouseClicked( e -> updateRoomView(false));
         rightButton.setOnMouseClicked(e -> updateRoomView(true));
@@ -77,14 +83,18 @@ public class GameLevelApp extends GameApplication {
         rightButton.setTranslateX(1200);
         rightButton.setTranslateY(360);
 
+        pauseButton.setTranslateX(1200);
+        pauseButton.setTranslateY(60);
+
         getGameScene().addUINode(leftButton);
         getGameScene().addUINode(rightButton);
+        getGameScene().addUINode(pauseButton);
     }
 
     private void showScoreText(){
-        Font jelleeScore = Font.loadFont(getClass().getResourceAsStream("/assets/ui/fonts/Jellee-Roman.ttf"), 30);
-        Font jelleeBody = Font.loadFont(getClass().getResourceAsStream("/assets/ui/fonts/Jellee-Roman.ttf"), 12);
-        Font jelleeHeading = Font.loadFont(getClass().getResourceAsStream("/assets/ui/fonts/Jellee-Roman.ttf"), 24);
+        Font jelleeScore = Font.loadFont(getClass().getResourceAsStream("/fonts/Jellee-Roman.ttf"), 30);
+        Font jelleeBody = Font.loadFont(getClass().getResourceAsStream("/fonts/Jellee-Roman.ttf"), 12);
+        Font jelleeHeading = Font.loadFont(getClass().getResourceAsStream("/fonts/Jellee-Roman.ttf"), 24);
 
         Text scoreText = new Text("SCORE");
         scoreText.setTranslateX(50);
