@@ -82,36 +82,54 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void showScoreText(){
+        Font jelleeScore = Font.loadFont(getClass().getResourceAsStream("/assets/ui/fonts/Jellee-Roman.ttf"), 30);
+        Font jelleeBody = Font.loadFont(getClass().getResourceAsStream("/assets/ui/fonts/Jellee-Roman.ttf"), 12);
+        Font jelleeHeading = Font.loadFont(getClass().getResourceAsStream("/assets/ui/fonts/Jellee-Roman.ttf"), 24);
+
         Text scoreText = new Text("SCORE");
         scoreText.setTranslateX(50);
-        scoreText.setTranslateY(100);
-        scoreText.setFill(Color.BLACK);
-        scoreText.setFont(Font.font("verdana", 24));
+        scoreText.setTranslateY(75);
+        scoreText.setFill(Color.WHITE);
+        scoreText.setFont(jelleeBody);
         getGameScene().addUINode(scoreText);
 
         Text scoreVarText = new Text();
-        scoreVarText.setTranslateX(150);
-        scoreVarText.setTranslateY(100);
-        scoreVarText.setFill(Color.BLACK);
-        scoreVarText.setFont(Font.font("verdana", 24));
+        scoreVarText.setTranslateX(50);
+        scoreVarText.setTranslateY(106);
+        scoreVarText.setFill(Color.WHITE);
+        scoreVarText.setFont(jelleeScore);
         scoreVarText.textProperty().bind(getip("score").asString());
         getGameScene().addUINode(scoreVarText);
 
-        Text livesText = new Text();
-        livesText.setTranslateX(300);
-        livesText.setTranslateY(100);
-        livesText.setFill(Color.BLACK);
-        livesText.setFont(Font.font("verdana", 24));
-        livesText.textProperty().bind(getip("lives").asString());
+        Text livesText = new Text("LIVES");
+        livesText.setTranslateX(200);
+        livesText.setTranslateY(75);
+        livesText.setFill(Color.WHITE);
+        livesText.setFont(jelleeBody);
         getGameScene().addUINode(livesText);
 
-        Text multText = new Text();
-        multText.setTranslateX(350);
-        multText.setTranslateY(100);
-        multText.setFill(Color.BLACK);
-        multText.setFont(Font.font("verdana", 24));
-        multText.textProperty().bind(getip("mult").asString());
+        Text livesVarText = new Text();
+        livesVarText.setTranslateX(200);
+        livesVarText.setTranslateY(100);
+        livesVarText.setFill(Color.WHITE);
+        livesVarText.setFont(jelleeHeading);
+        livesVarText.textProperty().bind(getip("lives").asString());
+        getGameScene().addUINode(livesVarText);
+
+        Text multText = new Text("MULTIPLIER");
+        multText.setTranslateX(300);
+        multText.setTranslateY(75);
+        multText.setFill(Color.WHITE);
+        multText.setFont(jelleeBody);
         getGameScene().addUINode(multText);
+
+        Text multVarText = new Text();
+        multVarText.setTranslateX(300);
+        multVarText.setTranslateY(100);
+        multVarText.setFill(Color.WHITE);
+        multVarText.setFont(jelleeHeading);
+        multVarText.textProperty().bind(getip("mult").asString());
+        getGameScene().addUINode(multVarText);
     }
 
     @Override
