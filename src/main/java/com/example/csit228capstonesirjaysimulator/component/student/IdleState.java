@@ -3,6 +3,7 @@ package com.example.csit228capstonesirjaysimulator.component.student;
 import com.almasb.fxgl.core.math.FXGLMath;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.example.csit228capstonesirjaysimulator.component.score.UpdateScoreRunnable;
 import javafx.util.Duration;
 
 public class IdleState extends StudentState {
@@ -29,6 +30,8 @@ public class IdleState extends StudentState {
     public void onAction() {
         System.out.println("student not cheating! state is idle");
         super.playSound("wrong.mp3");
-        scoreComponent.wrongGuess();
+//        scoreComponent.wrongGuess();
+        Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
+        t.start();
     }
 }

@@ -1,45 +1,63 @@
 package com.example.csit228capstonesirjaysimulator.component.score;
 
 import com.almasb.fxgl.dsl.FXGL;
+import javafx.application.Platform;
 
 public class ScoreComponent {
+    private static final Object LOCK = new Object();
     int mult = 1;
     final int success = 120, sharpEye = 267, fail = 150;
 
     public void updateScore(boolean sharpEyeBonus) {
-        int sc = FXGL.geti("score");
-        mult = FXGL.geti("mult");
-        if(sharpEyeBonus) FXGL.set("score", sc + (sharpEye * mult));
-        else FXGL.set("score", sc + (success * mult));
+        Platform.runLater(() -> {
+            synchronized (LOCK) {
+                int sc = FXGL.geti("score");
+                mult = FXGL.geti("mult");
+                if(sharpEyeBonus) FXGL.set("score", sc + (sharpEye * mult));
+                else FXGL.set("score", sc + (success * mult));
+            }
+        });
     }
 
     public void failToCatch(){
-        int sc = FXGL.geti("score");
-        FXGL.set("score", sc - fail);
-        FXGL.set("mult", 1);
+        Platform.runLater(() -> {
+            synchronized (LOCK) {
+                int sc = FXGL.geti("score");
+                FXGL.set("score", sc - fail);
+                FXGL.set("mult", 1);
+            }
+        });
     }
 
     public void wrongGuess(){
-        int lives = FXGL.geti("lives");
-        FXGL.set("lives", lives-1);
-        FXGL.set("streak", 0);
-        FXGL.set("mult", 1);
+        Platform.runLater(() -> {
+            synchronized (LOCK) {
+                int lives = FXGL.geti("lives");
+                FXGL.set("lives", lives - 1);
+                FXGL.set("streak", 0);
+                FXGL.set("mult", 1);
+            }
+        });
     }
 
     public void correctGuess(){
-        int streak = FXGL.geti("streak");
-        //mult = FXGL.geti("mult");
-        if(streak > 67){
-            FXGL.set("mult", 100);
-        } else if(streak > 10){
-            FXGL.set("mult", 5);
-        } else if(streak > 7){
-            FXGL.set("mult", 4);
-        } else if(streak > 5){
-            FXGL.set("mult", 3);
-        } else if(streak > 3){
-            FXGL.set("mult", 2);
-        }
-        FXGL.set("streak", streak+1);
+        Platform.runLater(() -> {
+            synchronized (LOCK) {
+                int streak = FXGL.geti("streak");
+                //mult = FXGL.geti("mult");
+                if(streak > 67){
+                    FXGL.set("mult", 100);
+                } else if(streak > 10){
+                    FXGL.set("mult", 5);
+                } else if(streak > 7){
+                    FXGL.set("mult", 4);
+                } else if(streak > 5){
+                    FXGL.set("mult", 3);
+                } else if(streak > 3){
+                    FXGL.set("mult", 2);
+                }
+                FXGL.set("streak", streak + 1);
+            }
+        });
     }
 }

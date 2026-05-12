@@ -1,10 +1,11 @@
 package com.example.csit228capstonesirjaysimulator.component.student;
 
 import com.almasb.fxgl.core.math.FXGLMath;
+import com.example.csit228capstonesirjaysimulator.component.score.UpdateScoreRunnable;
 import javafx.util.Duration;
 
 public class CheatingState extends StudentState{
-    boolean sharpEyeBonus = true;
+    public boolean sharpEyeBonus = true;
     Duration bonus = Duration.seconds(1.5);
     public CheatingState(StudentComponent student){
         super(student);
@@ -26,8 +27,10 @@ public class CheatingState extends StudentState{
         System.out.println("yes this is a cheater!! Not Good");
         super.playSound("correct.mp3");
         // later on add mechanics for sharpEyeBonus
-        scoreComponent.correctGuess();
-        scoreComponent.updateScore(sharpEyeBonus);
+//        scoreComponent.correctGuess();
+//        scoreComponent.updateScore(sharpEyeBonus);
+        Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
+        t.start();
         // reset it to idle
         getStudent().changeState(new IdleState(getStudent()));
     }
