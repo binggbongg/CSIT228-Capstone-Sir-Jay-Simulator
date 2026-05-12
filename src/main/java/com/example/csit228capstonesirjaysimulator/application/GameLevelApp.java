@@ -307,7 +307,7 @@ public class GameLevelApp extends GameApplication {
         UserAction shushStudents = new UserAction("PAGHILOM!") {
             @Override
             protected void onAction(){
-                handleSpacebar();
+                handlePressE();
             }
         };
 
@@ -331,7 +331,7 @@ public class GameLevelApp extends GameApplication {
         }
     }
 
-    private void handleSpacebar(){
+    private void handlePressE(){
         // shush all students
         if(FXGL.geti("streak") > 6){
             System.out.println("Shush is activated");
@@ -341,6 +341,7 @@ public class GameLevelApp extends GameApplication {
             }
             streakIndicator.setImage(streakIconNormal);
             FXGL.set("streak", 0);
+            FXGL.set("isLocked", false);
         }
     }
 }
