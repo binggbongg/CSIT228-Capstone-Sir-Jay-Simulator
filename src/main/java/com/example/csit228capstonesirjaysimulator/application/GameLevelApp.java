@@ -12,8 +12,11 @@ import com.example.csit228capstonesirjaysimulator.component.student.StudentCompo
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
+import com.example.csit228capstonesirjaysimulator.scene.IntroCutScene;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
@@ -30,8 +33,8 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 public class GameLevelApp extends GameApplication {
     private final MyEntityFactory factory = new MyEntityFactory();
     private boolean isRight;
-    private Button leftButton;
-    private Button rightButton;
+    private ImageView leftButton;
+    private ImageView rightButton;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -53,19 +56,26 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void setupButtons(){
-        leftButton = new Button();
-        rightButton = new Button();
 
-        leftButton.setText("<");
+        Image leftBtnImg = new Image("assets/textures/button-left.png");
+        Image rightBtnImg = new Image("assets/textures/button-right.png");
+
+        leftButton = new ImageView(leftBtnImg);
+        rightButton = new ImageView(rightBtnImg);
+
+        leftButton.setFitWidth(50);
+        leftButton.setPreserveRatio(true);
+        rightButton.setFitWidth(50);
+        rightButton.setPreserveRatio(true);
+
+        leftButton.setOnMouseClicked( e -> updateRoomView(false));
+        rightButton.setOnMouseClicked(e -> updateRoomView(true));
+
         leftButton.setTranslateX(60);
         leftButton.setTranslateY(360);
 
-        rightButton.setText(">");
         rightButton.setTranslateX(1200);
         rightButton.setTranslateY(360);
-
-        rightButton.setOnAction(e -> updateRoomView(true));
-        leftButton.setOnAction(e -> updateRoomView(false));
 
         getGameScene().addUINode(leftButton);
         getGameScene().addUINode(rightButton);
