@@ -9,7 +9,6 @@ import com.almasb.fxgl.texture.Texture;
 import com.example.csit228capstonesirjaysimulator.component.student.DistractIdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
 import com.example.csit228capstonesirjaysimulator.component.student.IdleState;
-import com.example.csit228capstonesirjaysimulator.component.student.StudentState;
 
 public class MyEntityFactory implements EntityFactory {
     @Spawns("student")
@@ -42,7 +41,7 @@ public class MyEntityFactory implements EntityFactory {
                 .viewWithBBox(texture)
                 .zIndex(10)
                 .collidable()
-                .with("isRightSide", (boolean)data.get("isRightSide"))
+                .with("isRightSide", data.get("isRightSide"))
                 .with(brain)
                 .build();
     }

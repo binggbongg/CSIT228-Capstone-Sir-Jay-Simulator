@@ -12,9 +12,7 @@ import com.example.csit228capstonesirjaysimulator.component.student.StudentCompo
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
-import com.example.csit228capstonesirjaysimulator.scene.IntroCutScene;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
