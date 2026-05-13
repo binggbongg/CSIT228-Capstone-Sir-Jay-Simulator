@@ -12,6 +12,7 @@ import com.example.csit228capstonesirjaysimulator.component.student.StudentCompo
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
+import com.example.csit228capstonesirjaysimulator.scene.PauseScene;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -64,6 +65,7 @@ public class GameLevelApp extends GameApplication {
 //        gameSettings.setDeveloperMenuEnabled(true);
         // turn developer menu on for debugging stuff
         gameSettings.setMainMenuEnabled(true);
+        gameSettings.setMenuKey(KeyCode.F12);
         gameSettings.setSceneFactory(new MenuFactory());
     }
 
@@ -92,7 +94,9 @@ public class GameLevelApp extends GameApplication {
         pauseButton.setFitWidth(50);
         pauseButton.setPreserveRatio(true);
 
-        // TODO Make Overlay for Pause Button
+        pauseButton.setOnMouseClicked(e -> {
+            FXGL.getSceneService().pushSubScene(new PauseScene());
+        });
 
         leftButton.setOnMouseClicked( e -> updateRoomView(false));
         rightButton.setOnMouseClicked(e -> updateRoomView(true));
@@ -323,6 +327,13 @@ public class GameLevelApp extends GameApplication {
 
         Input input = FXGL.getInput();
 
+        UserAction pauseScreen = new UserAction("Pause Screen"){
+            @Override
+            protected void onAction() {
+                FXGL.getSceneService().pushSubScene(new PauseScene());
+            }
+        };
+
         UserAction switchScreenRight = new UserAction("Switch Screen Right"){
             @Override
             protected void onAction(){
@@ -347,6 +358,7 @@ public class GameLevelApp extends GameApplication {
         input.addAction(switchScreenLeft, KeyCode.A);
         input.addAction(switchScreenRight, KeyCode.D);
         input.addAction(shushStudents, KeyCode.E);
+        input.addAction(pauseScreen, KeyCode.ESCAPE);
     }
 
     private void handleMouseClick() {
