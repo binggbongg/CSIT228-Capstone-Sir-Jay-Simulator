@@ -71,7 +71,7 @@ public class GameLevelApp extends GameApplication {
     protected void initUI(){
         showScoreText();
         setupButtons();
-        updateRoomView(isRight);
+        updateRoomView(FXGL.getb("isRight"));
     }
 
     private void setupButtons(){
@@ -209,6 +209,7 @@ public class GameLevelApp extends GameApplication {
         vars.put("mult", 1);
         vars.put("streak", 0);
         vars.put("isLocked", false);
+        vars.put("isRight", false);
 
         vars.put("sessionCheatersCaught",0);
         vars.put("sessionFalseAccusations",0);
@@ -219,7 +220,6 @@ public class GameLevelApp extends GameApplication {
 
     @Override
     protected void initGame() {
-        isRight = false;
         FXGL.getGameWorld().addEntityFactory(factory);
 
         spawnStudentGrid(false);
@@ -263,25 +263,25 @@ public class GameLevelApp extends GameApplication {
             return;
         }
 
-        isRight = isRightSide;
-        FXGL.getWorldProperties().setValue("isRight", isRightSide);
+        FXGL.set("isRight", isRightSide);
 
-        String filename = (isRight) ? "teacherView_rightSide.PNG" : "teacherView_leftSide.PNG";
-        FXGL.getGameScene().setBackgroundRepeat(filename);
+        getGameWorld().getEntitiesByType(EntityType.BACKGROUND).forEach(Entity::removeFromWorld);
+        String filename = isRightSide ? "teacherView_rightSide.PNG" : "teacherView_leftSide.PNG";
+        spawn("background", new SpawnData(0, 0).put("texture", filename));
 
-        FXGL.getGameWorld().getEntitiesByType(EntityType.STUDENT).forEach(e -> {
-            boolean studentIsRight = e.getBoolean("isRightSide");
-            e.setVisible(studentIsRight == isRightSide);
-        });
+
+        FXGL.getGameWorld().getEntitiesByType(EntityType.STUDENT).forEach(e ->
+            e.setVisible(e.getBoolean("isRightSide") == isRightSide)
+        );
 
         if(leftButton != null && rightButton != null) {
-            leftButton.setVisible(isRight);
-            rightButton.setVisible(!isRight);
+            leftButton.setVisible(isRightSide);
+            rightButton.setVisible(!isRightSide);
         }
     }
 
     private void spawnStudentGrid(boolean isRight) {
-        int rows = 3, cols = 3, spacing = 150;
+        int rows = 3, cols = 3, spacing = 190;
         double startX = (getAppWidth() - (cols - 1) * spacing) / 2.0 - 60;
         double startY = (getAppHeight() - (rows - 1) * spacing) / 2.0 - 60;
 
