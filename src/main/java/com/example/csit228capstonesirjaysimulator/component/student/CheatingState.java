@@ -10,7 +10,8 @@ public class CheatingState extends StudentState{
     public CheatingState(StudentComponent student){
         super(student);
         this.duration = Duration.seconds(FXGLMath.random(2, 6));
-        student.setHue(0.7); // rainbowdash turn pink
+        //student.setHue(0.7); // rainbowdash turn pink
+        student.playCheatingAnimation();
     }
 
     @Override

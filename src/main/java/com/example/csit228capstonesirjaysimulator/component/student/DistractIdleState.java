@@ -9,7 +9,8 @@ public class DistractIdleState extends StudentState {
     public DistractIdleState(StudentComponent student){
         super(student);
         this.duration = Duration.seconds(FXGLMath.random(5, 15));
-        student.setHue(0);
+        //student.setHue(0);
+        student.playIdleAnimation();
     }
 
     @Override

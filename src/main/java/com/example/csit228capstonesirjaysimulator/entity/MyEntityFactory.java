@@ -5,6 +5,8 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
+import com.almasb.fxgl.physics.BoundingShape;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.texture.Texture;
 import com.example.csit228capstonesirjaysimulator.component.student.DistractIdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
@@ -14,9 +16,9 @@ import org.w3c.dom.Text;
 public class MyEntityFactory implements EntityFactory {
     @Spawns("student")
     public Entity newStudent(SpawnData data) {
-        StudentComponent student = new StudentComponent();
+        StudentComponent student = new StudentComponent("stud5");
 
-        Entity e = baseStudent(data, student, "rainbow.jpg");
+        Entity e = baseStudent(data, student);
 
         student.changeState(new IdleState(student));
         return e;
@@ -24,22 +26,23 @@ public class MyEntityFactory implements EntityFactory {
 
     @Spawns("distractor")
     public Entity newDistractor(SpawnData data) {
-        StudentComponent student = new StudentComponent();
+        StudentComponent student = new StudentComponent("trey");
 
-        Entity e = baseStudent(data, student, "applejack.jpg");
+        Entity e = baseStudent(data, student);
 
         student.changeState(new DistractIdleState(student));
         return e;
     }
 
-    private Entity baseStudent(SpawnData data, StudentComponent brain, String textureName) {
-        Texture texture = FXGL.getAssetLoader().loadTexture(textureName);
-        texture.setFitWidth(150);
-        texture.setFitHeight(150);
+    private Entity baseStudent(SpawnData data, StudentComponent brain) {
+//        Texture texture = FXGL.getAssetLoader().loadTexture(textureName);
+//        texture.setFitWidth(150);
+//        texture.setFitHeight(150);
 
         return FXGL.entityBuilder(data)
                 .type(EntityType.STUDENT)
-                .viewWithBBox(texture)
+                //.viewWithBBox(texture)
+                .bbox(new HitBox(BoundingShape.box(100,150)))
                 .zIndex(10)
                 .collidable()
                 .with("isRightSide", data.get("isRightSide"))

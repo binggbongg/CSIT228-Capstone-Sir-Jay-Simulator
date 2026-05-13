@@ -16,7 +16,8 @@ public class IdleState extends StudentState {
         else if(sc > 10_000) cap = 20;
 
         this.duration = Duration.seconds(FXGLMath.random(7, cap));
-        student.setHue(0);
+        //student.setHue(0);
+        student.playIdleAnimation();
     }
 
     @Override
