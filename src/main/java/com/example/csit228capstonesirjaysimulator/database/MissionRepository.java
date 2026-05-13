@@ -45,7 +45,11 @@ public class MissionRepository {
     public void saveMissionProgress(String studentId, List<Mission<?>> missions) {
         String sql = "INSERT INTO mission_progress "
                 + "(student_id, mission_id, current_value, completed) "
-                + "VALUES (?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?) "
+                + "ON DUPLICATE KEY UPDATE "
+                + "current_value = VALUES(current_value), "
+                + "completed     = VALUES(completed), "
+                + "session_date  = CURRENT_TIMESTAMP";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement st = conn.prepareStatement(sql)) {

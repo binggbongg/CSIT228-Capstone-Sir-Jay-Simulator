@@ -77,26 +77,27 @@ public class DatabaseConnection {
 
 
         st.executeUpdate("""
-        CREATE TABLE IF NOT EXISTS missions (
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            description VARCHAR(255) NOT NULL,
-            type ENUM('INTEGER','BOOLEAN') NOT NULL,
-            target_value INT NOT NULL
-        )
-    """);
+    CREATE TABLE IF NOT EXISTS missions (
+        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        description VARCHAR(255) NOT NULL UNIQUE,
+        type ENUM('INTEGER','BOOLEAN') NOT NULL,
+        target_value INT NOT NULL
+    )
+""");
 
         st.executeUpdate("""
-        CREATE TABLE IF NOT EXISTS mission_progress (
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            student_id VARCHAR(20) NOT NULL,
-            mission_id INT NOT NULL,
-            session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            current_value INT NOT NULL DEFAULT 0,
-            completed TINYINT(1) NOT NULL DEFAULT 0,
-            CONSTRAINT fk_mp_user FOREIGN KEY (student_id) REFERENCES users(student_id) ON DELETE CASCADE,
-            CONSTRAINT fk_mp_mission FOREIGN KEY (mission_id) REFERENCES missions(id)
-        )
-    """);
+    CREATE TABLE IF NOT EXISTS mission_progress (
+        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        student_id VARCHAR(20) NOT NULL,
+        mission_id INT NOT NULL,
+        session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        current_value INT NOT NULL DEFAULT 0,
+        completed TINYINT(1) NOT NULL DEFAULT 0,
+        CONSTRAINT fk_mp_user FOREIGN KEY (student_id) REFERENCES users(student_id) ON DELETE CASCADE,
+        CONSTRAINT fk_mp_mission FOREIGN KEY (mission_id) REFERENCES missions(id),
+        CONSTRAINT uq_mp UNIQUE (student_id, mission_id)
+    )
+""");
 
         st.executeUpdate("""
         CREATE TABLE IF NOT EXISTS sessions (
