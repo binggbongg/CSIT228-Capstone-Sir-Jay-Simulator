@@ -12,6 +12,7 @@ import com.example.csit228capstonesirjaysimulator.component.student.StudentCompo
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
+import com.example.csit228capstonesirjaysimulator.scene.PauseScene;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,10 +32,30 @@ import static com.almasb.fxgl.dsl.FXGL.getInput;
 import static com.almasb.fxgl.dsl.FXGL.onBtnDown;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 
+
+
+import com.example.csit228capstonesirjaysimulator.database.Sessionstats;
+import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
+import com.example.csit228capstonesirjaysimulator.database.MissionRepository;
+
+import java.time.Instant;
+import java.util.List;
+
 public class GameLevelApp extends GameApplication {
     private final MyEntityFactory factory = new MyEntityFactory();
     private boolean isRight;
     private ImageView leftButton, rightButton, pauseButton;
+    private ImageView streakIndicator;
+
+    // Preloaded streak images
+    private Image streakIconNormal;
+    private Image streakIconAngry;
+    private Image streakIconAngrier;
+
+    private Sessionstats sessionStats;
+    private long sessionStart;
+
+    private List<Mission<?>> sessionMissions;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -44,6 +65,7 @@ public class GameLevelApp extends GameApplication {
 //        gameSettings.setDeveloperMenuEnabled(true);
         // turn developer menu on for debugging stuff
         gameSettings.setMainMenuEnabled(true);
+        gameSettings.setMenuKey(KeyCode.F12);
         gameSettings.setSceneFactory(new MenuFactory());
     }
 
@@ -51,7 +73,7 @@ public class GameLevelApp extends GameApplication {
     protected void initUI(){
         showScoreText();
         setupButtons();
-        updateRoomView(isRight);
+        updateRoomView(FXGL.getb("isRight"));
     }
 
     private void setupButtons(){
@@ -72,7 +94,9 @@ public class GameLevelApp extends GameApplication {
         pauseButton.setFitWidth(50);
         pauseButton.setPreserveRatio(true);
 
-        // TODO Make Overlay for Pause Button
+        pauseButton.setOnMouseClicked(e -> {
+            FXGL.getSceneService().pushSubScene(new PauseScene());
+        });
 
         leftButton.setOnMouseClicked( e -> updateRoomView(false));
         rightButton.setOnMouseClicked(e -> updateRoomView(true));
@@ -150,6 +174,36 @@ public class GameLevelApp extends GameApplication {
         multVarText.setFont(jelleeHeading);
         multVarText.textProperty().bind(getip("mult").asString());
         getGameScene().addUINode(multVarText);
+
+        // Streak indicator ImageView
+        streakIconNormal = new Image("assets/textures/sir_serato-icon.png");
+        streakIconAngry = new Image("assets/textures/sir_serato-icon-angry.png");
+        streakIconAngrier = new Image("assets/textures/sir_serato-icon-angrier.png");
+
+        streakIndicator = new ImageView(streakIconNormal);
+        streakIndicator.setFitWidth(80);
+        streakIndicator.setPreserveRatio(true);
+        streakIndicator.setTranslateX(400);
+        streakIndicator.setTranslateY(100);
+
+        getGameScene().addUINode(streakIndicator);
+    }
+
+    /**
+     * Updates the streak indicator image based on the current streak value.
+     * - streak > 6: sir_serato-icon-angrier.png
+     * - streak > 3: sir_serato-icon-angry.png
+     * - streak <= 3 (less than 6): sir_serato-icon.png
+     */
+
+    private void updateStreakIndicator(int streak) {
+        if (streak > 6) {
+            streakIndicator.setImage(streakIconAngrier);
+        } else if (streak > 3) {
+            streakIndicator.setImage(streakIconAngry);
+        } else {
+            streakIndicator.setImage(streakIconNormal);
+        }
     }
 
     @Override
@@ -159,15 +213,30 @@ public class GameLevelApp extends GameApplication {
         vars.put("mult", 1);
         vars.put("streak", 0);
         vars.put("isLocked", false);
+        vars.put("isRight", false);
+
+        vars.put("sessionCheatersCaught",0);
+        vars.put("sessionFalseAccusations",0);
+        vars.put("sessionTotalAttempts",0);
+        vars.put("sessionTotalCorrect",0);
+        vars.put("sessionDuration",0.0);
     }
 
     @Override
     protected void initGame() {
-        isRight = false;
         FXGL.getGameWorld().addEntityFactory(factory);
 
         spawnStudentGrid(false);
         spawnStudentGrid(true);
+
+        sessionStats = new Sessionstats();
+        sessionStart = Instant.now().getEpochSecond();
+
+        sessionMissions = MissionRepository.getInstance().loadGlobalMissions();
+        FXGL.getWorldProperties().setValue("sessionMissions", sessionMissions);
+
+
+
 
         // setting initial state (left side of classroom)
         updateRoomView(false);
@@ -177,9 +246,18 @@ public class GameLevelApp extends GameApplication {
                 showGameOver();
             }
         });
+
+        // Listen for streak changes and update the visual indicator
+        getip("streak").addListener((observable, oldValue, newValue) -> {
+            updateStreakIndicator(newValue.intValue());
+        });
     }
 
     private void showGameOver(){
+        long now      = Instant.now().getEpochSecond();
+        double secs   = now - sessionStart;
+        FXGL.getWorldProperties().setValue("sessionDuration", secs);
+
         FXGL.getSceneService().pushSubScene(new FinishScene());
     }
 
@@ -189,25 +267,25 @@ public class GameLevelApp extends GameApplication {
             return;
         }
 
-        isRight = isRightSide;
-        FXGL.getWorldProperties().setValue("isRight", isRightSide);
+        FXGL.set("isRight", isRightSide);
 
-        String filename = (isRight) ? "teacherView_rightSide.PNG" : "teacherView_leftSide.PNG";
-        FXGL.getGameScene().setBackgroundRepeat(filename);
+        getGameWorld().getEntitiesByType(EntityType.BACKGROUND).forEach(Entity::removeFromWorld);
+        String filename = isRightSide ? "teacherView_rightSide.PNG" : "teacherView_leftSide.PNG";
+        spawn("background", new SpawnData(0, 0).put("texture", filename));
 
-        FXGL.getGameWorld().getEntitiesByType(EntityType.STUDENT).forEach(e -> {
-            boolean studentIsRight = e.getBoolean("isRightSide");
-            e.setVisible(studentIsRight == isRightSide);
-        });
+
+        FXGL.getGameWorld().getEntitiesByType(EntityType.STUDENT).forEach(e ->
+            e.setVisible(e.getBoolean("isRightSide") == isRightSide)
+        );
 
         if(leftButton != null && rightButton != null) {
-            leftButton.setVisible(isRight);
-            rightButton.setVisible(!isRight);
+            leftButton.setVisible(isRightSide);
+            rightButton.setVisible(!isRightSide);
         }
     }
 
     private void spawnStudentGrid(boolean isRight) {
-        int rows = 3, cols = 3, spacing = 150;
+        int rows = 3, cols = 3, spacing = 190;
         double startX = (getAppWidth() - (cols - 1) * spacing) / 2.0 - 60;
         double startY = (getAppHeight() - (rows - 1) * spacing) / 2.0 - 60;
 
@@ -249,6 +327,13 @@ public class GameLevelApp extends GameApplication {
 
         Input input = FXGL.getInput();
 
+        UserAction pauseScreen = new UserAction("Pause Screen"){
+            @Override
+            protected void onAction() {
+                FXGL.getSceneService().pushSubScene(new PauseScene());
+            }
+        };
+
         UserAction switchScreenRight = new UserAction("Switch Screen Right"){
             @Override
             protected void onAction(){
@@ -266,13 +351,14 @@ public class GameLevelApp extends GameApplication {
         UserAction shushStudents = new UserAction("PAGHILOM!") {
             @Override
             protected void onAction(){
-                handleSpacebar();
+                handlePressE();
             }
         };
 
         input.addAction(switchScreenLeft, KeyCode.A);
         input.addAction(switchScreenRight, KeyCode.D);
         input.addAction(shushStudents, KeyCode.E);
+        input.addAction(pauseScreen, KeyCode.ESCAPE);
     }
 
     private void handleMouseClick() {
@@ -290,7 +376,7 @@ public class GameLevelApp extends GameApplication {
         }
     }
 
-    private void handleSpacebar(){
+    private void handlePressE(){
         // shush all students
         if(FXGL.geti("streak") > 6){
             System.out.println("Shush is activated");
@@ -298,6 +384,57 @@ public class GameLevelApp extends GameApplication {
                 StudentComponent s = e.getComponent(StudentComponent.class);
                 if(s != null) s.changeState(new IdleState(s));
             }
+            streakIndicator.setImage(streakIconNormal);
+            FXGL.set("streak", 0);
+            FXGL.set("isLocked", false);
         }
     }
+
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnCheaterCaught() {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 1 || m.getMissionId() == 2) {
+                ((Mission<Integer>) m).increment();
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnStreak(int streak) {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 3)
+                ((Mission<Integer>) m).setCurrent(streak);
+            else if (m.getMissionId() == 4)
+                ((Mission<Integer>) m).setCurrent(streak);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnScore(int score) {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 6)
+                ((Mission<Integer>) m).setCurrent(score);
+            else if (m.getMissionId() == 7)
+                ((Mission<Integer>) m).setCurrent(score);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateMissionsOnMultiplier(int mult) {
+        if (sessionMissions == null) return;
+        for (Mission<?> m : sessionMissions) {
+            if (m.getMissionId() == 8 && mult >= 3)
+                ((Mission<Boolean>) m).complete();
+            else if (m.getMissionId() == 9 && mult >= 5)
+                ((Mission<Boolean>) m).complete();
+        }
+    }
+
+
+
+
 }
