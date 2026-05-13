@@ -235,9 +235,6 @@ public class GameLevelApp extends GameApplication {
         sessionMissions = MissionRepository.getInstance().loadAllMissions();
         FXGL.getWorldProperties().setValue("sessionMissions", sessionMissions);
 
-
-
-
         // setting initial state (left side of classroom)
         updateRoomView(false);
 
