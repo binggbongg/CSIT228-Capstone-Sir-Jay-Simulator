@@ -1,18 +1,19 @@
 package com.example.csit228capstonesirjaysimulator.component.student;
 
-import com.almasb.fxgl.core.math.FXGLMath;
+import com.almasb.fxgl.audio.Music;
 import com.almasb.fxgl.dsl.FXGL;
-import javafx.util.Duration;
 
 public class DistractingState extends StudentState {
     private int clicksRequired = 5;
 
     public DistractingState(StudentComponent student){
         super(student);
-       //this.duration = Duration.seconds(FXGLMath.random(2, 6));
-        //student.setHue(0.5);
+//        student.setHue(0.5);
 
         student.playDistractAnimation();
+        // sound indicator for distractor (for now)
+        Music s = FXGL.getAssetLoader().loadMusic("distractor_sfx.wav");
+        FXGL.getAudioPlayer().loopMusic(s);
 
         FXGL.getWorldProperties().setValue("isLocked", true);
     }
@@ -34,6 +35,7 @@ public class DistractingState extends StudentState {
             FXGL.getWorldProperties().setValue("isLocked", false); //
             playSound("correct.mp3"); //
 
+            FXGL.getAudioPlayer().stopAllMusic();
             // Return to the distractor's specific idle state
             getStudent().changeState(new DistractIdleState(getStudent()));
         } else {

@@ -35,15 +35,12 @@ public class MyEntityFactory implements EntityFactory {
     }
 
     private Entity baseStudent(SpawnData data, StudentComponent brain) {
-//        Texture texture = FXGL.getAssetLoader().loadTexture(textureName);
-//        texture.setFitWidth(150);
-//        texture.setFitHeight(150);
+        int z = data.get("zIndex");
 
         return FXGL.entityBuilder(data)
                 .type(EntityType.STUDENT)
-                //.viewWithBBox(texture)
                 .bbox(new HitBox(BoundingShape.box(100,150)))
-                .zIndex(10)
+                .zIndex(z)
                 .collidable()
                 .with("isRightSide", data.get("isRightSide"))
                 .with(brain)
@@ -67,13 +64,28 @@ public class MyEntityFactory implements EntityFactory {
     @Spawns("chair")
     public Entity newChair(SpawnData data){
         Texture texture = FXGL.getAssetLoader().loadTexture("Chair.PNG");
-        texture.setFitWidth(150);
-        texture.setFitHeight(150);
+        texture.setFitWidth(210);
+        texture.setFitHeight(210);
 
         return FXGL.entityBuilder(data)
                 .type(EntityType.CHAIR)
                 .view(texture)
                 .zIndex(5)
+                .build();
+    }
+
+    @Spawns("table")
+    public Entity newTable(SpawnData data){
+        Texture texture = FXGL.getAssetLoader().loadTexture("Table.PNG");
+        texture.setFitWidth(240);
+        texture.setFitHeight(240);
+
+        int z = data.get("zIndex");
+
+        return FXGL.entityBuilder(data)
+                .type(EntityType.TABLE)
+                .view(texture)
+                .zIndex(z)
                 .build();
     }
 }

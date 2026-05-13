@@ -30,6 +30,7 @@ import java.util.Map;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGL.getInput;
 import static com.almasb.fxgl.dsl.FXGL.onBtnDown;
+import static com.almasb.fxgl.dsl.FXGL.spawn;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 
 
@@ -61,7 +62,7 @@ public class GameLevelApp extends GameApplication {
         gameSettings.setHeight(720);
         gameSettings.setWidth(1280);
         gameSettings.setTitle("Sir Serato Simulator");
-//        gameSettings.setDeveloperMenuEnabled(true);
+        gameSettings.setDeveloperMenuEnabled(true);
         // turn developer menu on for debugging stuff
         gameSettings.setMainMenuEnabled(true);
         gameSettings.setMenuKey(KeyCode.F12);
@@ -225,18 +226,20 @@ public class GameLevelApp extends GameApplication {
     protected void initGame() {
         FXGL.getGameWorld().addEntityFactory(factory);
 
+        spawnChairs();
+
         spawnStudentGrid(false);
         spawnStudentGrid(true);
 
-
         sessionStats = new Sessionstats();
         sessionStart = Instant.now().getEpochSecond();
-
         sessionMissions = MissionRepository.getInstance().loadAllMissions();
+
         FXGL.getWorldProperties().setValue("sessionMissions", sessionMissions);
 
         // setting initial state (left side of classroom)
         updateRoomView(false);
+        spawnTables();
 
         getip("lives").addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() <= 0) {
@@ -282,28 +285,32 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void spawnStudentGrid(boolean isRight) {
-        int rows = 3, cols = 3, spacing = 190;
-        double startX = (getAppWidth() - (cols - 1) * spacing) / 2.0 - 60;
-        double startY = (getAppHeight() - (rows - 1) * spacing) / 2.0 - 60;
+        int colSpacing = 290;
+        int rowSpacing = 190;
+
+        double startX = 300;
+        double startY = 430;
 
         List<Integer> seatIndices = new ArrayList<>();
-        for (int i = 0; i < (rows * cols); i++) {
+        for (int i = 0; i < 9; i++) {
             seatIndices.add(i);
         }
-
         Collections.shuffle(seatIndices);
-        List<Integer> distractorSeats = seatIndices.subList(0, 1);
+        int distractorIndex = seatIndices.getFirst();
 
         int currentSeat = 0;
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                double x = startX + (c * spacing);
-                double y = startY + (r * spacing);
+        for (int r = 0; r < 3; r++) {
+            double rowY = startY - (r * rowSpacing);
+            int z = 30 - (r * 10);
 
-                SpawnData data = new SpawnData(x, y).put("isRightSide", isRight);
+            for (int c = 0; c < 3; c++) {
+                double colX = startX + (c * colSpacing);
 
-                // 4. Decide which entity type to spawn based on our shuffled list
-                if (distractorSeats.contains(currentSeat)) {
+                SpawnData data = new SpawnData(colX, rowY)
+                        .put("isRightSide", isRight)
+                        .put("zIndex", z);
+
+                if (currentSeat == distractorIndex) {
                     spawn("distractor", data);
                 } else {
                     spawn("student", data);
@@ -311,6 +318,48 @@ public class GameLevelApp extends GameApplication {
 
                 currentSeat++;
             }
+        }
+    }
+
+    private void spawnChairs(){
+        int colSpacing = 290;
+        int rowSpacing = 190;
+
+        double startX = 292;
+        double startY = 590;
+
+        for (int r = 0; r < 3; r++) {
+            // Calculate the Y for this specific row once
+            double rowY = startY - (r * rowSpacing);
+
+            for (int c = 0; c < 3; c++) {
+                // Calculate the X for this specific column
+                double colX = startX + (c * colSpacing);
+
+                spawn("chair", new SpawnData(colX, rowY));
+            }
+
+        }
+    }
+
+    private void spawnTables(){
+        int colSpacing = 290;
+        int rowSpacing = 190;
+
+        double startX = 275;
+        double startY = 600;
+
+        for (int r = 0; r < 3; r++) {
+            double rowY = startY - (r * rowSpacing);
+
+            int z = 30 - (r * 10);
+
+            for (int c = 0; c < 3; c++) {
+                double colX = startX + (c * colSpacing);
+
+                spawn("table", new SpawnData(colX, rowY).put("zIndex", z));
+            }
+
         }
     }
 
