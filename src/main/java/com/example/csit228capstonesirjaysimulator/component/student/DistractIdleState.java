@@ -2,6 +2,7 @@ package com.example.csit228capstonesirjaysimulator.component.student;
 
 import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
+import com.example.csit228capstonesirjaysimulator.component.score.UpdateScoreRunnable;
 import javafx.util.Duration;
 
 public class DistractIdleState extends StudentState {
@@ -30,6 +31,7 @@ public class DistractIdleState extends StudentState {
     void onAction() {
         System.out.println("Distractor just idle..");
         super.playSound("wrong.mp3");
-        scoreComponent.wrongGuess();
+        Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
+        t.start();
     }
 }
