@@ -58,12 +58,13 @@ public class ProfileSelectScene extends SubScene {
        // Playroot.getChildren().add(cardFlow);
 
         cardFlow.setAlignment(Pos.CENTER);
-        cardFlow.setPrefWrapLength(3 * 160 + 2 * 12 + 10);
+        cardFlow.setPrefWrapLength(580);
         cardFlow.setPadding(new Insets(8));
+        cardFlow.setMaxWidth(580);
         refreshCards();
 
         ScrollPane scroll = new ScrollPane(cardFlow);
-        scroll.setPrefSize(540, 340);
+        scroll.setPrefSize(520, 340);
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -87,6 +88,7 @@ public class ProfileSelectScene extends SubScene {
 
         VBox content = new VBox(16, title,scroll, actions, btnBack);
         content.setAlignment(Pos.CENTER);
+        content.setMaxWidth(600);
         content.setPadding(new Insets(40));
 
         StackPane panel = new StackPane(bg,  content);
