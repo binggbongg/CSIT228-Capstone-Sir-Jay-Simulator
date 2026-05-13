@@ -39,7 +39,6 @@ import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
 import com.example.csit228capstonesirjaysimulator.database.MissionRepository;
 
 import java.time.Instant;
-import java.util.List;
 
 public class GameLevelApp extends GameApplication {
     private final MyEntityFactory factory = new MyEntityFactory();
@@ -229,10 +228,11 @@ public class GameLevelApp extends GameApplication {
         spawnStudentGrid(false);
         spawnStudentGrid(true);
 
+
         sessionStats = new Sessionstats();
         sessionStart = Instant.now().getEpochSecond();
 
-        sessionMissions = MissionRepository.getInstance().loadGlobalMissions();
+        sessionMissions = MissionRepository.getInstance().loadAllMissions();
         FXGL.getWorldProperties().setValue("sessionMissions", sessionMissions);
 
 

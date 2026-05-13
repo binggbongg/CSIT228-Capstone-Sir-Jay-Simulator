@@ -21,16 +21,16 @@ import java.util.List;
 public class ProfileSelectScene extends SubScene {
 
     private final javafx.scene.Node parentRoot;
-    private final Runnable          onPlay;
+    private final Runnable onPlay;
 
     private final List<UserProfile> profiles = new ArrayList<>();
     private UserProfile selectedProfile = null;
 
-    private FlowPane  cardFlow;
-    private Button    btnViewProfile;
-    private Button    btnPlay;
-    private VBox      dialogBox;
-    private StackPane overlayPane;
+    private FlowPane          cardFlow;
+    private Button            btnViewProfile;
+    private Button            btnPlay;
+    private VBox              dialogBox;
+    private StackPane         overlayPane;
 
     public ProfileSelectScene(javafx.scene.Node parentRoot, Runnable onPlay) {
         this.parentRoot = parentRoot;
@@ -43,18 +43,28 @@ public class ProfileSelectScene extends SubScene {
     private void buildScene() {
         Rectangle bg = panelBg(600, 650);
 
+        //root.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 13px;");
+
         Text title = new Text("SELECT PROFILE");
         title.setFont(Font.font("Verdana", FontWeight.BOLD, 36));
         title.setFill(Color.GOLD);
 
+       // StackPane Playroot = new StackPane();
+
+
+        //cards
         cardFlow = new FlowPane(12, 12);
+
+       // Playroot.getChildren().add(cardFlow);
+
+        cardFlow.setAlignment(Pos.CENTER);
         cardFlow.setPrefWrapLength(3 * 160 + 2 * 12 + 10);
         cardFlow.setPadding(new Insets(8));
         refreshCards();
 
         ScrollPane scroll = new ScrollPane(cardFlow);
         scroll.setPrefSize(540, 340);
-        scroll.setFitToWidth(false);
+        scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; "
@@ -75,11 +85,11 @@ public class ProfileSelectScene extends SubScene {
         Button btnBack = buildButton("RETURN TO MENU");
         btnBack.setOnAction(e -> closeScene());
 
-        VBox content = new VBox(16, title, scroll, actions, btnBack);
+        VBox content = new VBox(16, title,scroll, actions, btnBack);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(40));
 
-        StackPane panel = new StackPane(bg, content);
+        StackPane panel = new StackPane(bg,  content);
         panel.setPrefSize(1280, 720);
         panel.setAlignment(Pos.CENTER);
 

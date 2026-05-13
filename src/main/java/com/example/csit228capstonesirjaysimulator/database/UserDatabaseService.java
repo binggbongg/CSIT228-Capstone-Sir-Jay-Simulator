@@ -25,7 +25,7 @@ public class UserDatabaseService {
         String sqlStats = "INSERT INTO stats (student_id) VALUES (?)";
 
         try (Connection conn = DatabaseConnection.getConnection()) {
-            conn.setAutoCommit(false);                        // transaction start
+          conn.setAutoCommit(false);
 
             try (PreparedStatement stUser  = conn.prepareStatement(sqlUser);
                  PreparedStatement stStats = conn.prepareStatement(sqlStats)) {
@@ -107,10 +107,10 @@ public class UserDatabaseService {
         String sql = "INSERT INTO users (student_id, username, course, section, password) "
                 + "VALUES (?, ?, ?, ?, ?) "
                 + "ON DUPLICATE KEY UPDATE "
-                + "  username = VALUES(username), "
-                + "  course   = VALUES(course),   "
-                + "  section  = VALUES(section),  "
-                + "  password = VALUES(password)";
+                + "username = VALUES(username), "
+                + "course = VALUES(course),   "
+                + "section = VALUES(section),  "
+                + "password = VALUES(password)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement st = conn.prepareStatement(sql)) {
@@ -134,15 +134,13 @@ public class UserDatabaseService {
         }
     }
 
-    public synchronized void saveSession(String studentId,
-                                         Sessionstats ss,
-                                         List<Mission<?>> missions) {
+    public synchronized void saveSession(String studentId, Sessionstats ss, List<Mission<?>> missions) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             conn.setAutoCommit(false);
 
             try {
                 insertSession(conn, studentId, ss);
-                upsertStats(conn, studentId, ss);
+                updateStats(conn, studentId, ss);
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -178,7 +176,7 @@ public class UserDatabaseService {
         }
     }
 
-    private void upsertStats(Connection conn, String studentId, Sessionstats ss)
+    private void updateStats(Connection conn, String studentId, Sessionstats ss)
             throws SQLException {
         String sql = """
                 INSERT INTO stats

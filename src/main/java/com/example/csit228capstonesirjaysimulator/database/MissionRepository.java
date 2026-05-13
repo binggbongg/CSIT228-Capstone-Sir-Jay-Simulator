@@ -15,7 +15,8 @@ public class MissionRepository {
         return instance;
     }
 
-    public List<Mission<?>> loadGlobalMissions() {
+    //TODO implement dynamically added missions
+    public List<Mission<?>> loadAllMissions() {
         List<Mission<?>> list = new ArrayList<>();
         String sql = "SELECT id, description, type, target_value FROM missions ORDER BY id";
 
@@ -24,10 +25,10 @@ public class MissionRepository {
              ResultSet rs = st.executeQuery()) {
 
             while (rs.next()) {
-                int    id     = rs.getInt("id");
-                String desc   = rs.getString("description");
-                String type   = rs.getString("type");
-                int    target = rs.getInt("target_value");
+                int id = rs.getInt("id");
+                String desc = rs.getString("description");
+                String type = rs.getString("type");
+                int target = rs.getInt("target_value");
 
                 if ("BOOLEAN".equalsIgnoreCase(type)) {
                     list.add(new Mission<>(id, desc, Boolean.TRUE, Boolean.FALSE));
@@ -55,9 +56,7 @@ public class MissionRepository {
 
                 // Normalise generic value → int for DB storage
                 Object val = m.getCurrent();
-                int    dbVal = (val instanceof Boolean)
-                        ? ((Boolean) val ? 1 : 0)
-                        : (Integer) val;
+                int dbVal = (val instanceof Boolean) ? ((Boolean) val ? 1 : 0) : (Integer) val;
 
                 st.setInt(3, dbVal);
                 st.setBoolean(4, m.isCompleted());
@@ -75,18 +74,13 @@ public class MissionRepository {
 
 
         String sql = """
-                SELECT m.id, m.description, m.type, m.target_value,
-                       mp.current_value, mp.completed
-                FROM   missions m
+                SELECT m.id, m.description, m.type, m.target_value, mp.current_value, mp.completed
+                FROM missions m
                 LEFT JOIN mission_progress mp
-                       ON mp.mission_id  = m.id
-                      AND mp.student_id  = ?
-                      AND mp.session_date = (
+                       ON mp.mission_id  = m.id AND mp.student_id  = ? AND mp.session_date = (
                               SELECT MAX(mp2.session_date)
-                              FROM   mission_progress mp2
-                              WHERE  mp2.student_id = ?
-                                AND  mp2.mission_id = m.id
-                          )
+                              FROM mission_progress mp2
+                              WHERE mp2.student_id = ? AND mp2.mission_id = m.id)
                 ORDER BY m.id
                 """;
 
@@ -115,11 +109,11 @@ public class MissionRepository {
     }
 
     public record MissionProgressRow(
-            int     missionId,
-            String  description,
-            String  type,
-            int     targetValue,
-            int     currentValue,
+            int missionId,
+            String description,
+            String type,
+            int targetValue,
+            int currentValue,
             boolean completed
     ) {
         public String progressText() {

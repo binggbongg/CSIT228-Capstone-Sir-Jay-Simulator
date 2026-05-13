@@ -33,7 +33,6 @@ public class Sessionstats {
 
 
     public double getCatchAccuracy() {
-        return totalAttempts == 0 ? 0.0
-                : (double) totalCorrect / totalAttempts;
+        return totalAttempts == 0 ? 0.0 : (double) totalCorrect / totalAttempts;
     }
 }

@@ -85,7 +85,6 @@ public class DatabaseConnection {
         )
     """);
 
-        // 4. MISSION_PROGRESS (per-user, per-session log)
         st.executeUpdate("""
         CREATE TABLE IF NOT EXISTS mission_progress (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -99,7 +98,6 @@ public class DatabaseConnection {
         )
     """);
 
-        // 5. SESSIONS (one row per play session)
         st.executeUpdate("""
         CREATE TABLE IF NOT EXISTS sessions (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -117,6 +115,9 @@ public class DatabaseConnection {
     """);
     }
 
+
+    //hard coded missions pa
+    //TODO Implement dynamically added mission
 
     private static void seedMissions(Statement st) throws SQLException {
         String[] seeds = {
