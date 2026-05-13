@@ -23,7 +23,7 @@ public class IntroCutScene extends SubScene {
 
     private Runnable onFinished;
 
-    private ImageView background, ppt, sirJay;
+    private ImageView background, ppt, sirJay, skipButton;
 
     private StackPane sirBubble, treBubble, hertzBubble, coolAndNormalBubble;
 
@@ -31,6 +31,7 @@ public class IntroCutScene extends SubScene {
 
     private Image imgNormalSir, imgSirJudgy, imgSirTalking;
     private Image imgPptTitle, imgPptDiscussion, imgPptQuiz;
+    private Image imgSkipButton;
 
     private Rectangle topCurtain, bottomCurtain;
 
@@ -49,14 +50,20 @@ public class IntroCutScene extends SubScene {
         imgPptDiscussion = new Image("assets/textures/ppt_discussion.png");
         imgPptQuiz = new Image("assets/textures/ppt_quiz.png");
 
+        imgSkipButton = new Image("assets/textures/button-right.png");
+
         ppt = new ImageView(imgPptTitle);
         sirJay = new ImageView(imgNormalSir);
+        skipButton = new ImageView(imgSkipButton);
 
         ppt.setFitHeight(180);
         ppt.setFitWidth(323);
 
         sirJay.setFitHeight(380);
         sirJay.setFitWidth(250);
+
+        skipButton.setFitWidth(70);
+        skipButton.setPreserveRatio(true);
 
         sirText = new Text("How's your day everybody?");
         treText = new Text("Wait sa sir!");
@@ -88,13 +95,22 @@ public class IntroCutScene extends SubScene {
         coolAndNormalBubble.setTranslateX(50);
         coolAndNormalBubble.setTranslateY(575);
 
+        skipButton.setTranslateX(1150);
+        skipButton.setTranslateY(40);
+
         topCurtain = new Rectangle(1280, 360, Color.BLACK);
         bottomCurtain = new Rectangle(1280, 360, Color.BLACK);
 
         topCurtain.setTranslateY(0);
         bottomCurtain.setTranslateY(360);
 
-        getContentRoot().getChildren().addAll(background, ppt, sirJay,  sirBubble, treBubble, hertzBubble, coolAndNormalBubble, topCurtain, bottomCurtain);
+        getContentRoot().getChildren().addAll(background, ppt, sirJay,  sirBubble, treBubble, hertzBubble, coolAndNormalBubble, skipButton, topCurtain, bottomCurtain);
+
+        skipButton.setOnMouseClicked(e -> {
+            FXGL.getAudioPlayer().stopAllMusic();
+            FXGL.getAudioPlayer().stopAllSounds();
+            onFinished.run();
+        });
 
         this.getInput().addAction(new UserAction("Advance") {
             @Override
