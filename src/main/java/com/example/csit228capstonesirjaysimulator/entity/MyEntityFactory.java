@@ -16,7 +16,7 @@ import org.w3c.dom.Text;
 public class MyEntityFactory implements EntityFactory {
     @Spawns("student")
     public Entity newStudent(SpawnData data) {
-        StudentComponent student = new StudentComponent("stud5");
+        StudentComponent student = new StudentComponent("students/stud4");
 
         Entity e = baseStudent(data, student);
 

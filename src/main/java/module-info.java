@@ -13,7 +13,7 @@ module com.example.csit228capstonesirjaysimulator {
     opens assets.textures;
     opens assets.sounds;
     opens assets.music;
-
+    opens assets.textures.students;
     // Reflection access for FXGL
     // This allows FXGL to "see" your Factory and Components
     opens com.example.csit228capstonesirjaysimulator.entity to com.almasb.fxgl.core;
