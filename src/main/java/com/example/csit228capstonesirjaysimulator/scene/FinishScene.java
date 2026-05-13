@@ -50,6 +50,7 @@ public class FinishScene extends SubScene {
         // Pull down Background 3
         Image imgBg3 = new Image("assets/textures/game-over-bg-3.png", 1280, 0, true, true);
         ImageView bg3 = new ImageView(imgBg3);
+        bg3.setTranslateX(-300);
         bg3.setTranslateY(-imgBg3.getHeight());
 
         TranslateTransition pullDownBg3 = new TranslateTransition(Duration.seconds(1), bg3);
