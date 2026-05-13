@@ -205,6 +205,7 @@ public class ProfileSelectScene extends SubScene {
         btnOk.setOnAction(e -> {
             if (selectedProfile.checkPassword(pfPass.getText())) {
                 overlayPane.setVisible(false);
+                selectedProfile = UserDatabaseService.getInstance().loginUser(selectedProfile.getStudentId(), pfPass.getText());
                 startGame();
             } else {
                 err.setText("Incorrect password.");
@@ -236,7 +237,7 @@ public class ProfileSelectScene extends SubScene {
         dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         dTitle.setFill(Color.GOLD);
 
-        TextField tfId   = dialogField("Student ID");
+        TextField tfId   = dialogField("Professor ID");
         TextField tfName = dialogField("Username");
 
         PasswordField pfPass    = new PasswordField();
@@ -427,7 +428,7 @@ public class ProfileSelectScene extends SubScene {
     private void startGame() {
         if (selectedProfile == null) return;
         System.out.println("[ProfileSelect] Playing as: " + selectedProfile);
-        FXGL.getWorldProperties().setValue("activeProfile", selectedProfile);
+        UserDatabaseService.getInstance().setCurrentUser(selectedProfile);
         closeScene();
         if (onPlay != null) onPlay.run();
     }

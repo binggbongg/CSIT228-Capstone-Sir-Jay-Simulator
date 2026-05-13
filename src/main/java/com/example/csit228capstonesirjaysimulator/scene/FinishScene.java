@@ -103,7 +103,7 @@ public class FinishScene extends SubScene {
     private void persistSessionAsync() {
         UserProfile profile = null;
         try {
-            profile = (UserProfile) FXGL.getWorldProperties().getObject("activeProfile");
+            profile = UserDatabaseService.getInstance().getCurrentUser();
         } catch (Exception ignored) { }
 
         if (profile == null) {

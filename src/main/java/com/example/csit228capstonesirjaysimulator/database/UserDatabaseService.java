@@ -11,11 +11,23 @@ import java.util.List;
 public class UserDatabaseService {
 
     private static UserDatabaseService instance;
-    private UserDatabaseService() {}
+    private UserProfile currentUser;
+
+    private UserDatabaseService(UserProfile currentUser) {
+        this.currentUser = currentUser;
+    }
 
     public static synchronized UserDatabaseService getInstance() {
-        if (instance == null) instance = new UserDatabaseService();
+        if (instance == null) instance = new UserDatabaseService(null);
         return instance;
+    }
+
+    public UserProfile getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(UserProfile currentUser) {
+        this.currentUser = currentUser;
     }
 
     public boolean registerUser(String studentId, String username,
@@ -140,7 +152,7 @@ public class UserDatabaseService {
 
             try {
                 insertSession(conn, studentId, ss);
-                updateStats(conn, studentId, ss);
+                upsertStats(conn, studentId, ss);
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -176,7 +188,7 @@ public class UserDatabaseService {
         }
     }
 
-    private void updateStats(Connection conn, String studentId, Sessionstats ss)
+    private void upsertStats(Connection conn, String studentId, Sessionstats ss)
             throws SQLException {
         String sql = """
                 INSERT INTO stats

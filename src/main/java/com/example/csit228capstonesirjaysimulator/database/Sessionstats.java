@@ -28,10 +28,6 @@ public class Sessionstats {
     public int    getTotalCorrect(){ return totalCorrect;}
     public double getDurationSeconds(){ return durationSeconds;}
 
-
-
-
-
     public double getCatchAccuracy() {
         return totalAttempts == 0 ? 0.0 : (double) totalCorrect / totalAttempts;
     }

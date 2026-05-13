@@ -7,6 +7,7 @@ import com.example.csit228capstonesirjaysimulator.database.UserDatabaseService;
 import com.example.csit228capstonesirjaysimulator.entity.ScoreRecord;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
@@ -17,11 +18,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import java.util.List;
 
+
 public class LeaderboardScene extends SubScene {
     private VBox listContainer;
-    private javafx.scene.Node parentRoot;
+    private Node parentRoot;
 
-    public LeaderboardScene(javafx.scene.Node parentRoot) {
+    public LeaderboardScene(Node parentRoot) {
         this.parentRoot = parentRoot;
 
         Rectangle rect = new Rectangle(600, 650);
