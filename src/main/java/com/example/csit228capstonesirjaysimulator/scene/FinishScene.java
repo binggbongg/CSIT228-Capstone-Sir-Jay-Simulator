@@ -146,9 +146,9 @@ public class FinishScene extends SubScene {
 
 
         new Thread(() -> {
-            System.out.println("[FinishScene] Saving session for " + studentId + " …");
+            System.out.println("Saving session for " + studentId + " …");
             UserDatabaseService.getInstance().saveSession(studentId, ss, finalMissions);
-            System.out.println("[FinishScene] Session saved.");
+            System.out.println("Session saved.");
         }, "db-save-thread").start();
     }
 

@@ -167,6 +167,21 @@ public class UserDatabaseService {
         MissionRepository.getInstance().saveMissionProgress(studentId, missions);
     }
 
+    public boolean deleteUser(String studentId) {
+        String sql = "DELETE FROM users WHERE student_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+
+            st.setString(1, studentId);
+            int affected = st.executeUpdate();
+            return affected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     private void insertSession(Connection conn, String studentId, Sessionstats ss)
             throws SQLException {
