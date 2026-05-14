@@ -249,9 +249,12 @@ public class UserDatabaseService {
 
     public List<ScoreRecord> getLeaderboard() {
         List<ScoreRecord> list = new ArrayList<>();
-        String sql = "SELECT u.username, s.final_score "
-                + "FROM sessions s JOIN users u ON u.student_id = s.student_id "
-                + "ORDER BY s.final_score DESC LIMIT 10";
+        String sql = "SELECT u.username, MAX(s.final_score) AS high_score "
+                + "FROM sessions s "
+                + "JOIN users u ON u.student_id = s.student_id "
+                + "GROUP BY u.student_id "
+                + "ORDER BY high_score DESC "
+                + "LIMIT 10";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement st = conn.prepareStatement(sql);
@@ -260,7 +263,7 @@ public class UserDatabaseService {
             while (rs.next()) {
                 list.add(new ScoreRecord(
                         rs.getString("username"),
-                        rs.getInt("final_score")
+                        rs.getInt("high_score")
                 ));
             }
         } catch (SQLException e) {

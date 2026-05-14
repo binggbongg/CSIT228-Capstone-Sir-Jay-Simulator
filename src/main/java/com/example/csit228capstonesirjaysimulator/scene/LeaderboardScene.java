@@ -84,5 +84,11 @@ public class LeaderboardScene extends SubScene {
             listContainer.getChildren().add(row);
             rank++;
         }
+        while (rank <= 10){
+            LeaderboardRow row = new LeaderboardRow(rank, "", 0);
+            row.setAlignment(Pos.CENTER);
+            listContainer.getChildren().add(row);
+            rank++;
+        }
     }
 }

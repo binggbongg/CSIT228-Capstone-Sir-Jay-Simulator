@@ -110,6 +110,7 @@ public class FinishScene extends SubScene {
 
         javafx.scene.layout.HBox buttonsBox = new javafx.scene.layout.HBox(30, btnRetry, btnLeaderboard, btnMenu);
         buttonsBox.setAlignment(Pos.CENTER);
+        buttonsBox.setTranslateY(120);
 
         VBox vbox = new VBox(30, header, scoreTextTitle, scoreText, buttonsBox);
         vbox.setAlignment(Pos.CENTER);

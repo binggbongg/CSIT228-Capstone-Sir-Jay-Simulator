@@ -5,6 +5,7 @@ import com.almasb.fxgl.audio.Sound;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.scene.SubScene;
+import com.example.csit228capstonesirjaysimulator.database.UserDatabaseService;
 import javafx.animation.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,7 +20,8 @@ import javafx.util.Duration;
 
 public class IntroCutScene extends SubScene {
     private int currentSceneStep = 0;
-    private boolean isAnimating = false;
+    private boolean isAnimating = false, isExiting = false;
+    private String professorCourse = UserDatabaseService.getInstance().getCurrentUser().getCourse();
 
     private Runnable onFinished;
 
@@ -27,17 +29,72 @@ public class IntroCutScene extends SubScene {
 
     private StackPane sirBubble, treBubble, hertzBubble, coolAndNormalBubble;
 
-    private Text sirText, treText, hertzText, coolAndNormalText;
+    private Text sirText, treText, hertzText, coolAndNormalText, clickEnterText;
 
     private Image imgNormalSir, imgSirJudgy, imgSirTalking;
-    private Image imgPptTitle, imgPptDiscussion, imgPptQuiz;
+    private Image imgPptQuiz;
+    private Image daaTitle, daaSlide1, daaSlide2, daaSlide3;
+    private Image oopTitle, oopSlide1, oopSlide2, oopSlide3;
+
+    private Timeline pptTimeline;
     private Image imgSkipButton;
 
     private Rectangle topCurtain, bottomCurtain;
 
+    private Timeline mouthFlicker;
+    private PauseTransition lectureTimer;
+    private TranslateTransition walk, bobbing;
+    private PauseTransition delay, delay2;
+
     public IntroCutScene(Runnable onFinished){
         this.onFinished = onFinished;
 
+        initUI();
+
+        skipButton.setOnMouseClicked(e -> {cleanUpAudio();});
+
+        this.getInput().addAction(new UserAction("Advance") {
+            @Override
+            protected void onActionBegin() {
+                if (!isAnimating) {
+                    advanceScene();
+                }
+            }
+        }, KeyCode.ENTER);
+
+        playMusic("classroom.wav");
+        advanceScene();
+    }
+
+    private void playMusic(String file) {
+        Music music = FXGL.getAssetLoader().loadMusic(file);
+        FXGL.getAudioPlayer().playMusic(music);
+    }
+
+    private void playSound(String file){
+        Sound sound = FXGL.getAssetLoader().loadSound(file);
+        FXGL.getAudioPlayer().playSound(sound);
+    }
+
+    private void cleanUpAudio(){
+        isExiting = true;
+        isAnimating = false;
+
+        FXGL.getGameTimer().clear();
+
+        if (mouthFlicker != null) mouthFlicker.stop();
+        if (lectureTimer != null) lectureTimer.stop();
+        if (walk != null) walk.stop();
+        if (bobbing != null) bobbing.stop();
+        if (pptTimeline != null) pptTimeline.stop();
+
+        FXGL.getAudioPlayer().stopAllMusic();
+        FXGL.getAudioPlayer().stopAllSounds();
+
+        onFinished.run();
+    }
+
+    private void initUI(){
         background = new ImageView(new Image("assets/textures/studentView.png"));
         background.setFitHeight(720);
         background.setFitWidth(1280);
@@ -46,13 +103,21 @@ public class IntroCutScene extends SubScene {
         imgSirJudgy = new Image("assets/textures/sir_serato1.png");
         imgSirTalking = new Image("assets/textures/sir_serato_talking.png");
 
-        imgPptTitle = new Image("assets/textures/ppt_title.png");
-        imgPptDiscussion = new Image("assets/textures/ppt_discussion.png");
         imgPptQuiz = new Image("assets/textures/ppt_quiz.png");
+
+        daaTitle = new Image("assets/textures/img_daa_title.png");
+        daaSlide1 = new Image("assets/textures/img_daa_ppt1.png");
+        daaSlide2 = new Image("assets/textures/img_daa_ppt2.png");
+        daaSlide3 = new Image("assets/textures/img_daa_ppt3.png");
+
+        oopTitle = new Image("assets/textures/img_oop_title.png");
+        oopSlide1 = new Image("assets/textures/img_oop_ppt1.png");
+        oopSlide2 = new Image("assets/textures/img_oop_ppt2.png");
+        oopSlide3 = new Image("assets/textures/img_oop_ppt3.png");
 
         imgSkipButton = new Image("assets/textures/button-right.png");
 
-        ppt = new ImageView(imgPptTitle);
+        ppt = new ImageView(daaTitle);
         sirJay = new ImageView(imgNormalSir);
         skipButton = new ImageView(imgSkipButton);
 
@@ -69,11 +134,21 @@ public class IntroCutScene extends SubScene {
         treText = new Text("Wait sa sir!");
         hertzText = new Text("One-fourth sir?");
         coolAndNormalText = new Text("Cool and Normal!");
+        coolAndNormalText.setFont(Font.font("Arial", 36));
 
-        sirBubble = makeSpeechBubble(new Rectangle(200, 50, Color.WHITE), sirText);
-        treBubble = makeSpeechBubble(new Rectangle(80, 50, Color.WHITE), treText);
-        hertzBubble = makeSpeechBubble(new Rectangle(120, 50, Color.WHITE), hertzText);
-        coolAndNormalBubble = makeSpeechBubble(new Rectangle(1200, 100, Color.WHITE), coolAndNormalText);
+        clickEnterText = new Text("Click Enter to proceed");
+        clickEnterText.setFont(Font.loadFont(
+                getClass().getResourceAsStream("/fonts/Jellee-Roman.otf"),
+                20));
+        clickEnterText.setFill(Color.YELLOW);
+        clickEnterText.setVisible(false);
+        clickEnterText.setTranslateX(975);
+        clickEnterText.setTranslateY(650);
+
+        sirBubble = makeSpeechBubble(new Rectangle(250, 50, Color.WHITE), sirText, 16);
+        treBubble = makeSpeechBubble(new Rectangle(100, 50, Color.WHITE), treText, 16);
+        hertzBubble = makeSpeechBubble(new Rectangle(140, 50, Color.WHITE), hertzText, 16);
+        coolAndNormalBubble = makeSpeechBubble(new Rectangle(1200, 100, Color.WHITE), coolAndNormalText, 36);
 
         ppt.setTranslateX(470);
         ppt.setTranslateY(250);
@@ -104,27 +179,7 @@ public class IntroCutScene extends SubScene {
         topCurtain.setTranslateY(0);
         bottomCurtain.setTranslateY(360);
 
-        getContentRoot().getChildren().addAll(background, ppt, sirJay,  sirBubble, treBubble, hertzBubble, coolAndNormalBubble, skipButton, topCurtain, bottomCurtain);
-
-        skipButton.setOnMouseClicked(e -> {
-            FXGL.getAudioPlayer().stopAllMusic();
-            FXGL.getAudioPlayer().stopAllSounds();
-            onFinished.run();
-        });
-
-        this.getInput().addAction(new UserAction("Advance") {
-            @Override
-            protected void onActionBegin() {
-                if (!isAnimating) {
-                    advanceScene();
-                }
-            }
-        }, KeyCode.ENTER);
-
-        Music bgMusic = FXGL.getAssetLoader().loadMusic("classroom.wav");
-        FXGL.getAudioPlayer().playMusic(bgMusic);
-        FXGL.getSettings().setGlobalMusicVolume(0.2);
-        advanceScene();
+        getContentRoot().getChildren().addAll(background, ppt, sirJay,  sirBubble, treBubble, hertzBubble, coolAndNormalBubble, skipButton, clickEnterText, topCurtain, bottomCurtain);
     }
 
     @Override
@@ -133,13 +188,13 @@ public class IntroCutScene extends SubScene {
         this.getContentRoot().requestFocus();
     }
 
-    StackPane makeSpeechBubble(Rectangle shape, Text label){
+    StackPane makeSpeechBubble(Rectangle shape, Text label, int fontSize){
         shape.setArcWidth(20);
         shape.setArcHeight(20);
 
         Font customFont = Font.loadFont(
                 getClass().getResourceAsStream("/fonts/Jellee-Roman.otf"),
-                14
+                fontSize
         );
 
         label.setFont(customFont);
@@ -150,7 +205,16 @@ public class IntroCutScene extends SubScene {
         return stack;
     }
 
+    private void applyInputDelay(double seconds) {
+        isAnimating = true;
+        PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
+        delay.setOnFinished(e -> isAnimating = false);
+        delay.play();
+    }
+
     private void advanceScene(){
+        if(isExiting) return;
+
         switch (currentSceneStep){
             case 0:
                 openCurtains();
@@ -160,21 +224,19 @@ public class IntroCutScene extends SubScene {
 
             case 1:
                 sirBubble.setVisible(true);
-
-                Sound greeting = FXGL.getAssetLoader().loadSound("howsurdayeverybody2.wav");
-                FXGL.getAudioPlayer().playSound(greeting);
-
+                clickEnterText.setVisible(true);
+                playSound("howsurdayeverybody2.wav");
                 currentSceneStep++;
+                applyInputDelay(0.5);
                 break;
 
             case 2:
                 sirBubble.setVisible(false);
                 coolAndNormalBubble.setVisible(true);
-
-                Sound response = FXGL.getAssetLoader().loadSound("coolandnormal.wav");
-                FXGL.getAudioPlayer().playSound(response);
-
+                clickEnterText.setVisible(false);
+                playSound("coolandnormal.wav");
                 currentSceneStep++;
+                applyInputDelay(0.5);
                 break;
 
             case 3:
@@ -185,41 +247,53 @@ public class IntroCutScene extends SubScene {
                 Rectangle goodRect = (Rectangle) sirBubble.getChildren().getFirst();
                 goodRect.setWidth(100);
 
-                Sound good = FXGL.getAssetLoader().loadSound("good2.wav");
-                FXGL.getAudioPlayer().playSound(good);
-
+                playSound("good2.wav");
                 currentSceneStep++;
+                applyInputDelay(0.5);
                 break;
 
             case 4:
-                sirText.setText("Okay. Our discussion for today: Trees!");
+                Rectangle rect = (Rectangle) sirBubble.getChildren().getFirst();
+                if(professorCourse.equals("CS244")){
+                    sirText.setText("Okay. Our discussion for today: Trees!");
+                    rect.setWidth(350);
+                } else {
+                    sirText.setText("Okay. Our discussion for today: Exceptions and Assertions!");
+                    rect.setWidth(475);
+                }
                 sirBubble.setVisible(true);
 
-                Rectangle rect = (Rectangle) sirBubble.getChildren().getFirst();
-                rect.setWidth(350);
-
-                Sound trees = FXGL.getAssetLoader().loadSound("trees.wav");
-                FXGL.getAudioPlayer().playSound(trees);
+                if(professorCourse.equals("CS244")){
+                    ppt.setImage(daaTitle);
+                    playSound("daa_intro.wav");
+                } else {
+                    ppt.setImage(oopTitle);
+                    playSound("oop_intro.wav");
+                }
 
                 ppt.setVisible(true);
                 currentSceneStep++;
+                applyInputDelay(0.5);
                 break;
 
             case 5:
                 sirBubble.setVisible(false);
-                startLecture();
+                if(professorCourse.equals("CS244")){
+                    startDaaLecture();
+                } else {
+                    startOopLecture();
+                }
                 break;
 
             case 6:
                 ppt.setImage(imgPptQuiz);
                 sirText.setText("Quiz! Get one-fourth sheet of paper.");
 
-                Sound getQuiz = FXGL.getAssetLoader().loadSound("quiz.wav");
-                FXGL.getAudioPlayer().playSound(getQuiz);
+                playSound("quiz.wav");
 
                 sirBubble.setVisible(true);
                 Rectangle rect2 = (Rectangle) sirBubble.getChildren().getFirst();
-                rect2.setWidth(500);
+                rect2.setWidth(400);
                 currentSceneStep++;
                 break;
 
@@ -229,9 +303,7 @@ public class IntroCutScene extends SubScene {
 
                 sirJay.setImage(imgSirJudgy);
                 sirJay.setScaleX(-1);
-
-                Sound wait = FXGL.getAssetLoader().loadSound("waitsasir.wav");
-                FXGL.getAudioPlayer().playSound(wait);
+                playSound("waitsasir.wav");
 
                 currentSceneStep++;
                 break;
@@ -241,17 +313,14 @@ public class IntroCutScene extends SubScene {
                 hertzBubble.setVisible(true);
 
                 sirJay.setScaleX(1);
-
-                Sound question = FXGL.getAssetLoader().loadSound("onefourth.wav");
-                FXGL.getAudioPlayer().playSound(question);
+                playSound("onefourth.wav");
 
                 currentSceneStep++;
                 break;
 
             case 9:
                 hertzBubble.setVisible(false);
-                FXGL.getAudioPlayer().stopAllMusic();
-                onFinished.run();
+                cleanUpAudio();
                 break;
         }
     }
@@ -271,17 +340,55 @@ public class IntroCutScene extends SubScene {
         parallel.setOnFinished(e -> {
             getContentRoot().getChildren().removeAll(bottomCurtain, topCurtain);
 
-            isAnimating = false;
         });
 
         parallel.play();
     }
 
-    private void startLecture() {
+    private void startOopLecture() {
         isAnimating = true;
-        ppt.setImage(imgPptDiscussion);
 
-        Timeline mouthFlicker = new Timeline(
+        mouthFlicker = new Timeline(
+                new KeyFrame(Duration.seconds(0.10), e -> {
+                    if (sirJay.getImage() == imgNormalSir) {
+                        sirJay.setImage(imgSirTalking);
+                        sirJay.setFitHeight(380);
+                        sirJay.setFitWidth(250);
+                    } else {
+                        sirJay.setImage(imgNormalSir);
+                        sirJay.setFitHeight(380);
+                        sirJay.setFitWidth(250);
+                    }
+                })
+        );
+        mouthFlicker.setCycleCount(Animation.INDEFINITE);
+        mouthFlicker.play();
+        playMusic("oop_discussion.wav");
+
+        pptTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> ppt.setImage(oopSlide1)),
+
+                new KeyFrame(Duration.seconds(4.0), e -> ppt.setImage(oopSlide2)),
+
+                new KeyFrame(Duration.seconds(8.5), e -> ppt.setImage(oopSlide3))
+        );
+        pptTimeline.play();
+
+        lectureTimer = new PauseTransition(Duration.seconds(13.0));
+        lectureTimer.setOnFinished(e -> {
+            mouthFlicker.stop();
+            sirJay.setImage(imgNormalSir);
+            isAnimating = false;
+            currentSceneStep++;
+        });
+
+        lectureTimer.play();
+    }
+
+    private void startDaaLecture(){
+        isAnimating = true;
+
+        mouthFlicker = new Timeline(
                 new KeyFrame(Duration.seconds(0.15), e -> {
                     if (sirJay.getImage() == imgNormalSir) {
                         sirJay.setImage(imgSirTalking);
@@ -296,10 +403,18 @@ public class IntroCutScene extends SubScene {
         );
         mouthFlicker.setCycleCount(Animation.INDEFINITE);
         mouthFlicker.play();
-        Music discussion = FXGL.getAssetLoader().loadMusic("mii_discussion_boosted.mp3");
-        FXGL.getAudioPlayer().playMusic(discussion);
+        playMusic("daa_discussion.mp3");
 
-        PauseTransition lectureTimer = new PauseTransition(Duration.seconds(13.0));
+        pptTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> ppt.setImage(daaSlide1)),
+
+                new KeyFrame(Duration.seconds(4.0), e -> ppt.setImage(daaSlide2)),
+
+                new KeyFrame(Duration.seconds(8.5), e -> ppt.setImage(daaSlide3))
+        );
+        pptTimeline.play();
+
+        lectureTimer = new PauseTransition(Duration.seconds(13.0));
         lectureTimer.setOnFinished(e -> {
             mouthFlicker.stop();
             sirJay.setImage(imgNormalSir);
@@ -310,26 +425,27 @@ public class IntroCutScene extends SubScene {
         lectureTimer.play();
     }
 
+
     private void startSirWalk(){
         isAnimating = true;
 
         sirJay.setTranslateX(1100);
         sirJay.setTranslateY(340);
 
-        TranslateTransition bobbing = new TranslateTransition(Duration.seconds(0.2), sirJay);
+        bobbing = new TranslateTransition(Duration.seconds(0.2), sirJay);
         bobbing.setFromY(340);
         bobbing.setToY(330);
         bobbing.setCycleCount(Animation.INDEFINITE);
         bobbing.setAutoReverse(true);
         bobbing.play();
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
+        delay = new PauseTransition(Duration.seconds(1.5));
         delay.setOnFinished(e -> {
             sirJay.setVisible(true);
         });
         delay.play();
 
-        TranslateTransition walk = new TranslateTransition(Duration.seconds(3.5), sirJay);
+        walk = new TranslateTransition(Duration.seconds(3.5), sirJay);
         walk.setFromX(1100);
         walk.setToX(750);
         walk.setInterpolator(Interpolator.EASE_OUT);
@@ -341,11 +457,13 @@ public class IntroCutScene extends SubScene {
             advanceScene();
         });
 
-        PauseTransition delay2 = new PauseTransition(Duration.seconds(2.5));
+        delay2 = new PauseTransition(Duration.seconds(2.5));
         delay2.setOnFinished(e -> {
             bobbing.play();
             walk.play();
         });
         delay2.play();
     }
+
+
 }
