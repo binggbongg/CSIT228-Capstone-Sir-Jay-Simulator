@@ -11,12 +11,19 @@ import com.almasb.fxgl.texture.Texture;
 import com.example.csit228capstonesirjaysimulator.component.student.DistractIdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
 import com.example.csit228capstonesirjaysimulator.component.student.IdleState;
-import org.w3c.dom.Text;
+
+import java.util.*;
 
 public class MyEntityFactory implements EntityFactory {
+    private List<String> listOfPrefixes = List.of("stud1", "stud2", "stud3", "stud4");
+
+    private String getRandomPrefix(){
+        return listOfPrefixes.get(FXGL.random(0, listOfPrefixes.size()-1));
+    }
+
     @Spawns("student")
     public Entity newStudent(SpawnData data) {
-        StudentComponent student = new StudentComponent("students/stud4");
+        StudentComponent student = new StudentComponent("students/"+getRandomPrefix());
 
         Entity e = baseStudent(data, student);
 
@@ -26,7 +33,7 @@ public class MyEntityFactory implements EntityFactory {
 
     @Spawns("distractor")
     public Entity newDistractor(SpawnData data) {
-        StudentComponent student = new StudentComponent("trey");
+        StudentComponent student = new StudentComponent("students/trey");
 
         Entity e = baseStudent(data, student);
 
@@ -89,3 +96,4 @@ public class MyEntityFactory implements EntityFactory {
                 .build();
     }
 }
+
