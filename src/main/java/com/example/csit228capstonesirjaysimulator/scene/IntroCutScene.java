@@ -115,7 +115,7 @@ public class IntroCutScene extends SubScene {
         oopSlide2 = new Image("assets/textures/img_oop_ppt2.png");
         oopSlide3 = new Image("assets/textures/img_oop_ppt3.png");
 
-        imgSkipButton = new Image("assets/textures/button-right.png");
+        imgSkipButton = new Image("assets/textures/button-skip.png");
 
         ppt = new ImageView(daaTitle);
         sirJay = new ImageView(imgNormalSir);
@@ -127,7 +127,7 @@ public class IntroCutScene extends SubScene {
         sirJay.setFitHeight(380);
         sirJay.setFitWidth(250);
 
-        skipButton.setFitWidth(70);
+        skipButton.setFitWidth(130);
         skipButton.setPreserveRatio(true);
 
         sirText = new Text("How's your day everybody?");
@@ -170,7 +170,7 @@ public class IntroCutScene extends SubScene {
         coolAndNormalBubble.setTranslateX(50);
         coolAndNormalBubble.setTranslateY(575);
 
-        skipButton.setTranslateX(1150);
+        skipButton.setTranslateX(1100);
         skipButton.setTranslateY(40);
 
         topCurtain = new Rectangle(1280, 360, Color.BLACK);
