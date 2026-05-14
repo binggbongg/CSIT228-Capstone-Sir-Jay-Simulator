@@ -84,15 +84,34 @@ public class FinishScene extends SubScene {
         scoreText.setFill(Color.WHITE);
         scoreText.setFont(jelleeScore);
 
-        // Custom Button Texture
-        Image imgBtn = new Image("assets/textures/button-back-to-menu.png");
-        ImageView btnMenu = new ImageView(imgBtn);
-        btnMenu.setFitWidth(300);
+        // Retry Button
+        Image imgBtnRetry = new Image("assets/textures/button-retry.png");
+        ImageView btnRetry = new ImageView(imgBtnRetry);
+        btnRetry.setFitWidth(200);
+        btnRetry.setPreserveRatio(true);
+        btnRetry.setCursor(Cursor.HAND);
+        btnRetry.setOnMouseClicked(e -> FXGL.getGameController().startNewGame());
+
+        // Leaderboard Button
+        Image imgBtnLeaderboard = new Image("assets/textures/button-leaderboard.png");
+        ImageView btnLeaderboard = new ImageView(imgBtnLeaderboard);
+        btnLeaderboard.setFitWidth(200);
+        btnLeaderboard.setPreserveRatio(true);
+        btnLeaderboard.setCursor(Cursor.HAND);
+        btnLeaderboard.setOnMouseClicked(e -> FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot())));
+
+        // Back to Menu Button
+        Image imgBtnMenu = new Image("assets/textures/button-back-to-menu.png");
+        ImageView btnMenu = new ImageView(imgBtnMenu);
+        btnMenu.setFitWidth(200);
         btnMenu.setPreserveRatio(true);
         btnMenu.setCursor(Cursor.HAND);
         btnMenu.setOnMouseClicked(e -> FXGL.getGameController().gotoMainMenu());
 
-        VBox vbox = new VBox(30, header, scoreTextTitle, scoreText, btnMenu);
+        javafx.scene.layout.HBox buttonsBox = new javafx.scene.layout.HBox(30, btnRetry, btnLeaderboard, btnMenu);
+        buttonsBox.setAlignment(Pos.CENTER);
+
+        VBox vbox = new VBox(30, header, scoreTextTitle, scoreText, buttonsBox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPrefSize(1280, 720);
 
