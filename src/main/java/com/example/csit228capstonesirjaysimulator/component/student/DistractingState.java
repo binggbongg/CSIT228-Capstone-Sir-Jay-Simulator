@@ -33,13 +33,13 @@ public class DistractingState extends StudentState {
         if (clicksRequired <= 0) {
             System.out.println("Student satisfied. Room unlocked.");
             FXGL.getWorldProperties().setValue("isLocked", false); //
-            playSound("correct.mp3"); //
+            FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("correct.mp3")); //
 
             FXGL.getAudioPlayer().stopAllMusic();
             // Return to the distractor's specific idle state
             getStudent().changeState(new DistractIdleState(getStudent()));
         } else {
-            playSound("tap.mp3"); // Short feedback sound
+            FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("tap.mp3")); // Short feedback sound
         }
     }
 }

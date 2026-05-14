@@ -76,6 +76,12 @@ public class GameLevelApp extends GameApplication {
         updateRoomView(FXGL.getb("isRight"));
     }
 
+    protected void initAssets() {
+        FXGL.getAssetLoader().loadSound("correct.mp3");
+        FXGL.getAssetLoader().loadSound("wrong.mp3");
+        FXGL.getAssetLoader().loadSound("tap.mp3");
+    }
+
     private void setupButtons(){
 
         Image pauseBtnImg = new Image("assets/textures/button-pause.png");
@@ -224,6 +230,8 @@ public class GameLevelApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        initAssets(); // Preload assets to avoid latency during gameplay
+
         FXGL.getGameWorld().addEntityFactory(factory);
 
         spawnChairs();

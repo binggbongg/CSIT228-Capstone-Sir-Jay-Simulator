@@ -30,8 +30,9 @@ public class DistractIdleState extends StudentState {
 
     @Override
     void onAction() {
-        System.out.println("Distractor just idle..");
-        super.playSound("wrong.mp3");
+        System.out.println("Wait im doing nothing im just idle-distractor!");
+        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("wrong.mp3"));
+
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();
     }

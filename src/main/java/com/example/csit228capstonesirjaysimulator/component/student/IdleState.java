@@ -30,7 +30,7 @@ public class IdleState extends StudentState {
     @Override
     public void onAction() {
         System.out.println("student not cheating! state is idle");
-        super.playSound("wrong.mp3");
+        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("wrong.mp3"));
 //        scoreComponent.wrongGuess();
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();

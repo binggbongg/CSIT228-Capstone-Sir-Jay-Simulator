@@ -27,7 +27,7 @@ public abstract class StudentState {
     abstract void onUpdate(double tpf);
     abstract void onAction();
 
-    public void playSound(String name){
-        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound(name));
-    }
+//    public void playSound(String name){
+//        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound(name));
+//    }
 }
