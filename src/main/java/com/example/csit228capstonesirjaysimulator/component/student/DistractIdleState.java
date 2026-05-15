@@ -9,7 +9,7 @@ import javafx.util.Duration;
 public class DistractIdleState extends StudentState {
     public DistractIdleState(StudentComponent student){
         super(student);
-        this.duration = Duration.seconds(FXGLMath.random(5, 15));
+        this.duration = Duration.seconds(FXGLMath.random(15, 30));
         student.setHue(0);
         student.playIdleAnimation();
     }

@@ -65,33 +65,33 @@ public class StudentComponent extends Component {
 
     public void playIdleAnimation() {
         texture.loopNoOverride(animIdle);
-//        texture.setTranslateX(0);
     }
 
     public void playSuspiciousAnimation() {
         texture.loopNoOverride(animSus);
-//        texture.setTranslateX(-0.5);
-//        texture.setTranslateY(0);
     }
 
     public void playCheatingAnimation() {
         texture.loopNoOverride(animCheat);
-//        texture.setTranslateX(-3.5);
-//        texture.setTranslateY(0);
     }
 
     public void playDistractAnimation() {
         texture.loopNoOverride(animDistract);
-//        texture.setTranslateX(-4.5);
-//        texture.setTranslateY(0);
     }
 
-
-        public void setHue(double value){
+    public void setHue(double value){
         var children = entity.getViewComponent().getChildren();
         if(children.isEmpty()) return;
 
         currentColor.setHue(value);
         children.getFirst().setEffect(value == 0 ? null : currentColor);
+    }
+
+    public void setBrightness(double value){
+        currentColor.setBrightness(value);
+
+        if (texture != null) {
+            texture.setEffect(currentColor);
+        }
     }
 }

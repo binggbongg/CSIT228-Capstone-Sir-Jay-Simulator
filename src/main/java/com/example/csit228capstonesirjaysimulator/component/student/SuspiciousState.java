@@ -9,7 +9,7 @@ public class SuspiciousState extends StudentState {
 
     public SuspiciousState(StudentComponent student){
         super(student);
-        this.duration = Duration.seconds(FXGLMath.random(3, 7));
+        this.duration = Duration.seconds(FXGLMath.random(5, 10));
         //student.setHue(0.2); // rainbowdash turn purple ish idk
         student.playSuspiciousAnimation();
     }
