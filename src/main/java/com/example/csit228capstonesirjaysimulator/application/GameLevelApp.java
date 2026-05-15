@@ -15,7 +15,6 @@ import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
 import com.example.csit228capstonesirjaysimulator.scene.PauseScene;
 import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.geometry.Point2D;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;

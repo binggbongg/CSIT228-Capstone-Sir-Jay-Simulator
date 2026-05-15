@@ -1,7 +1,6 @@
 package com.example.csit228capstonesirjaysimulator.component.student;
 
 import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.dsl.FXGL;
 import com.example.csit228capstonesirjaysimulator.component.score.UpdateScoreRunnable;
 import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.util.Duration;

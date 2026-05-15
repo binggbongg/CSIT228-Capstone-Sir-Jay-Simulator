@@ -49,7 +49,12 @@ public class AudioManager {
     }
 
     public void playMusic(String name){
-        FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic(name));
+       Music m = musicMap.get(name);
+       if(m != null){
+           FXGL.getAudioPlayer().loopMusic(m);
+       } else {
+           FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic(name));
+       }
     }
 
     public void stopAllSounds(){
