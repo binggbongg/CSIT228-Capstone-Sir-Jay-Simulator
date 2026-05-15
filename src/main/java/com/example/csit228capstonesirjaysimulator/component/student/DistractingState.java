@@ -2,18 +2,18 @@ package com.example.csit228capstonesirjaysimulator.component.student;
 
 import com.almasb.fxgl.audio.Music;
 import com.almasb.fxgl.dsl.FXGL;
+import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 
 public class DistractingState extends StudentState {
     private int clicksRequired = 5;
 
     public DistractingState(StudentComponent student){
         super(student);
-//        student.setHue(0.5);
+        student.setHue(0.2);
 
         student.playDistractAnimation();
-        // sound indicator for distractor (for now)
-        Music s = FXGL.getAssetLoader().loadMusic("distractor_sfx.wav");
-        FXGL.getAudioPlayer().loopMusic(s);
+//        Music s = FXGL.getAssetLoader().loadMusic("distractor_sfx.wav");
+        AudioManager.getInstance().playMusic("distractor_sfx.wav");
 
         FXGL.getWorldProperties().setValue("isLocked", true);
     }
@@ -32,14 +32,15 @@ public class DistractingState extends StudentState {
 
         if (clicksRequired <= 0) {
             System.out.println("Student satisfied. Room unlocked.");
-            FXGL.getWorldProperties().setValue("isLocked", false); //
-            FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("correct.mp3")); //
+            FXGL.getWorldProperties().setValue("isLocked", false);
+//            FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("correct.mp3"));
+            AudioManager.getInstance().playSound("anywho1.wav");
 
             FXGL.getAudioPlayer().stopAllMusic();
             // Return to the distractor's specific idle state
             getStudent().changeState(new DistractIdleState(getStudent()));
         } else {
-            FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("tap.mp3")); // Short feedback sound
+            AudioManager.getInstance().playSound("tap.mp3");
         }
     }
 }

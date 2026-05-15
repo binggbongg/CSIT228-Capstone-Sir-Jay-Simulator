@@ -3,6 +3,7 @@ package com.example.csit228capstonesirjaysimulator.component.student;
 import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
 import com.example.csit228capstonesirjaysimulator.component.score.UpdateScoreRunnable;
+import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.util.Duration;
 
 public class SuspiciousState extends StudentState {
@@ -24,8 +25,9 @@ public class SuspiciousState extends StudentState {
     @Override
     public void onAction() {
         System.out.println("student not cheating! state is suspicious");
-        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("wrong.mp3"));
+//        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("wrong.mp3"));
 //        scoreComponent.wrongGuess();
+        AudioManager.getInstance().playSound("mahbadmahbad2.wav");
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();
 

@@ -13,6 +13,7 @@ import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
 import com.example.csit228capstonesirjaysimulator.scene.PauseScene;
+import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -75,12 +76,6 @@ public class GameLevelApp extends GameApplication {
         showScoreText();
         setupButtons();
         updateRoomView(FXGL.getb("isRight"));
-    }
-
-    protected void initAssets() {
-        FXGL.getAssetLoader().loadSound("correct.mp3");
-        FXGL.getAssetLoader().loadSound("wrong.mp3");
-        FXGL.getAssetLoader().loadSound("tap.mp3");
     }
 
     private void setupButtons(){
@@ -231,8 +226,8 @@ public class GameLevelApp extends GameApplication {
 
     @Override
     protected void initGame() {
-        initAssets(); // Preload assets to avoid latency during gameplay
-
+//        initAssets(); // Preload assets to avoid latency during gameplay
+        AudioManager.getInstance();
         FXGL.getGameWorld().addEntityFactory(factory);
 
         spawnChairs();
@@ -263,6 +258,9 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void showGameOver(){
+        AudioManager.getInstance().stopAllSounds();
+        AudioManager.getInstance().stopMusic();
+
         long now      = Instant.now().getEpochSecond();
         double secs   = now - sessionStart;
         FXGL.getWorldProperties().setValue("sessionDuration", secs);
