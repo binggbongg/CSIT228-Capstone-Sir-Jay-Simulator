@@ -131,7 +131,7 @@ public class FinishScene extends SubScene {
             return;
         }
 
-        final String studentId = profile.getStudentId();
+        final String teacherId = profile.getTeacherId();
 
 
         Sessionstats ss = buildSessionStats();
@@ -146,8 +146,8 @@ public class FinishScene extends SubScene {
 
 
         new Thread(() -> {
-            System.out.println("Saving session for " + studentId + " …");
-            UserDatabaseService.getInstance().saveSession(studentId, ss, finalMissions);
+            System.out.println("Saving session for " + teacherId + " …");
+            UserDatabaseService.getInstance().saveSession(teacherId, ss, finalMissions);
             System.out.println("Session saved.");
         }, "db-save-thread").start();
     }

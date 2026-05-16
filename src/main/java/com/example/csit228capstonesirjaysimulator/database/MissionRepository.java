@@ -15,7 +15,6 @@ public class MissionRepository {
         return instance;
     }
 
-    //TODO implement dynamically added missions
     public List<Mission<?>> loadAllMissions() {
         List<Mission<?>> list = new ArrayList<>();
         String sql = "SELECT id, description, type, target_value FROM missions ORDER BY id";
@@ -25,10 +24,10 @@ public class MissionRepository {
              ResultSet rs = st.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String desc = rs.getString("description");
-                String type = rs.getString("type");
-                int target = rs.getInt("target_value");
+                int    id     = rs.getInt("id");
+                String desc   = rs.getString("description");
+                String type   = rs.getString("type");
+                int    target = rs.getInt("target_value");
 
                 if ("BOOLEAN".equalsIgnoreCase(type)) {
                     list.add(new Mission<>(id, desc, Boolean.TRUE, Boolean.FALSE));
@@ -42,9 +41,9 @@ public class MissionRepository {
         return list;
     }
 
-    public void saveMissionProgress(String studentId, List<Mission<?>> missions) {
+    public void saveMissionProgress(String teacherId, List<Mission<?>> missions) {
         String sql = "INSERT INTO mission_progress "
-                + "(student_id, mission_id, current_value, completed) "
+                + "(teacher_id, mission_id, current_value, completed) "
                 + "VALUES (?, ?, ?, ?) "
                 + "ON DUPLICATE KEY UPDATE "
                 + "current_value = VALUES(current_value), "
@@ -55,12 +54,11 @@ public class MissionRepository {
              PreparedStatement st = conn.prepareStatement(sql)) {
 
             for (Mission<?> m : missions) {
-                st.setString(1, studentId);
+                st.setString(1, teacherId);
                 st.setInt(2, m.getMissionId());
 
-                // Normalise generic value → int for DB storage
-                Object val = m.getCurrent();
-                int dbVal = (val instanceof Boolean) ? ((Boolean) val ? 1 : 0) : (Integer) val;
+                Object val   = m.getCurrent();
+                int    dbVal = (val instanceof Boolean) ? ((Boolean) val ? 1 : 0) : (Integer) val;
 
                 st.setInt(3, dbVal);
                 st.setBoolean(4, m.isCompleted());
@@ -73,26 +71,25 @@ public class MissionRepository {
         }
     }
 
-    public List<MissionProgressRow> getLatestSessionProgress(String studentId) {
+    public List<MissionProgressRow> getLatestSessionProgress(String teacherId) {
         List<MissionProgressRow> rows = new ArrayList<>();
-
 
         String sql = """
                 SELECT m.id, m.description, m.type, m.target_value, mp.current_value, mp.completed
                 FROM missions m
                 LEFT JOIN mission_progress mp
-                       ON mp.mission_id  = m.id AND mp.student_id  = ? AND mp.session_date = (
+                       ON mp.mission_id = m.id AND mp.teacher_id = ? AND mp.session_date = (
                               SELECT MAX(mp2.session_date)
                               FROM mission_progress mp2
-                              WHERE mp2.student_id = ? AND mp2.mission_id = m.id)
+                              WHERE mp2.teacher_id = ? AND mp2.mission_id = m.id)
                 ORDER BY m.id
                 """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement st = conn.prepareStatement(sql)) {
 
-            st.setString(1, studentId);
-            st.setString(2, studentId);
+            st.setString(1, teacherId);
+            st.setString(2, teacherId);
 
             try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {

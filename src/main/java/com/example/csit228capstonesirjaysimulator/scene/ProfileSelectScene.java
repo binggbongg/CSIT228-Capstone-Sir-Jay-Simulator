@@ -21,20 +21,14 @@ import java.util.List;
 public class ProfileSelectScene extends SubScene {
 
     private final javafx.scene.Node parentRoot;
-    private final Runnable onPlay;
+    private final Runnable          onPlay;
 
     private final List<UserProfile> profiles = new ArrayList<>();
     private UserProfile selectedProfile = null;
 
-
-    private boolean editMode = false;
-
-
     private FlowPane  cardFlow;
     private Button    btnViewProfile;
     private Button    btnPlay;
-    private Button    btnDelete;
-    private Button    btnEdit;
     private HBox      actionsRow;
     private VBox      dialogBox;
     private StackPane overlayPane;
@@ -46,21 +40,12 @@ public class ProfileSelectScene extends SubScene {
         buildScene();
     }
 
-
     private void buildScene() {
         Rectangle bg = panelBg(600, 650);
-
 
         Text title = new Text("SELECT PROFILE");
         title.setFont(Font.font("Verdana", FontWeight.BOLD, 36));
         title.setFill(Color.GOLD);
-
-        btnEdit = buildEditButton();
-        btnEdit.setOnAction(e -> toggleEditMode());
-
-        HBox titleRow = new HBox(16, title, btnEdit);
-        titleRow.setAlignment(Pos.CENTER);
-
 
         cardFlow = new FlowPane(12, 12);
         cardFlow.setAlignment(Pos.CENTER);
@@ -77,14 +62,12 @@ public class ProfileSelectScene extends SubScene {
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; "
                 + "-fx-border-color: transparent;");
 
-
         actionsRow = buildActionsRow();
 
         Button btnBack = buildButton("RETURN TO MENU");
         btnBack.setOnAction(e -> closeScene());
 
-
-        VBox content = new VBox(16, titleRow, scroll, actionsRow, btnBack);
+        VBox content = new VBox(16, title, scroll, actionsRow, btnBack);
         content.setAlignment(Pos.CENTER);
         content.setMaxWidth(600);
         content.setPadding(new Insets(40));
@@ -106,33 +89,6 @@ public class ProfileSelectScene extends SubScene {
         getContentRoot().getChildren().add(root);
     }
 
-
-
-    private void toggleEditMode() {
-        editMode = !editMode;
-
-        if (editMode) {
-
-            btnEdit.setText("DONE");
-            btnEdit.setBackground(new Background(new BackgroundFill(
-                    Color.rgb(50, 150, 50), new CornerRadii(4), Insets.EMPTY)));
-            btnEdit.setTextFill(Color.WHITE);
-        } else {
-
-            btnEdit.setText("EDIT");
-            btnEdit.setBackground(new Background(new BackgroundFill(
-                    Color.rgb(80, 80, 80), new CornerRadii(4), Insets.EMPTY)));
-            btnEdit.setTextFill(Color.LIGHTGRAY);
-            selectedProfile = null;
-        }
-
-        rebuildActionsRow();
-        refreshCards();
-    }
-
-
-
-
     private HBox buildActionsRow() {
         btnViewProfile = buildButton("VIEW PROFILE");
         btnViewProfile.setDisable(true);
@@ -140,11 +96,7 @@ public class ProfileSelectScene extends SubScene {
 
         btnPlay = buildButton("PLAY");
         btnPlay.setDisable(true);
-        btnPlay.setOnAction(e -> showPasswordDialog());
-
-        btnDelete = buildDeleteButton();
-        btnDelete.setDisable(true);
-        btnDelete.setOnAction(e -> showDeleteConfirmDialog());
+        btnPlay.setOnAction(e -> showPasswordDialogThenPlay());
 
         HBox row = new HBox(16, btnViewProfile, btnPlay);
         row.setAlignment(Pos.CENTER);
@@ -152,51 +104,25 @@ public class ProfileSelectScene extends SubScene {
     }
 
 
-    private void rebuildActionsRow() {
-        actionsRow.getChildren().clear();
-
-        if (editMode) {
-
-            btnDelete.setDisable(selectedProfile == null);
-            actionsRow.getChildren().add(btnDelete);
-        } else {
-
-            btnViewProfile.setDisable(true);
-            btnPlay.setDisable(true);
-            actionsRow.getChildren().addAll(btnViewProfile, btnPlay);
-        }
-
-        actionsRow.requestLayout();
-    }
-
-
     private void refreshCards() {
         cardFlow.getChildren().clear();
         for (UserProfile p : profiles)
             cardFlow.getChildren().add(buildProfileCard(p));
-
-        if (!editMode)
-            cardFlow.getChildren().add(buildAddCard());
+        cardFlow.getChildren().add(buildAddCard());
     }
 
     private VBox buildProfileCard(UserProfile p) {
         boolean sel = p.equals(selectedProfile);
 
-
-        Color normalFill   = editMode ? Color.rgb(60, 30, 30)  : Color.rgb(50, 50, 50);
-        Color selFill      = editMode ? Color.rgb(100, 20, 20) : Color.rgb(60, 55, 10);
-        Color normalStroke = editMode ? Color.rgb(140, 60, 60) : Color.rgb(90, 90, 90);
-        Color selStroke    = editMode ? Color.rgb(220, 60, 60) : Color.GOLD;
-
         Rectangle bg = new Rectangle(155, 80);
-        bg.setFill(sel ? selFill : normalFill);
+        bg.setFill(sel ? Color.rgb(60, 55, 10) : Color.rgb(50, 50, 50));
         bg.setArcWidth(10); bg.setArcHeight(10);
-        bg.setStroke(sel ? selStroke : normalStroke);
+        bg.setStroke(sel ? Color.GOLD : Color.rgb(90, 90, 90));
         bg.setStrokeWidth(sel ? 2 : 1);
 
         Text name = new Text(truncate(p.getUsername(), 14));
         name.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-        name.setFill(sel ? (editMode ? Color.rgb(255, 110, 110) : Color.GOLD) : Color.LIGHTGRAY);
+        name.setFill(sel ? Color.GOLD : Color.LIGHTGRAY);
 
         Text sub = new Text(p.getCourse() + " · " + p.getSection());
         sub.setFont(Font.font("Arial", FontWeight.NORMAL, 11));
@@ -212,23 +138,18 @@ public class ProfileSelectScene extends SubScene {
 
         card.setOnMouseClicked(e -> {
             selectedProfile = p;
-            if (editMode) {
-                btnDelete.setDisable(false);
-
-            } else {
-                btnViewProfile.setDisable(false);
-                btnPlay.setDisable(false);
-            }
+            btnViewProfile.setDisable(false);
+            btnPlay.setDisable(false);
             refreshCards();
-            actionsRow.requestLayout();
         });
 
         card.setOnMouseEntered(ev -> {
             if (!p.equals(selectedProfile))
-                bg.setFill(editMode ? Color.rgb(80, 38, 38) : Color.rgb(65, 65, 65));
+                bg.setFill(Color.rgb(65, 65, 65));
         });
         card.setOnMouseExited(ev -> {
-            if (!p.equals(selectedProfile)) bg.setFill(normalFill);
+            if (!p.equals(selectedProfile))
+                bg.setFill(Color.rgb(50, 50, 50));
         });
 
         VBox wrapper = new VBox(card);
@@ -260,77 +181,123 @@ public class ProfileSelectScene extends SubScene {
     }
 
 
-
-
-    private void showDeleteConfirmDialog() {
+    private void showPasswordDialogThenPlay() {
         if (selectedProfile == null) return;
-        openOverlay();
-
-        Rectangle dBg = panelBg(420, 250);
-
-        Text dTitle = new Text("DELETE PROFILE");
-        dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
-        dTitle.setFill(Color.rgb(220, 60, 60));
-
-        Text warning = new Text(
-                "Are you sure you want to delete\n\""
-                        + selectedProfile.getUsername()
-                        + "\"?\n\nThis cannot be undone.");
-        warning.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
-        warning.setFill(Color.LIGHTGRAY);
-        warning.setTextAlignment(TextAlignment.CENTER);
-
-        Label err = errorLabel();
-
-        Button btnConfirm = new Button("DELETE");
-        btnConfirm.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        btnConfirm.setTextFill(Color.WHITE);
-        btnConfirm.setBackground(new Background(new BackgroundFill(
-                Color.rgb(180, 40, 40), new CornerRadii(4), Insets.EMPTY)));
-        btnConfirm.setPadding(new Insets(10, 20, 10, 20));
-
-        Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
-
-        btnConfirm.setOnAction(e -> {
-            UserProfile toDelete = selectedProfile;
-            new Thread(() -> {
-                boolean ok = UserDatabaseService.getInstance().deleteUser(toDelete.getStudentId());
-                javafx.application.Platform.runLater(() -> {
-                    if (ok) {
-                        profiles.remove(toDelete);
-                        selectedProfile = null;
-                        btnDelete.setDisable(true);
-                        overlayPane.setVisible(false);
-                        refreshCards();
-                    } else {
-                        err.setText("DB error – check console.");
-                    }
-                });
-            }).start();
+        showConfirmIdentityDialog(selectedProfile, () -> {
+            selectedProfile = UserDatabaseService.getInstance()
+                    .loginUser(selectedProfile.getTeacherId(), selectedProfile.getPassword());
+            overlayPane.setVisible(false);
+            startGame();
         });
-
-        HBox btns = new HBox(12, btnCancel, btnConfirm);
-        btns.setAlignment(Pos.CENTER);
-
-        VBox form = new VBox(16, dTitle, warning, err, btns);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(32));
-        form.setMaxWidth(420);
-
-        showDialog(new StackPane(dBg, form));
     }
 
-    private void showPasswordDialog() {
+    private void showViewDialog() {
         if (selectedProfile == null) return;
         openOverlay();
 
-        Rectangle dBg = panelBg(380, 260);
+        UserProfile         p  = selectedProfile;
+        UserDatabaseService db = UserDatabaseService.getInstance();
 
-        Text dTitle = new Text("ENTER PASSWORD");
+        Rectangle dBg = panelBg(780, 540);
+
+        Text dTitle = new Text(p.getUsername());
+        dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
+        dTitle.setFill(Color.GOLD);
+
+        Text sub = new Text(p.getTeacherId() + "  ·  " + p.getCourse() + " " + p.getSection());
+        sub.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
+        sub.setFill(Color.LIGHTGRAY);
+
+        //Mission list
+        VBox missionList = new VBox(8);
+        missionList.setPadding(new Insets(6));
+
+        new Thread(() -> {
+            List<MissionProgressRow> rows =
+                    MissionRepository.getInstance().getLatestSessionProgress(p.getTeacherId());
+            javafx.application.Platform.runLater(() -> {
+                if (rows.isEmpty()) {
+                    Text none = new Text("No sessions played yet.");
+                    none.setFill(Color.GRAY);
+                    none.setFont(Font.font("Arial", 12));
+                    missionList.getChildren().add(none);
+                } else {
+                    for (MissionProgressRow row : rows)
+                        missionList.getChildren().add(buildMissionRow(row));
+                }
+            });
+        }).start();
+
+        ScrollPane missionScroll = new ScrollPane(missionList);
+        missionScroll.setPrefSize(330, 300);
+        missionScroll.setFitToWidth(true);
+        missionScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        missionScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; "
+                + "-fx-border-color: #444444; -fx-border-width: 1;");
+
+        VBox leftCol = new VBox(10, columnTitle("MISSIONS"), missionScroll);
+        leftCol.setAlignment(Pos.TOP_CENTER);
+
+        // Stats
+        VBox statsList = new VBox(8,
+                statRow("Catch Accuracy",    String.format("%.1f%%", db.getCatchAccuracy(p.getTeacherId()))),
+                statRow("Highest Combo",     String.valueOf(db.getHighestCombo(p.getTeacherId()))),
+                statRow("Cheaters Caught",   String.valueOf(db.getCheatersCaught(p.getTeacherId()))),
+                statRow("False Accusations", String.valueOf(db.getFalseAccusations(p.getTeacherId()))),
+                statRow("Quizzes Conducted", String.valueOf(db.getQuizzesConducted(p.getTeacherId()))),
+                statRow("Hours Worked",      String.format("%.1f h", db.getHoursWorked(p.getTeacherId())))
+        );
+        statsList.setAlignment(Pos.TOP_LEFT);
+        statsList.setPadding(new Insets(6));
+
+        VBox rightCol = new VBox(10, columnTitle("STATS"), statsList);
+        rightCol.setAlignment(Pos.TOP_CENTER);
+
+        HBox columns = new HBox(20, leftCol, new Rectangle(1, 340, Color.rgb(80, 76, 40)), rightCol);
+        columns.setAlignment(Pos.TOP_CENTER);
+
+        // Bottom buttons
+        Button btnEdit   = buildButton("EDIT");
+        Button btnDelete = buildDeleteButton("DELETE");
+        Button btnClose  = buildButton("CLOSE");
+
+        btnClose.setOnAction(e -> overlayPane.setVisible(false));
+
+        btnEdit.setOnAction(e -> {
+
+            showConfirmIdentityDialog(p, () -> {
+                overlayPane.setVisible(false);
+                showEditDialog(p);
+            });
+        });
+
+        btnDelete.setOnAction(e -> {
+
+            showDeleteConfirmStep(p);
+        });
+
+        HBox bottomBtns = new HBox(16, btnEdit, btnDelete, btnClose);
+        bottomBtns.setAlignment(Pos.CENTER);
+
+        VBox content = new VBox(12, dTitle, sub, columns, bottomBtns);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(32));
+        content.setMaxWidth(780);
+
+        showDialog(new StackPane(dBg, content));
+    }
+
+
+    private void showConfirmIdentityDialog(UserProfile p, Runnable onSuccess) {
+        openOverlay();
+
+        Rectangle dBg = panelBg(380, 270);
+
+        Text dTitle = new Text("CONFIRM IDENTITY");
         dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         dTitle.setFill(Color.GOLD);
 
-        Text sub = new Text("Profile: " + selectedProfile.getUsername());
+        Text sub = new Text("Profile: " + p.getUsername());
         sub.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
         sub.setFill(Color.LIGHTGRAY);
 
@@ -345,11 +312,8 @@ public class ProfileSelectScene extends SubScene {
         Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
 
         btnOk.setOnAction(e -> {
-            if (selectedProfile.checkPassword(pfPass.getText())) {
-                overlayPane.setVisible(false);
-                selectedProfile = UserDatabaseService.getInstance()
-                        .loginUser(selectedProfile.getStudentId(), pfPass.getText());
-                startGame();
+            if (p.checkPassword(pfPass.getText())) {
+                onSuccess.run();
             } else {
                 err.setText("Incorrect password.");
                 pfPass.clear();
@@ -369,16 +333,204 @@ public class ProfileSelectScene extends SubScene {
         showDialog(new StackPane(dBg, form));
     }
 
+    private void showDeleteConfirmStep(UserProfile p) {
+        openOverlay();
+
+        Rectangle dBg = panelBg(420, 260);
+
+        Text dTitle = new Text("DELETE PROFILE");
+        dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+        dTitle.setFill(Color.rgb(220, 60, 60));
+
+        Text warning = new Text(
+                "Are you sure you want to delete\n\""
+                        + p.getUsername()
+                        + "\"?\n\nThis action cannot be undone.");
+        warning.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
+        warning.setFill(Color.LIGHTGRAY);
+        warning.setTextAlignment(TextAlignment.CENTER);
+
+        Button btnConfirm = buildDeleteButton("DELETE");
+        Button btnCancel  = cancelButton(() -> overlayPane.setVisible(false));
+
+        // After confirming "yes", move to the password step
+        btnConfirm.setOnAction(e -> showDeletePasswordStep(p));
+
+        HBox btns = new HBox(12, btnCancel, btnConfirm);
+        btns.setAlignment(Pos.CENTER);
+
+        VBox form = new VBox(16, dTitle, warning, btns);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(32));
+        form.setMaxWidth(420);
+
+        showDialog(new StackPane(dBg, form));
+    }
+
+    private void showDeletePasswordStep(UserProfile p) {
+        openOverlay();
+
+        Rectangle dBg = panelBg(380, 270);
+
+        Text dTitle = new Text("CONFIRM IDENTITY");
+        dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+        dTitle.setFill(Color.GOLD);
+
+        Text sub = new Text("Enter password to confirm deletion of\n\"" + p.getUsername() + "\"");
+        sub.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
+        sub.setFill(Color.LIGHTGRAY);
+        sub.setTextAlignment(TextAlignment.CENTER);
+
+        PasswordField pfPass = new PasswordField();
+        pfPass.setPromptText("Password");
+        pfPass.setPrefWidth(300);
+        styleTextField(pfPass);
+
+        Label err = errorLabel();
+
+        Button btnOk     = buildDeleteButton("DELETE");
+        Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
+
+        btnOk.setOnAction(e -> {
+            if (p.checkPassword(pfPass.getText())) {
+                new Thread(() -> {
+                    boolean ok = UserDatabaseService.getInstance().deleteUser(p.getTeacherId());
+                    javafx.application.Platform.runLater(() -> {
+                        if (ok) {
+                            profiles.remove(p);
+                            if (p.equals(selectedProfile)) {
+                                selectedProfile = null;
+                                btnViewProfile.setDisable(true);
+                                btnPlay.setDisable(true);
+                            }
+                            overlayPane.setVisible(false);
+                            refreshCards();
+                        } else {
+                            err.setText("DB error — check console.");
+                        }
+                    });
+                }).start();
+            } else {
+                err.setText("Incorrect password.");
+                pfPass.clear();
+            }
+        });
+
+        pfPass.setOnAction(e -> btnOk.fire());
+
+        HBox btns = new HBox(12, btnCancel, btnOk);
+        btns.setAlignment(Pos.CENTER);
+
+        VBox form = new VBox(14, dTitle, sub, pfPass, err, btns);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(36));
+        form.setMaxWidth(380);
+
+        showDialog(new StackPane(dBg, form));
+    }
+
+    private void showEditDialog(UserProfile p) {
+        openOverlay();
+
+        Rectangle dBg = panelBg(420, 440);
+
+        Text dTitle = new Text("EDIT PROFILE");
+        dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+        dTitle.setFill(Color.GOLD);
+
+        TextField tfName = dialogField("Username");
+        tfName.setText(p.getUsername());
+
+        PasswordField pfPass = new PasswordField();
+        pfPass.setPromptText("New Password");
+        pfPass.setPrefWidth(340);
+        styleTextField(pfPass);
+
+        PasswordField pfConfirm = new PasswordField();
+        pfConfirm.setPromptText("Confirm New Password");
+        pfConfirm.setPrefWidth(340);
+        styleTextField(pfConfirm);
+
+        ComboBox<String> cbCourse  = styledCombo("Course",  "CS244", "CSIT228");
+        ComboBox<String> cbSection = styledCombo("Section", "F1", "F2", "F3");
+        cbCourse.setValue(p.getCourse());
+        cbSection.setValue(p.getSection());
+
+        HBox combos = new HBox(10, cbCourse, cbSection);
+        combos.setAlignment(Pos.CENTER);
+
+        Label err      = errorLabel();
+        Button btnSave   = buildButton("SAVE");
+        Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
+
+        btnSave.setOnAction(e -> {
+            String newName = tfName.getText().trim();
+            String newCrs  = cbCourse.getValue();
+            String newSec  = cbSection.getValue();
+            String newPw   = pfPass.getText();
+            String newPw2  = pfConfirm.getText();
+
+            if (newName.isEmpty() || newCrs == null || newSec == null) {
+                err.setText("Please fill in all fields.");
+                return;
+            }
+            String finalPassword;
+            if (!newPw.isEmpty() || !newPw2.isEmpty()) {
+                if (!newPw.equals(newPw2)) {
+                    err.setText("Passwords do not match.");
+                    return;
+                }
+                finalPassword = newPw;
+            } else {
+                finalPassword = p.getPassword();
+            }
+
+            final String fp = finalPassword;
+            new Thread(() -> {
+                boolean ok = UserDatabaseService.getInstance()
+                        .updateUser(p.getTeacherId(), newName, newCrs, newSec, fp);
+                javafx.application.Platform.runLater(() -> {
+                    if (ok) {
+                        // Rebuild the profile object in our local list
+                        UserProfile updated = new UserProfile(
+                                p.getTeacherId(), newName, newCrs, newSec, fp);
+                        int idx = profiles.indexOf(p);
+                        if (idx >= 0) profiles.set(idx, updated);
+                        selectedProfile = updated;
+                        overlayPane.setVisible(false);
+                        refreshCards();
+                    } else {
+                        err.setText("DB error — check console.");
+                    }
+                });
+            }).start();
+        });
+
+        HBox btns = new HBox(12, btnCancel, btnSave);
+        btns.setAlignment(Pos.CENTER);
+
+        Text idLabel = new Text("Teacher ID: " + p.getTeacherId());
+        idLabel.setFill(Color.GRAY);
+        idLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
+
+        VBox form = new VBox(12, dTitle, idLabel, tfName, pfPass, pfConfirm, combos, err, btns);
+        form.setAlignment(Pos.CENTER);
+        form.setPadding(new Insets(32));
+        form.setMaxWidth(420);
+
+        showDialog(new StackPane(dBg, form));
+    }
+
     private void showAddDialog() {
         openOverlay();
 
-        Rectangle dBg = panelBg(420, 420);
+        Rectangle dBg = panelBg(420, 440);
 
         Text dTitle = new Text("ADD PROFILE");
         dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         dTitle.setFill(Color.GOLD);
 
-        TextField tfId   = dialogField("Professor ID");
+        TextField tfId   = dialogField("Teacher ID");
         TextField tfName = dialogField("Username");
 
         PasswordField pfPass = new PasswordField();
@@ -393,36 +545,38 @@ public class ProfileSelectScene extends SubScene {
 
         ComboBox<String> cbCourse  = styledCombo("Course",  "CS244", "CSIT228");
         ComboBox<String> cbSection = styledCombo("Section", "F1", "F2", "F3");
-        HBox combos = centred(new HBox(10, cbCourse, cbSection));
+        HBox combos = new HBox(10, cbCourse, cbSection);
+        combos.setAlignment(Pos.CENTER);
 
-        Label err      = errorLabel();
+        Label  err       = errorLabel();
         Button btnSave   = buildButton("SAVE");
         Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
 
         btnSave.setOnAction(e -> {
-            String sid  = tfId.getText().trim();
+            String tid  = tfId.getText().trim();
             String user = tfName.getText().trim();
             String crs  = cbCourse.getValue();
             String sec  = cbSection.getValue();
             String pw   = pfPass.getText();
             String pw2  = pfConfirm.getText();
 
-            if (sid.isEmpty() || user.isEmpty() || crs == null || sec == null || pw.isEmpty()) {
+            if (tid.isEmpty() || user.isEmpty() || crs == null || sec == null || pw.isEmpty()) {
                 err.setText("Please fill in all fields."); return;
             }
             if (!pw.equals(pw2)) {
                 err.setText("Passwords do not match."); return;
             }
-            if (profiles.stream().anyMatch(p -> p.getStudentId().equalsIgnoreCase(sid))) {
-                err.setText("Student ID already exists."); return;
+            if (profiles.stream().anyMatch(p -> p.getTeacherId().equalsIgnoreCase(tid))) {
+                err.setText("Teacher ID already exists."); return;
             }
 
-            UserProfile np = new UserProfile(sid, user, crs, sec, pw);
+            UserProfile np = new UserProfile(tid, user, crs, sec, pw);
             new Thread(() -> {
-                boolean ok = UserDatabaseService.getInstance().registerUser(sid, user, crs, sec, pw);
+                boolean ok = UserDatabaseService.getInstance()
+                        .registerUser(tid, user, crs, sec, pw);
                 javafx.application.Platform.runLater(() -> {
                     if (ok) { profiles.add(np); refreshCards(); overlayPane.setVisible(false); }
-                    else    { err.setText("DB error – check console."); }
+                    else    { err.setText("DB error — check console."); }
                 });
             }).start();
         });
@@ -438,82 +592,6 @@ public class ProfileSelectScene extends SubScene {
         showDialog(new StackPane(dBg, form));
     }
 
-    private void showViewDialog() {
-        if (selectedProfile == null) return;
-        openOverlay();
-
-        UserProfile         p  = selectedProfile;
-        UserDatabaseService db = UserDatabaseService.getInstance();
-
-        Rectangle dBg = panelBg(780, 520);
-
-        Text dTitle = new Text(p.getUsername());
-        dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
-        dTitle.setFill(Color.GOLD);
-
-        Text sub = new Text(p.getStudentId() + "  ·  " + p.getCourse() + " " + p.getSection());
-        sub.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
-        sub.setFill(Color.LIGHTGRAY);
-
-        VBox missionList = new VBox(8);
-        missionList.setPadding(new Insets(6));
-
-        new Thread(() -> {
-            List<MissionProgressRow> rows =
-                    MissionRepository.getInstance().getLatestSessionProgress(p.getStudentId());
-            javafx.application.Platform.runLater(() -> {
-                if (rows.isEmpty()) {
-                    Text none = new Text("No sessions played yet.");
-                    none.setFill(Color.GRAY);
-                    none.setFont(Font.font("Arial", 12));
-                    missionList.getChildren().add(none);
-                } else {
-                    for (MissionProgressRow row : rows)
-                        missionList.getChildren().add(buildMissionRow(row));
-                }
-            });
-        }).start();
-
-        ScrollPane missionScroll = new ScrollPane(missionList);
-        missionScroll.setPrefSize(330, 340);
-        missionScroll.setFitToWidth(true);
-        missionScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        missionScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; "
-                + "-fx-border-color: #444444; -fx-border-width: 1;");
-
-        VBox leftCol = new VBox(10, columnTitle("MISSIONS"), missionScroll);
-        leftCol.setAlignment(Pos.TOP_CENTER);
-
-        VBox statsList = new VBox(8,
-                statRow("Catch Accuracy",    String.format("%.1f%%", db.getCatchAccuracy(p.getStudentId()))),
-                statRow("Highest Combo",     String.valueOf(db.getHighestCombo(p.getStudentId()))),
-                statRow("Cheaters Caught",   String.valueOf(db.getCheatersCaught(p.getStudentId()))),
-                statRow("False Accusations", String.valueOf(db.getFalseAccusations(p.getStudentId()))),
-                statRow("Quizzes Conducted", String.valueOf(db.getQuizzesConducted(p.getStudentId()))),
-                statRow("Hours Worked",      String.format("%.1f h", db.getHoursWorked(p.getStudentId())))
-        );
-        statsList.setAlignment(Pos.TOP_LEFT);
-        statsList.setPadding(new Insets(6));
-
-        VBox rightCol = new VBox(10, columnTitle("STATS"), statsList);
-        rightCol.setAlignment(Pos.TOP_CENTER);
-
-        HBox columns = new HBox(20, leftCol, new Rectangle(1, 380, Color.rgb(80, 76, 40)), rightCol);
-        columns.setAlignment(Pos.TOP_CENTER);
-
-        Button btnClose = buildButton("CLOSE");
-        btnClose.setOnAction(e -> overlayPane.setVisible(false));
-
-        VBox content = new VBox(12, dTitle, sub, columns, btnClose);
-        content.setAlignment(Pos.CENTER);
-        content.setPadding(new Insets(36));
-        content.setMaxWidth(780);
-
-        showDialog(new StackPane(dBg, content));
-    }
-
-
-
     private void startGame() {
         if (selectedProfile == null) return;
         System.out.println("[ProfileSelect] Playing as: " + selectedProfile);
@@ -527,6 +605,16 @@ public class ProfileSelectScene extends SubScene {
         FXGL.getSceneService().popSubScene();
     }
 
+    private void openOverlay() {
+        dialogBox.getChildren().clear();
+        overlayPane.setVisible(true);
+    }
+
+    private void showDialog(javafx.scene.Node node) {
+        dialogBox.getChildren().add(node);
+        dialogBox.setAlignment(Pos.CENTER);
+        VBox.setVgrow(dialogBox, Priority.ALWAYS);
+    }
 
     private HBox buildMissionRow(MissionProgressRow row) {
         Color barColor = row.completed() ? Color.LIMEGREEN : Color.GOLD;
@@ -562,20 +650,6 @@ public class ProfileSelectScene extends SubScene {
     }
 
 
-
-    private void openOverlay() {
-        dialogBox.getChildren().clear();
-        overlayPane.setVisible(true);
-    }
-
-    private void showDialog(javafx.scene.Node node) {
-        dialogBox.getChildren().add(node);
-        dialogBox.setAlignment(Pos.CENTER);
-        VBox.setVgrow(dialogBox, Priority.ALWAYS);
-    }
-
-
-
     private Rectangle panelBg(double w, double h) {
         Rectangle r = new Rectangle(w, h);
         r.setFill(Color.rgb(30, 30, 30, 0.95));
@@ -594,20 +668,8 @@ public class ProfileSelectScene extends SubScene {
         return b;
     }
 
-
-    private Button buildEditButton() {
-        Button b = new Button("EDIT");
-        b.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-        b.setTextFill(Color.LIGHTGRAY);
-        b.setBackground(new Background(new BackgroundFill(
-                Color.rgb(80, 80, 80), new CornerRadii(4), Insets.EMPTY)));
-        b.setPadding(new Insets(8, 16, 8, 16));
-        return b;
-    }
-
-
-    private Button buildDeleteButton() {
-        Button b = new Button("DELETE");
+    private Button buildDeleteButton(String label) {
+        Button b = new Button(label);
         b.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         b.setTextFill(Color.WHITE);
         b.setBackground(new Background(new BackgroundFill(
@@ -681,11 +743,6 @@ public class ProfileSelectScene extends SubScene {
         row.setPrefWidth(300);
         row.setPadding(new Insets(0, 10, 0, 10));
         return row;
-    }
-
-    private HBox centred(HBox box) {
-        box.setAlignment(Pos.CENTER);
-        return box;
     }
 
     private String truncate(String s, int max) {

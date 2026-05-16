@@ -49,76 +49,70 @@ public class DatabaseConnection {
     private static void createTables(Statement st) throws SQLException {
 
         st.executeUpdate("""
-        CREATE TABLE IF NOT EXISTS users (
-            student_id VARCHAR(20) NOT NULL PRIMARY KEY,
-            username VARCHAR(60) NOT NULL,
-            course VARCHAR(20) NOT NULL,
-            section VARCHAR(10) NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """);
-
-
-        st.executeUpdate("""
-        CREATE TABLE IF NOT EXISTS stats (
-            student_id VARCHAR(20) NOT NULL PRIMARY KEY,
-            catch_accuracy DOUBLE NOT NULL DEFAULT 0.0,
-            highest_combo INT NOT NULL DEFAULT 0,
-            cheaters_caught INT NOT NULL DEFAULT 0,
-            false_accusations INT NOT NULL DEFAULT 0,
-            quizzes_conducted INT NOT NULL DEFAULT 0,
-            hours_worked DOUBLE NOT NULL DEFAULT 0.0,
-            total_attempts INT NOT NULL DEFAULT 0,
-            total_correct INT NOT NULL DEFAULT 0,
-            CONSTRAINT fk_stats_user FOREIGN KEY (student_id) REFERENCES users(student_id) ON DELETE CASCADE
-        )
-    """);
-
+            CREATE TABLE IF NOT EXISTS users (
+                teacher_id VARCHAR(20) NOT NULL PRIMARY KEY,
+                username VARCHAR(60) NOT NULL,
+                course VARCHAR(20) NOT NULL,
+                section VARCHAR(10) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """);
 
         st.executeUpdate("""
-    CREATE TABLE IF NOT EXISTS missions (
-        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        description VARCHAR(255) NOT NULL UNIQUE,
-        type ENUM('INTEGER','BOOLEAN') NOT NULL,
-        target_value INT NOT NULL
-    )
-""");
+            CREATE TABLE IF NOT EXISTS stats (
+                teacher_id VARCHAR(20) NOT NULL PRIMARY KEY,
+                catch_accuracy DOUBLE NOT NULL DEFAULT 0.0,
+                highest_combo INT NOT NULL DEFAULT 0,
+                cheaters_caught INT NOT NULL DEFAULT 0,
+                false_accusations INT NOT NULL DEFAULT 0,
+                quizzes_conducted INT NOT NULL DEFAULT 0,
+                hours_worked DOUBLE NOT NULL DEFAULT 0.0,
+                total_attempts INT NOT NULL DEFAULT 0,
+                total_correct INT NOT NULL DEFAULT 0,
+                CONSTRAINT fk_stats_user FOREIGN KEY (teacher_id) REFERENCES users(teacher_id) ON DELETE CASCADE
+            )
+        """);
 
         st.executeUpdate("""
-    CREATE TABLE IF NOT EXISTS mission_progress (
-        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        student_id VARCHAR(20) NOT NULL,
-        mission_id INT NOT NULL,
-        session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        current_value INT NOT NULL DEFAULT 0,
-        completed TINYINT(1) NOT NULL DEFAULT 0,
-        CONSTRAINT fk_mp_user FOREIGN KEY (student_id) REFERENCES users(student_id) ON DELETE CASCADE,
-        CONSTRAINT fk_mp_mission FOREIGN KEY (mission_id) REFERENCES missions(id),
-        CONSTRAINT uq_mp UNIQUE (student_id, mission_id)
-    )
-""");
+            CREATE TABLE IF NOT EXISTS missions (
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                description VARCHAR(255) NOT NULL UNIQUE,
+                type ENUM('INTEGER','BOOLEAN') NOT NULL,
+                target_value INT NOT NULL
+            )
+        """);
 
         st.executeUpdate("""
-        CREATE TABLE IF NOT EXISTS sessions (
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            student_id VARCHAR(20) NOT NULL,
-            played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            final_score INT NOT NULL DEFAULT 0,
-            cheaters_caught INT NOT NULL DEFAULT 0,
-            false_accusations INT NOT NULL DEFAULT 0,
-            highest_combo INT NOT NULL DEFAULT 0,
-            total_attempts INT NOT NULL DEFAULT 0,
-            total_correct INT NOT NULL DEFAULT 0,
-            duration_seconds DOUBLE NOT NULL DEFAULT 0.0,
-            CONSTRAINT fk_session_user FOREIGN KEY (student_id) REFERENCES users(student_id) ON DELETE CASCADE
-        )
-    """);
+            CREATE TABLE IF NOT EXISTS mission_progress (
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                teacher_id VARCHAR(20) NOT NULL,
+                mission_id INT NOT NULL,
+                session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                current_value INT NOT NULL DEFAULT 0,
+                completed TINYINT(1) NOT NULL DEFAULT 0,
+                CONSTRAINT fk_mp_user FOREIGN KEY (teacher_id) REFERENCES users(teacher_id) ON DELETE CASCADE,
+                CONSTRAINT fk_mp_mission FOREIGN KEY (mission_id) REFERENCES missions(id),
+                CONSTRAINT uq_mp UNIQUE (teacher_id, mission_id)
+            )
+        """);
+
+        st.executeUpdate("""
+            CREATE TABLE IF NOT EXISTS sessions (
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                teacher_id VARCHAR(20) NOT NULL,
+                played_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                final_score INT NOT NULL DEFAULT 0,
+                cheaters_caught INT NOT NULL DEFAULT 0,
+                false_accusations INT NOT NULL DEFAULT 0,
+                highest_combo INT NOT NULL DEFAULT 0,
+                total_attempts INT NOT NULL DEFAULT 0,
+                total_correct INT NOT NULL DEFAULT 0,
+                duration_seconds DOUBLE NOT NULL DEFAULT 0.0,
+                CONSTRAINT fk_session_user FOREIGN KEY (teacher_id) REFERENCES users(teacher_id) ON DELETE CASCADE
+            )
+        """);
     }
-
-
-    //hard coded missions pa
-    //TODO Implement dynamically added mission
 
     private static void seedMissions(Statement st) throws SQLException {
         String[] seeds = {
