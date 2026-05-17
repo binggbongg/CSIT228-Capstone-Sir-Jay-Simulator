@@ -82,7 +82,7 @@ public class UserDatabaseService {
     public List<UserProfile> getAllProfiles() {
         List<UserProfile> list = new ArrayList<>();
         String sql = "SELECT teacher_id, username, course, section, password "
-                + "FROM users ORDER BY username";
+                + "FROM users ORDER BY last_played DESC, created_at ASC";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement st = conn.prepareStatement(sql);
@@ -101,6 +101,18 @@ public class UserDatabaseService {
             e.printStackTrace();
         }
         return list;
+    }
+
+
+    public void updateLastPlayed(String teacherId) {
+        String sql = "UPDATE users SET last_played = CURRENT_TIMESTAMP WHERE teacher_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, teacherId);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public UserProfile loginUser(String teacherId, String password) {

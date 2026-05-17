@@ -494,6 +494,11 @@ public class ProfileSelectScene extends SubScene {
     private void startGame() {
         if (selectedProfile == null) return;
         UserDatabaseService.getInstance().setCurrentUser(selectedProfile);
+
+        new Thread(() ->
+                UserDatabaseService.getInstance().updateLastPlayed(selectedProfile.getTeacherId())
+        ).start();
+
         closeScene();
         if (onPlay != null) onPlay.run();
     }
