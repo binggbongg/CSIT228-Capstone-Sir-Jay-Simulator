@@ -7,6 +7,8 @@ public class UpdateScoreRunnable implements Runnable{
     private ScoreComponent scoreComponent;
     private StudentState state;
 
+    //This is the runnable that runs everytime a student is hit.
+
     public UpdateScoreRunnable(ScoreComponent sc, StudentState state){
         scoreComponent = sc;
         this.state = state;

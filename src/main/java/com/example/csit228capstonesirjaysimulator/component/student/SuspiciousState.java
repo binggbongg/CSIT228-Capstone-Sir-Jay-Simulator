@@ -24,9 +24,8 @@ public class SuspiciousState extends StudentState {
     @Override
     public void onAction() {
         System.out.println("student not cheating! state is suspicious");
-//        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("wrong.mp3"));
-//        scoreComponent.wrongGuess();
         AudioManager.getInstance().playSound("mahbadmahbad2.wav");
+        //Create new thread to update the score
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();
 

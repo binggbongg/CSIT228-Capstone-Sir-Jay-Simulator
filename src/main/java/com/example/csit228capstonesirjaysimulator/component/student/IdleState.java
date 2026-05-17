@@ -33,6 +33,7 @@ public class IdleState extends StudentState {
 //        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("wrong.mp3"));
 //        scoreComponent.wrongGuess();
         AudioManager.getInstance().playSound("whatdidijustdo2.wav");
+        //Create new thread to update the score
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();
     }
