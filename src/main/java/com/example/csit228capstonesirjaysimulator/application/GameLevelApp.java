@@ -257,7 +257,7 @@ public class GameLevelApp extends GameApplication {
     protected void initGame() {
 
         try {
-            Thread.sleep(1500); //artificial delay for loading screen
+            Thread.sleep(1000); //artificial delay for loading screen
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

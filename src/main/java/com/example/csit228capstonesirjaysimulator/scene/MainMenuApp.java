@@ -51,7 +51,7 @@ public class MainMenuApp extends FXGLMenu {
         btnExit.setVisible(false);
 
         btnPlay.setOnMouseClicked( e -> {
-            System.out.println("Play button clicked");
+            AudioManager.getInstance().stopMusic("classroom.wav");
             btnPlay.getParent().requestFocus();
 
             FXGL.getSceneService().pushSubScene(new ProfileSelectScene(getContentRoot(), () -> {
@@ -107,11 +107,6 @@ public class MainMenuApp extends FXGLMenu {
             btnPlay.setVisible(true);
             btnLeaderboard.setVisible(true);
             btnExit.setVisible(true);
-
-            FXGL.getAudioPlayer().stopMusic(music);
-
-            AudioManager.getInstance().playMusic("classroom.wav");
-
         });
 
         FXGL.getAudioPlayer().playMusic(music);

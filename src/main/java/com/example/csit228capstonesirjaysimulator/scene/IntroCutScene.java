@@ -234,7 +234,7 @@ public class IntroCutScene extends SubScene {
                 clickEnterText.setVisible(true);
                 playSound("howsurdayeverybody2.wav");
                 currentSceneStep++;
-                applyInputDelay(0.5);
+                applyInputDelay(.8);
                 break;
 
             case 2:
@@ -256,7 +256,7 @@ public class IntroCutScene extends SubScene {
 
                 playSound("good2.wav");
                 currentSceneStep++;
-                applyInputDelay(0.5);
+                applyInputDelay(0.7);
                 break;
 
             case 4:
@@ -280,7 +280,7 @@ public class IntroCutScene extends SubScene {
 
                 ppt.setVisible(true);
                 currentSceneStep++;
-                applyInputDelay(0.5);
+                applyInputDelay(1.3);
                 break;
 
             case 5:
@@ -302,6 +302,7 @@ public class IntroCutScene extends SubScene {
                 Rectangle rect2 = (Rectangle) sirBubble.getChildren().getFirst();
                 rect2.setWidth(400);
                 currentSceneStep++;
+                applyInputDelay(1.3);
                 break;
 
             case 7:
@@ -313,6 +314,7 @@ public class IntroCutScene extends SubScene {
                 playSound("waitsasir.wav");
 
                 currentSceneStep++;
+                applyInputDelay(.5);
                 break;
 
             case 8:
@@ -323,6 +325,7 @@ public class IntroCutScene extends SubScene {
                 playSound("onefourth.wav");
 
                 currentSceneStep++;
+                applyInputDelay(.5);
                 break;
 
             case 9:
@@ -381,7 +384,7 @@ public class IntroCutScene extends SubScene {
         );
         pptTimeline.play();
 
-        lectureTimer = new PauseTransition(Duration.seconds(13.0));
+        lectureTimer = new PauseTransition(Duration.seconds(10.0));
         lectureTimer.setOnFinished(e -> {
             mouthFlicker.stop();
             sirJay.setImage(imgNormalSir);
