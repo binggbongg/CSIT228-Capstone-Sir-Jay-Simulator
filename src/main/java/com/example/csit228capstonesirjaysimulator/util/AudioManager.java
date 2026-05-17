@@ -42,7 +42,9 @@ public class AudioManager {
 
     private void preloadMusic(){
         String[] lines = {"distractor_sfx.wav",
-                            "chocolate-milk.mp3"};
+                            "chocolate-milk.mp3",
+                            "gameover.mp3",
+                            "classroom.wav"};
         for(String s : lines){
             musicMap.put(s, FXGL.getAssetLoader().loadMusic(s));
         }

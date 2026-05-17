@@ -5,6 +5,7 @@ import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
 import com.example.csit228capstonesirjaysimulator.database.Sessionstats;
 import com.example.csit228capstonesirjaysimulator.database.UserDatabaseService;
 import com.example.csit228capstonesirjaysimulator.database.UserProfile;
+import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
@@ -28,6 +29,7 @@ public class FinishScene extends SubScene {
     public FinishScene() {
         buildUI();
         persistSessionAsync();
+        AudioManager.getInstance().playMusic("gameover.mp3");
     }
     
     private void buildUI() {
@@ -90,7 +92,10 @@ public class FinishScene extends SubScene {
         btnRetry.setFitWidth(200);
         btnRetry.setPreserveRatio(true);
         btnRetry.setCursor(Cursor.HAND);
-        btnRetry.setOnMouseClicked(e -> FXGL.getGameController().startNewGame());
+        btnRetry.setOnMouseClicked(e -> {
+            FXGL.getGameController().startNewGame();
+            AudioManager.getInstance().stopMusic("gameover.mp3");
+        });
 
         // Leaderboard Button
         Image imgBtnLeaderboard = new Image("assets/textures/button-leaderboard.png");
@@ -101,6 +106,7 @@ public class FinishScene extends SubScene {
         btnLeaderboard.setOnMouseClicked(e -> {
             getContentRoot().setEffect(new GaussianBlur(50));
             FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot()));
+            AudioManager.getInstance().stopMusic("gameover.mp3");
         });
 
         // Back to Menu Button
@@ -109,7 +115,11 @@ public class FinishScene extends SubScene {
         btnMenu.setFitWidth(200);
         btnMenu.setPreserveRatio(true);
         btnMenu.setCursor(Cursor.HAND);
-        btnMenu.setOnMouseClicked(e -> FXGL.getGameController().gotoMainMenu());
+        btnMenu.setOnMouseClicked(e -> {
+            FXGL.getGameController().gotoMainMenu();
+            AudioManager.getInstance().stopMusic("gameover.mp3");
+            AudioManager.getInstance().playMusic("classroom.wav");
+        });
 
         javafx.scene.layout.HBox buttonsBox = new javafx.scene.layout.HBox(30, btnRetry, btnLeaderboard, btnMenu);
         buttonsBox.setAlignment(Pos.CENTER);
