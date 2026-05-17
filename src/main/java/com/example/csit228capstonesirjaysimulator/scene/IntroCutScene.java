@@ -97,20 +97,20 @@ public class IntroCutScene extends SubScene {
     private void initUI(){
         String bgPath;
         if ("CS244".equals(professorCourse)) {
-            bgPath = "assets/textures/DAA_bg.png";
+            bgPath = "assets/textures/bg_daa.png";
         } else {
-            bgPath = "assets/textures/OOP2_bg.png";
+            bgPath = "assets/textures/bg_oop.png";
         }
 
         background = new ImageView(new Image(bgPath));
         background.setFitHeight(720);
         background.setFitWidth(1280);
 
-        imgNormalSir = new Image("assets/textures/sir_serato2.png");
-        imgSirJudgy = new Image("assets/textures/sir_serato1.png");
+        imgNormalSir = new Image("assets/textures/sir_serato_neutral.png");
+        imgSirJudgy = new Image("assets/textures/sir_serato_side_eye.png");
         imgSirTalking = new Image("assets/textures/sir_serato_talking.png");
 
-        imgPptQuiz = new Image("assets/textures/ppt_quiz.png");
+        imgPptQuiz = new Image("assets/textures/img_ppt_quiz.png");
 
         daaTitle = new Image("assets/textures/img_daa_title.png");
         daaSlide1 = new Image("assets/textures/img_daa_ppt1.png");
@@ -122,7 +122,7 @@ public class IntroCutScene extends SubScene {
         oopSlide2 = new Image("assets/textures/img_oop_ppt2.png");
         oopSlide3 = new Image("assets/textures/img_oop_ppt3.png");
 
-        imgSkipButton = new Image("assets/textures/button-skip.png");
+        imgSkipButton = new Image("assets/textures/button_skip.png");
 
         imgPpt = new ImageView(daaTitle);
         imgSirJay = new ImageView(imgNormalSir);

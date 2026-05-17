@@ -78,9 +78,9 @@ public class GameLevelApp extends GameApplication {
 
     private void setupButtons(){
 
-        Image pauseBtnImg = new Image("assets/textures/button-pause.png");
-        Image leftBtnImg = new Image("assets/textures/button-left.png");
-        Image rightBtnImg = new Image("assets/textures/button-right.png");
+        Image pauseBtnImg = new Image("assets/textures/button_pause.png");
+        Image leftBtnImg = new Image("assets/textures/button_left.png");
+        Image rightBtnImg = new Image("assets/textures/button_right.png");
 
         pauseButton = new ImageView(pauseBtnImg);
         leftButton = new ImageView(leftBtnImg);
@@ -116,7 +116,7 @@ public class GameLevelApp extends GameApplication {
     }
 
     private void showScoreText(){
-        Image dashboardImg = new Image("assets/textures/game-screen_dashboard.png");
+        Image dashboardImg = new Image("assets/textures/game_screen_dashboard.png");
         ImageView gameDashboard = new ImageView(dashboardImg);
 
         gameDashboard.setFitWidth(300);
@@ -186,7 +186,7 @@ public class GameLevelApp extends GameApplication {
 
         getGameScene().addUINode(streakIndicator);
 
-        Image buttonTImg = new Image("assets/textures/button-T.png");
+        Image buttonTImg = new Image("assets/textures/button_T.png");
         ImageView buttonT = new ImageView(buttonTImg);
         buttonT.setFitWidth(50);
         buttonT.setPreserveRatio(true);
@@ -201,7 +201,7 @@ public class GameLevelApp extends GameApplication {
         openTutorialText.setFont(jelleeHeading);
         getGameScene().addUINode(openTutorialText);
 
-        Image buttonEImg = new Image("assets/textures/button-E.png");
+        Image buttonEImg = new Image("assets/textures/button_E.png");
         ImageView buttonE = new ImageView(buttonEImg);
         buttonE.setFitWidth(50);
         buttonE.setPreserveRatio(true);
@@ -312,7 +312,7 @@ public class GameLevelApp extends GameApplication {
         FXGL.set("isRight", isRightSide);
 
         getGameWorld().getEntitiesByType(EntityType.BACKGROUND).forEach(Entity::removeFromWorld);
-        String filename = isRightSide ? "teacherView_rightSide.PNG" : "teacherView_leftSide.PNG";
+        String filename = isRightSide ? "bg_teacher_view_right.png" : "bg_teacher_view_left.png";
         spawn("background", new SpawnData(0, 0).put("texture", filename));
 
 

@@ -28,7 +28,7 @@ public class LeaderboardScene extends SubScene {
     public LeaderboardScene(Node parentRoot) {
         this.parentRoot = parentRoot;
 
-        ImageView bg = new ImageView(new Image("assets/textures/polka_dot_bg.jpg"));
+        ImageView bg = new ImageView(new Image("assets/textures/bg_polka_dot.jpg"));
         bg.setOpacity(.25);
 
         Rectangle rect = new Rectangle(600, 650);
@@ -59,7 +59,7 @@ public class LeaderboardScene extends SubScene {
         refreshLeaderboard();
 
         Button btnBack = new Button("RETURN TO MENU");
-        title.setFont(Font.font(jelleeFont.getFamily(), FontWeight.BOLD, 14));
+        btnBack.setFont(Font.font(jelleeFont.getFamily(), FontWeight.BOLD, 14));
         btnBack.setTextFill(Color.BLACK);
         btnBack.setBackground(new Background(new BackgroundFill(Color.GOLD, CornerRadii.EMPTY, Insets.EMPTY)));
         btnBack.setPadding(new Insets(10, 40, 10, 40));

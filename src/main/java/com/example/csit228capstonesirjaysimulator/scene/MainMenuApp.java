@@ -20,7 +20,7 @@ public class MainMenuApp extends FXGLMenu {
     public MainMenuApp(){
         super(MenuType.MAIN_MENU);
 
-        Image image = new Image("assets/textures/MainMenu_bg.png");
+        Image image = new Image("assets/textures/bg_main_menu.png");
         ImageView bg = new ImageView(image);
         bg.setFitHeight(FXGL.getAppHeight());
         bg.setFitWidth(FXGL.getAppWidth());
@@ -32,9 +32,9 @@ public class MainMenuApp extends FXGLMenu {
 
         getContentRoot().getChildren().add(bg);
 
-        Image playImg = new Image("assets/textures/button-play.png");
-        Image leaderboardImg = new Image("assets/textures/button-leaderboard.png");
-        Image exitImg = new Image("assets/textures/button-exit.png");
+        Image playImg = new Image("assets/textures/button_play.png");
+        Image leaderboardImg = new Image("assets/textures/button_leaderboard.png");
+        Image exitImg = new Image("assets/textures/button_exit.png");
 
         ImageView btnPlay = new ImageView(playImg);
         ImageView btnLeaderboard = new ImageView(leaderboardImg);

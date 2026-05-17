@@ -13,9 +13,9 @@ public class PauseScene extends SubScene {
     public PauseScene() {
         AudioManager.getInstance().pauseMusic("chocolate-milk.mp3");
 
-        Image bgImg = new Image("assets/textures/polka_dot_bg.jpg");
-        Image resumeImg = new Image("assets/textures/button-resume.png");
-        Image menuImg = new Image("assets/textures/button-back-to-menu.png");
+        Image bgImg = new Image("assets/textures/bg_polka_dot.jpg");
+        Image resumeImg = new Image("assets/textures/button_resume.png");
+        Image menuImg = new Image("assets/textures/button_back_to_menu.png");
 
         ImageView background = new ImageView(bgImg);
         background.setOpacity(.5);

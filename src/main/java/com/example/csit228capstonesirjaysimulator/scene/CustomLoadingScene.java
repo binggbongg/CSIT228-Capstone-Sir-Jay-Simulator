@@ -12,7 +12,7 @@ import javafx.util.Duration;
 
 public class CustomLoadingScene extends LoadingScene {
     public CustomLoadingScene(){
-        ImageView bg = new ImageView(new Image("assets/textures/polka_dot_bg.jpg"));
+        ImageView bg = new ImageView(new Image("assets/textures/bg_polka_dot.jpg"));
         ImageView logo = new ImageView(new Image("assets/textures/sir_serato-icon.png"));
         logo.setFitWidth(300);
         logo.setPreserveRatio(true);

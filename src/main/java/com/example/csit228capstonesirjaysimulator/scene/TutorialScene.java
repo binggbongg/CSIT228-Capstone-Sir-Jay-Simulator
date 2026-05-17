@@ -12,7 +12,7 @@ public class TutorialScene extends SubScene {
     public TutorialScene() {
         Rectangle bg = new Rectangle(1280, 720, Color.color(0, 0, 0, 0.5));
 
-        Image tutorialImg = new Image("assets/textures/tutorial-bg.png");
+        Image tutorialImg = new Image("assets/textures/img_tutorial.png");
         ImageView tutorialView = new ImageView(tutorialImg);
         
         tutorialView.setFitHeight(600);

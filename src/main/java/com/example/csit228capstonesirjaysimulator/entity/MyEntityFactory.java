@@ -62,7 +62,7 @@ public class MyEntityFactory implements EntityFactory {
 
     @Spawns("chair")
     public Entity newChair(SpawnData data){
-        Texture texture = FXGL.getAssetLoader().loadTexture("Chair.PNG");
+        Texture texture = FXGL.getAssetLoader().loadTexture("chair.png");
         texture.setFitWidth(210);
         texture.setFitHeight(210);
 
@@ -75,7 +75,7 @@ public class MyEntityFactory implements EntityFactory {
 
     @Spawns("table")
     public Entity newTable(SpawnData data){
-        Texture texture = FXGL.getAssetLoader().loadTexture("Table.PNG");
+        Texture texture = FXGL.getAssetLoader().loadTexture("table.png");
         texture.setFitWidth(240);
         texture.setFitHeight(240);
 

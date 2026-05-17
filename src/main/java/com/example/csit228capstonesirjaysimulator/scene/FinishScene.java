@@ -34,12 +34,12 @@ public class FinishScene extends SubScene {
     
     private void buildUI() {
         // Initial Background
-        Image imgBg1 = new Image("assets/textures/game-over-bg-1.png", 1280, 0, true, true);
+        Image imgBg1 = new Image("assets/textures/game_over_bg_1.png", 1280, 0, true, true);
         ImageView bg1 = new ImageView(imgBg1);
         bg1.setTranslateY((720 - imgBg1.getHeight()) / 2.0 + 50);
 
         // Fade in Background 2
-        Image imgBg2 = new Image("assets/textures/game-over-bg-2.png", 1280, 0, true, true);
+        Image imgBg2 = new Image("assets/textures/game_over_bg_2.png", 1280, 0, true, true);
         ImageView bg2 = new ImageView(imgBg2);
         bg2.setTranslateY((720 - imgBg2.getHeight()) / 2.0 + 50);
         bg2.setOpacity(0);
@@ -50,7 +50,7 @@ public class FinishScene extends SubScene {
         fadeBg2.play();
 
         // Pull down Background 3
-        Image imgBg3 = new Image("assets/textures/game-over-bg-3.png", 1280, 0, true, true);
+        Image imgBg3 = new Image("assets/textures/game_over_bg_3.png", 1280, 0, true, true);
         ImageView bg3 = new ImageView(imgBg3);
         bg3.setTranslateX(-300);
         bg3.setTranslateY(-imgBg3.getHeight());
@@ -87,7 +87,7 @@ public class FinishScene extends SubScene {
         scoreText.setFont(jelleeScore);
 
         // Retry Button
-        Image imgBtnRetry = new Image("assets/textures/button-retry.png");
+        Image imgBtnRetry = new Image("assets/textures/button_retry.png");
         ImageView btnRetry = new ImageView(imgBtnRetry);
         btnRetry.setFitWidth(200);
         btnRetry.setPreserveRatio(true);
@@ -98,7 +98,7 @@ public class FinishScene extends SubScene {
         });
 
         // Leaderboard Button
-        Image imgBtnLeaderboard = new Image("assets/textures/button-leaderboard.png");
+        Image imgBtnLeaderboard = new Image("assets/textures/button_leaderboard.png");
         ImageView btnLeaderboard = new ImageView(imgBtnLeaderboard);
         btnLeaderboard.setFitWidth(200);
         btnLeaderboard.setPreserveRatio(true);
@@ -110,7 +110,7 @@ public class FinishScene extends SubScene {
         });
 
         // Back to Menu Button
-        Image imgBtnMenu = new Image("assets/textures/button-back-to-menu.png");
+        Image imgBtnMenu = new Image("assets/textures/button_back_to_menu.png");
         ImageView btnMenu = new ImageView(imgBtnMenu);
         btnMenu.setFitWidth(200);
         btnMenu.setPreserveRatio(true);
