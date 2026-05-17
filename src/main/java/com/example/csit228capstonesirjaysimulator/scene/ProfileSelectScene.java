@@ -33,6 +33,9 @@ public class ProfileSelectScene extends SubScene {
     private VBox      dialogBox;
     private StackPane overlayPane;
 
+    private int loginAttempts = 0;
+    private static final int MAX_LOGIN_ATTEMPTS = 5;
+
     public ProfileSelectScene(javafx.scene.Node parentRoot, Runnable onPlay) {
         this.parentRoot = parentRoot;
         this.onPlay     = onPlay;
@@ -295,7 +298,7 @@ public class ProfileSelectScene extends SubScene {
     private void showConfirmIdentityDialog(UserProfile p, Runnable onSuccess) {
         openOverlay();
 
-        Rectangle dBg = panelBg(380, 270);
+        Rectangle dBg = panelBg(380, 290);
 
         Text dTitle = new Text("CONFIRM IDENTITY");
         dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
@@ -313,13 +316,37 @@ public class ProfileSelectScene extends SubScene {
         Label err = errorLabel();
 
         Button btnOk     = buildButton("CONFIRM");
-        Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
+        Button btnCancel = cancelButton(() -> {
+            loginAttempts = 0; // reset on manual cancel
+            overlayPane.setVisible(false);
+        });
+
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+            pfPass.setDisable(true);
+            btnOk.setDisable(true);
+            err.setText("Too many attempts. Please restart the app.");
+        }
 
         btnOk.setOnAction(e -> {
+            if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+                err.setText("Too many attempts. Please restart the app.");
+                return;
+            }
+
             if (p.checkPassword(pfPass.getText())) {
+                loginAttempts = 0;
                 onSuccess.run();
             } else {
-                err.setText("Incorrect password.");
+                loginAttempts++;
+                int remaining = MAX_LOGIN_ATTEMPTS - loginAttempts;
+
+                if (remaining <= 0) {
+                    err.setText("Too many attempts. Please restart the app.");
+                    pfPass.setDisable(true);
+                    btnOk.setDisable(true);
+                } else {
+                    err.setText("Incorrect password. " + remaining + " attempt(s) left.");
+                }
                 pfPass.clear();
             }
         });
@@ -396,7 +423,13 @@ public class ProfileSelectScene extends SubScene {
         Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
 
         btnOk.setOnAction(e -> {
+            if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+                err.setText("Too many attempts. Please restart the app.");
+                return;
+            }
+
             if (p.checkPassword(pfPass.getText())) {
+                loginAttempts = 0;
                 new Thread(() -> {
                     boolean ok = UserDatabaseService.getInstance().deleteUser(p.getTeacherId());
                     javafx.application.Platform.runLater(() -> {
@@ -415,7 +448,15 @@ public class ProfileSelectScene extends SubScene {
                     });
                 }).start();
             } else {
-                err.setText("Incorrect password.");
+                loginAttempts++;
+                int remaining = MAX_LOGIN_ATTEMPTS - loginAttempts;
+                if (remaining <= 0) {
+                    err.setText("Too many attempts. Please restart the app.");
+                    pfPass.setDisable(true);
+                    btnOk.setDisable(true);
+                } else {
+                    err.setText("Incorrect password. " + remaining + " attempt(s) left.");
+                }
                 pfPass.clear();
             }
         });
