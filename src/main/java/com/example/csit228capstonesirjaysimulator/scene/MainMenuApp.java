@@ -61,8 +61,6 @@ public class MainMenuApp extends FXGLMenu {
         });
 
         btnLeaderboard.setOnMouseClicked(e -> {
-            System.out.println("CLICKING LEADERBOARD");
-
             getContentRoot().setEffect(new GaussianBlur(50));
             FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot()));
         });

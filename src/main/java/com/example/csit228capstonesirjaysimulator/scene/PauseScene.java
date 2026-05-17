@@ -4,6 +4,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.scene.SubScene;
 import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.geometry.Pos;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -14,10 +15,13 @@ public class PauseScene extends SubScene {
 
     public PauseScene() {
         AudioManager.getInstance().pauseMusic("chocolate-milk.mp3");
-        Rectangle bg = new Rectangle(1280, 720, Color.color(0, 0, 0, 0.5));
 
+        Image bgImg = new Image("assets/textures/polka_dot_bg.jpg");
         Image resumeImg = new Image("assets/textures/button-resume.png");
         Image menuImg = new Image("assets/textures/button-back-to-menu.png");
+
+        ImageView background = new ImageView(bgImg);
+        background.setOpacity(.5);
 
         ImageView resumeBtn = new ImageView(resumeImg);
         resumeBtn.setFitWidth(200);
@@ -36,6 +40,6 @@ public class PauseScene extends SubScene {
         vbox.setAlignment(Pos.CENTER);
         vbox.setPrefSize(1280, 720);
 
-        getContentRoot().getChildren().addAll(bg, vbox);
+        getContentRoot().getChildren().addAll(background, vbox);
     }
 }

@@ -1,0 +1,35 @@
+package com.example.csit228capstonesirjaysimulator.scene;
+
+import com.almasb.fxgl.app.scene.LoadingScene;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+
+public class CustomLoadingScene extends LoadingScene {
+    public CustomLoadingScene(){
+        ImageView bg = new ImageView(new Image("assets/textures/polka_dot_bg.jpg"));
+        ImageView logo = new ImageView(new Image("assets/textures/sir_serato-icon.png"));
+        logo.setFitWidth(300);
+        logo.setPreserveRatio(true);
+
+        RotateTransition sway = new RotateTransition(Duration.seconds(1.0), logo);
+        sway.setFromAngle(-15);
+        sway.setToAngle(15);
+        sway.setCycleCount(Animation.INDEFINITE);
+        sway.setAutoReverse(true);
+        sway.setInterpolator(Interpolator.EASE_BOTH);
+
+        sway.play();
+
+        VBox vbox = new VBox(logo);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPrefSize(1280, 720);
+
+        getContentRoot().getChildren().addAll(bg, vbox);
+    }
+}

@@ -10,6 +10,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -26,6 +28,9 @@ public class LeaderboardScene extends SubScene {
     public LeaderboardScene(Node parentRoot) {
         this.parentRoot = parentRoot;
 
+        ImageView bg = new ImageView(new Image("assets/textures/polka_dot_bg.jpg"));
+        bg.setOpacity(.25);
+
         Rectangle rect = new Rectangle(600, 650);
         rect.setFill(Color.rgb(30, 30, 30, 0.9));
         rect.setArcHeight(30);
@@ -34,7 +39,7 @@ public class LeaderboardScene extends SubScene {
         rect.setStrokeWidth(2);
         rect.setEffect(new DropShadow(20, Color.BLACK));
 
-        Text title = new Text("HALL OF FAME");
+        Text title = new Text("TOP NOTCHERS");
         title.setFont(Font.font("Verdana", FontWeight.BOLD, 36));
         title.setFill(Color.GOLD);
 
@@ -70,7 +75,7 @@ public class LeaderboardScene extends SubScene {
         container.setPrefSize(1280, 720);
         container.setAlignment(Pos.CENTER);
 
-        getContentRoot().getChildren().addAll(container);
+        getContentRoot().getChildren().addAll(bg, container);
     }
 
     public void refreshLeaderboard() {

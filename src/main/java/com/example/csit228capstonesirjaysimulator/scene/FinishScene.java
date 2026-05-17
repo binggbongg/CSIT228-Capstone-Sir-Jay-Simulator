@@ -10,11 +10,11 @@ import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import com.almasb.fxgl.scene.SubScene;
 import javafx.scene.Cursor;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -98,7 +98,10 @@ public class FinishScene extends SubScene {
         btnLeaderboard.setFitWidth(200);
         btnLeaderboard.setPreserveRatio(true);
         btnLeaderboard.setCursor(Cursor.HAND);
-        btnLeaderboard.setOnMouseClicked(e -> FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot())));
+        btnLeaderboard.setOnMouseClicked(e -> {
+            getContentRoot().setEffect(new GaussianBlur(50));
+            FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot()));
+        });
 
         // Back to Menu Button
         Image imgBtnMenu = new Image("assets/textures/button-back-to-menu.png");
