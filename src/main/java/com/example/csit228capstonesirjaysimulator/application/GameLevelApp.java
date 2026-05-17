@@ -274,7 +274,7 @@ public class GameLevelApp extends GameApplication {
         spawnTables();
 
         getip("lives").addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() <= 0) {
+            if (newValue.intValue() <= 0 && oldValue.intValue() > 0) {
                 showGameOver();
             }
         });

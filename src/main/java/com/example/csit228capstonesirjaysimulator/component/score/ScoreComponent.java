@@ -27,7 +27,7 @@ public class ScoreComponent {
         Platform.runLater(() -> {
             synchronized (LOCK) {
                 int sc = FXGL.geti("score");
-                FXGL.set("score", sc - fail);
+                FXGL.set("score", Math.max(0, sc - fail));
                 FXGL.set("mult", 1);
             }
         });
@@ -37,14 +37,14 @@ public class ScoreComponent {
         Platform.runLater(() -> {
             synchronized (LOCK) {
                 int lives = FXGL.geti("lives");
-                FXGL.set("lives", lives - 1);
+                int newLives = Math.max(0, lives - 1);
+                FXGL.set("lives", newLives);
                 FXGL.set("streak", 0);
                 FXGL.set("mult", 1);
                 onFalseAccusation();
             }
         });
     }
-
     public void correctGuess() {
         Platform.runLater(() -> {
             synchronized (LOCK) {
