@@ -4,10 +4,11 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.audio.Music;
 import com.almasb.fxgl.dsl.FXGL;
+import com.example.csit228capstonesirjaysimulator.database.DatabaseConnection;
 import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -62,8 +63,20 @@ public class MainMenuApp extends FXGLMenu {
         });
 
         btnLeaderboard.setOnMouseClicked(e -> {
-            getContentRoot().setEffect(new GaussianBlur(50));
-            FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot()));
+
+            // Running database status check in a background thread to avoid blocking the UI
+            // Using Platform.runLater to safely update the scene once the check completes
+            new Thread(() -> {
+                if (DatabaseConnection.checkStatus()) {
+                    Platform.runLater(() -> {
+                        FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot()));
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        FXGL.getSceneService().pushSubScene(new DatabaseErrorScene());
+                    });
+                }
+            }).start();
         });
 
         btnExit.setOnMouseClicked(e -> fireExit());

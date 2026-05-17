@@ -12,12 +12,12 @@ public class DatabaseConnection {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
 
-    public static Connection getConnection() {
+    public static Connection getConnection() throws SQLException {
         try {
-            return DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            return conn;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
@@ -43,6 +43,16 @@ public class DatabaseConnection {
         try (Connection conn = DriverManager.getConnection(BASE_URL, USERNAME, PASSWORD);
              Statement  st   = conn.createStatement()) {
             st.executeUpdate("CREATE DATABASE IF NOT EXISTS seratosimulator");
+        }
+    }
+
+    public static boolean checkStatus() {
+        java.sql.DriverManager.setLoginTimeout(2);
+
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
+            return true;
+        } catch (java.sql.SQLException e) {
+            return false;
         }
     }
 
