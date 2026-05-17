@@ -2,6 +2,7 @@ package com.example.csit228capstonesirjaysimulator.scene;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.scene.SubScene;
+import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 public class PauseScene extends SubScene {
 
     public PauseScene() {
+        AudioManager.getInstance().pauseMusic("chocolate-milk.mp3");
         Rectangle bg = new Rectangle(1280, 720, Color.color(0, 0, 0, 0.5));
 
         Image resumeImg = new Image("assets/textures/button-resume.png");
@@ -20,7 +22,10 @@ public class PauseScene extends SubScene {
         ImageView resumeBtn = new ImageView(resumeImg);
         resumeBtn.setFitWidth(200);
         resumeBtn.setPreserveRatio(true);
-        resumeBtn.setOnMouseClicked(e -> FXGL.getSceneService().popSubScene());
+        resumeBtn.setOnMouseClicked(e -> {
+            AudioManager.getInstance().resumeMusic("chocolate-milk.mp3");
+            FXGL.getSceneService().popSubScene();
+        });
 
         ImageView menuBtn = new ImageView(menuImg);
         menuBtn.setFitWidth(200);

@@ -26,14 +26,23 @@ public class AudioManager {
     }
 
     private void preloadSounds(){
-        String[] lines = {"good1.wav", "notgood1.wav", "tap.mp3", "mahbadmahbad2.wav", "whatdidijustdo2.wav", "anywho1.wav"};
+        String[] lines = {
+                "good1.wav",
+                "notgood1.wav",
+                "tap.mp3",
+                "mahbadmahbad2.wav",
+                "whatdidijustdo2.wav",
+                "anywho1.wav",
+                "tsk1.wav",
+                "swearbymysword1.wav"};
         for(String s : lines){
             soundMap.put(s, FXGL.getAssetLoader().loadSound(s));
         }
     }
 
     private void preloadMusic(){
-        String[] lines = {"distractor_sfx.wav"};
+        String[] lines = {"distractor_sfx.wav",
+                            "chocolate-milk.mp3"};
         for(String s : lines){
             musicMap.put(s, FXGL.getAssetLoader().loadMusic(s));
         }
@@ -46,6 +55,7 @@ public class AudioManager {
         } else {
             FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound(name));
         }
+
     }
 
     public void playMusic(String name){
@@ -61,7 +71,40 @@ public class AudioManager {
         FXGL.getAudioPlayer().stopAllSounds();
     }
 
-    public void stopMusic() {
+    public void stopAllMusicPlaying() {
         FXGL.getAudioPlayer().stopAllMusic();
+    }
+
+    public void stopMusic(String name){
+        Music m = musicMap.get(name);
+        FXGL.getAudioPlayer().stopMusic(m);
+    }
+
+    public void setMusicVolume (double volume) {
+        double clampedVolume = Math.max(0.0, Math.min(1.0, volume));
+
+        // FXGL automatically syncs these specific string variables to its internal audio systems!
+        FXGL.set("musicVolume", clampedVolume * 0.6); // Keep music a bit quieter
+
+        System.out.println("Music volume safely adjusted via FXGL Properties to: " + clampedVolume);
+    }
+
+    public void setSoundVolume (double volume) {
+        double clampedVolume = Math.max(0.0, Math.min(1.0, volume));
+
+        // FXGL automatically syncs these specific string variables to its internal audio systems!
+        FXGL.set("soundVolume", clampedVolume);
+
+        System.out.println("Sound volume safely adjusted via FXGL Properties to: " + clampedVolume);
+    }
+
+    public void pauseMusic(String name){
+        Music m = musicMap.get(name);
+        FXGL.getAudioPlayer().pauseMusic(m);
+    }
+
+    public void resumeMusic(String name){
+        Music m = musicMap.get(name);
+        FXGL.getAudioPlayer().resumeMusic(m);
     }
 }

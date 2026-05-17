@@ -1,5 +1,6 @@
 package com.example.csit228capstonesirjaysimulator.component.student;
 
+import com.almasb.fxgl.audio.Audio;
 import com.almasb.fxgl.dsl.FXGL;
 import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 
@@ -34,8 +35,7 @@ public class DistractingState extends StudentState {
             FXGL.getWorldProperties().setValue("isLocked", false);
 //            FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("correct.mp3"));
             AudioManager.getInstance().playSound("anywho1.wav");
-
-            FXGL.getAudioPlayer().stopAllMusic();
+            AudioManager.getInstance().stopMusic("distractor_sfx.wav");
 
             scoreComponent.distractorResolved();
 

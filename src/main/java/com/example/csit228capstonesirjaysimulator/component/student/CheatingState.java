@@ -27,7 +27,7 @@ public class CheatingState extends StudentState{
     @Override
     public void onAction() {
         System.out.println("yes this is a cheater!! Not Good");
-        AudioManager.getInstance().playSound("good1.wav");
+        AudioManager.getInstance().playSound("sosad1.wav");
         //Create new thread to update the score
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();

@@ -25,20 +25,14 @@ public class MyEntityFactory implements EntityFactory {
     public Entity newStudent(SpawnData data) {
         StudentComponent student = new StudentComponent("students/"+getRandomPrefix());
 
-        Entity e = baseStudent(data, student);
-
-        student.changeState(new IdleState(student));
-        return e;
+        return baseStudent(data, student);
     }
 
     @Spawns("distractor")
     public Entity newDistractor(SpawnData data) {
         StudentComponent student = new StudentComponent("students/trey");
 
-        Entity e = baseStudent(data, student);
-
-        student.changeState(new DistractIdleState(student));
-        return e;
+        return baseStudent(data, student);
     }
 
     private Entity baseStudent(SpawnData data, StudentComponent brain) {

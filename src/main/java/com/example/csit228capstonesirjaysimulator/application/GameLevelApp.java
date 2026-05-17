@@ -7,6 +7,7 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.example.csit228capstonesirjaysimulator.component.student.DistractIdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.IdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
@@ -256,6 +257,9 @@ public class GameLevelApp extends GameApplication {
     protected void initGame() {
 //        initAssets(); // Preload assets to avoid latency during gameplay
         AudioManager.getInstance();
+        AudioManager.getInstance().setMusicVolume(0.5);
+        AudioManager.getInstance().setSoundVolume(1);
+        AudioManager.getInstance().playMusic("chocolate-milk.mp3");
         FXGL.getGameWorld().addEntityFactory(factory);
 
         spawnChairs();
@@ -287,7 +291,7 @@ public class GameLevelApp extends GameApplication {
 
     private void showGameOver(){
         AudioManager.getInstance().stopAllSounds();
-        AudioManager.getInstance().stopMusic();
+        AudioManager.getInstance().stopAllMusicPlaying();
 
         long now      = Instant.now().getEpochSecond();
         double secs   = now - sessionStart;
@@ -456,6 +460,9 @@ public class GameLevelApp extends GameApplication {
         double y = mousePoint.getY();
 
         for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
+            if (!e.isVisible()) {
+                continue;
+            }
             // Check if the mouse point is inside the entity's current bounding box
             if (e.isVisible() && e.getBoundingBoxComponent().isWithin(x, y, x, y)) {
                 System.out.println("student is hit");
@@ -468,10 +475,19 @@ public class GameLevelApp extends GameApplication {
     private void handlePressE(){
         // shush all students
         if(FXGL.geti("streak") > 6){
+            AudioManager.getInstance().playSound("swearbymysword1.wav");
             System.out.println("Shush is activated");
             for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
                 StudentComponent s = e.getComponent(StudentComponent.class);
-                if(s != null) s.changeState(new IdleState(s));
+                if (s != null) {
+                    // Check if this specific entity is a distractor by checking its asset prefix
+                    if (s.getPrefix().contains("trey")) {
+                        System.out.println("changed the tre");
+                        s.changeState(new DistractIdleState(s));
+                    } else {
+                        s.changeState(new IdleState(s));
+                    }
+                }
             }
             streakIndicator.setImage(streakIconNormal);
             FXGL.set("streak", 0);

@@ -44,7 +44,12 @@ public class StudentComponent extends Component {
         );
 
         entity.getViewComponent().addChild(texture);
-        changeState(new IdleState(this));
+        if (prefix.contains("trey")) {
+            System.out.println("changed tre back");
+            changeState(new DistractIdleState(this));
+        } else {
+            changeState(new IdleState(this));
+        }
     }
     @Override
     public void onUpdate(double tpf) {
@@ -93,5 +98,9 @@ public class StudentComponent extends Component {
         if (texture != null) {
             texture.setEffect(currentColor);
         }
+    }
+
+    public String getPrefix() {
+        return prefix;
     }
 }
