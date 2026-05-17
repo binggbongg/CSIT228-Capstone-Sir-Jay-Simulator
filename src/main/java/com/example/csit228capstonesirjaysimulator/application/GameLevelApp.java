@@ -67,6 +67,7 @@ public class GameLevelApp extends GameApplication {
         gameSettings.setMainMenuEnabled(true);
         gameSettings.setMenuKey(KeyCode.F12);
         gameSettings.setSceneFactory(new MenuFactory());
+        gameSettings.setAppIcon("sir_serato-icon.png");
     }
 
     @Override
