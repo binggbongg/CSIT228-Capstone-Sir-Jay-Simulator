@@ -110,7 +110,7 @@ public class ProfileSelectScene extends SubScene {
     private void showAddDialog() {
         openOverlay();
 
-        TextField     tfId      = builder.dialogField("Teacher ID (00-0000-00)");
+        TextField     tfId      = builder.dialogField("Teacher ID (00-0000-000)");
         TextField     tfName    = builder.dialogField("Username");
         PasswordField pfPass    = builder.passwordField("Password");
         PasswordField pfConfirm = builder.passwordField("Confirm Password");
@@ -120,14 +120,21 @@ public class ProfileSelectScene extends SubScene {
 
         tfId.textProperty().addListener((obs, oldVal, newVal) -> {
             String digits = newVal.replaceAll("[^\\d]", "");
-            if (digits.length() > 8) digits = digits.substring(0, 8);
+            if (digits.length() > 9) digits = digits.substring(0, 9);
+
             StringBuilder fmt = new StringBuilder();
             for (int i = 0; i < digits.length(); i++) {
                 if (i == 2 || i == 6) fmt.append('-');
                 fmt.append(digits.charAt(i));
             }
             String result = fmt.toString();
-            if (!result.equals(newVal)) { tfId.setText(result); tfId.positionCaret(result.length()); }
+
+            if (!result.equals(newVal)) {
+                javafx.application.Platform.runLater(() -> {
+                    tfId.setText(result);
+                    tfId.positionCaret(result.length());
+                });
+            }
         });
 
         Button btnCancel = builder.cancelButton(() -> overlayPane.setVisible(false));
@@ -142,7 +149,7 @@ public class ProfileSelectScene extends SubScene {
             String pw2  = pfConfirm.getText();
 
             if (tid.isEmpty())                         { err.setText("Teacher ID is required."); return; }
-            if (!tid.matches("\\d{2}-\\d{4}-\\d{2}")) { err.setText("Format must be 00-0000-00."); return; }
+            if (!tid.matches("\\d{2}-\\d{4}-\\d{3}")) { err.setText("Format must be 00-0000-000."); return; }
             if (user.isEmpty())                        { err.setText("Username is required."); return; }
             if (user.length() > 60)                    { err.setText("Username max 60 characters."); return; }
             if (crs == null || sec == null)            { err.setText("Select a course and section."); return; }
