@@ -26,16 +26,13 @@ public class ProfileDialogBuilder {
 
     public StackPane buildAddDialog(TextField tfId, TextField tfName,
                                     PasswordField pfPass, PasswordField pfConfirm,
-                                    ComboBox<String> cbCourse, ComboBox<String> cbSection,
+                                    HBox combos,
                                     Label err, Button btnSave, Button btnCancel) {
-        Rectangle dBg = panelBg(420, 440);
+        Rectangle dBg = panelBg(420, 480);
 
         Text dTitle = new Text("ADD PROFILE");
         dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         dTitle.setFill(Color.GOLD);
-
-        HBox combos = new HBox(10, cbCourse, cbSection);
-        combos.setAlignment(Pos.CENTER);
 
         HBox btns = new HBox(12, btnCancel, btnSave);
         btns.setAlignment(Pos.CENTER);

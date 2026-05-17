@@ -114,21 +114,75 @@ public class ProfileSelectScene extends SubScene {
         TextField     tfName    = builder.dialogField("Username");
         PasswordField pfPass    = builder.passwordField("Password");
         PasswordField pfConfirm = builder.passwordField("Confirm Password");
+
         ComboBox<String> cbCourse  = builder.styledCombo("Course",  "CS244", "CSIT228");
         ComboBox<String> cbSection = builder.styledCombo("Section", "F1", "F2", "F3");
+
+
+        String comboStyle =
+                "-fx-background-color:#2a2a2a;" +
+                        "-fx-border-color: gold;" +
+                        "-fx-border-width:1.5;" +
+                        "-fx-border-radius:4;" +
+                        "-fx-background-radius:4;" +
+                        "-fx-font-size:13px;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-prompt-text-fill: #aaaaaa;";
+
+        cbCourse.setStyle(comboStyle);
+        cbSection.setStyle(comboStyle);
+
+        cbCourse.setButtonCell(new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Course" : item);
+                setStyle("-fx-text-fill: white; -fx-font-size:13px; -fx-background-color: transparent;");
+            }
+        });
+
+        cbSection.setButtonCell(new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Section" : item);
+                setStyle("-fx-text-fill: white; -fx-font-size:13px; -fx-background-color: transparent;");
+            }
+        });
+
+
+        javafx.scene.control.Label lblCourse = new javafx.scene.control.Label("Course");
+        lblCourse.setFont(Font.font("Arial", FontWeight.BOLD, 11));
+        lblCourse.setTextFill(Color.GOLD);
+
+        javafx.scene.control.Label lblSection = new javafx.scene.control.Label("Section");
+        lblSection.setFont(Font.font("Arial", FontWeight.BOLD, 11));
+        lblSection.setTextFill(Color.GOLD);
+
+        VBox courseBox   = new VBox(4, lblCourse, cbCourse);
+        VBox sectionBox  = new VBox(4, lblSection, cbSection);
+        HBox combos      = new HBox(10, courseBox, sectionBox);
+        combos.setAlignment(Pos.CENTER);
+
         Label err = builder.errorLabel();
+
+
+        tfId.setOnAction(e -> tfName.requestFocus());
+        tfName.setOnAction(e -> pfPass.requestFocus());
+        pfPass.setOnAction(e -> pfConfirm.requestFocus());
+        pfConfirm.setOnAction(e -> cbCourse.requestFocus());
+        cbCourse.setOnAction(e -> cbSection.requestFocus());
+
 
         tfId.textProperty().addListener((obs, oldVal, newVal) -> {
             String digits = newVal.replaceAll("[^\\d]", "");
             if (digits.length() > 9) digits = digits.substring(0, 9);
-
             StringBuilder fmt = new StringBuilder();
             for (int i = 0; i < digits.length(); i++) {
                 if (i == 2 || i == 6) fmt.append('-');
                 fmt.append(digits.charAt(i));
             }
             String result = fmt.toString();
-
             if (!result.equals(newVal)) {
                 javafx.application.Platform.runLater(() -> {
                     tfId.setText(result);
@@ -140,6 +194,11 @@ public class ProfileSelectScene extends SubScene {
         Button btnCancel = builder.cancelButton(() -> overlayPane.setVisible(false));
         Button btnSave   = builder.buildButton("SAVE");
 
+
+        cbSection.setOnKeyPressed(e -> {
+            if (e.getCode() == javafx.scene.input.KeyCode.ENTER) btnSave.fire();
+        });
+
         btnSave.setOnAction(e -> {
             String tid  = tfId.getText().trim();
             String user = tfName.getText().trim();
@@ -148,14 +207,15 @@ public class ProfileSelectScene extends SubScene {
             String pw   = pfPass.getText();
             String pw2  = pfConfirm.getText();
 
-            if (tid.isEmpty())                         { err.setText("Teacher ID is required."); return; }
-            if (!tid.matches("\\d{2}-\\d{4}-\\d{3}")) { err.setText("Format must be 00-0000-000."); return; }
-            if (user.isEmpty())                        { err.setText("Username is required."); return; }
-            if (user.length() > 60)                    { err.setText("Username max 60 characters."); return; }
-            if (crs == null || sec == null)            { err.setText("Select a course and section."); return; }
-            if (pw.isEmpty())                          { err.setText("Password is required."); return; }
-            if (pw.length() < 8)                       { err.setText("Password min 8 characters."); return; }
-            if (!pw.equals(pw2))                       { err.setText("Passwords do not match."); return; }
+            if (tid.isEmpty())                          { err.setText("Teacher ID is required."); return; }
+            if (!tid.matches("\\d{2}-\\d{4}-\\d{3}"))  { err.setText("Format must be 00-0000-000."); return; }
+            if (user.isEmpty())                         { err.setText("Username is required."); return; }
+            if (user.length() > 60)                     { err.setText("Username max 60 characters."); return; }
+            if (crs == null)                            { err.setText("Please select a course."); return; }
+            if (sec == null)                            { err.setText("Please select a section."); return; }
+            if (pw.isEmpty())                           { err.setText("Password is required."); return; }
+            if (pw.length() < 8)                        { err.setText("Password min 8 characters."); return; }
+            if (!pw.equals(pw2))                        { err.setText("Passwords do not match."); return; }
             if (profiles.stream().anyMatch(p -> p.getTeacherId().equalsIgnoreCase(tid))) {
                 err.setText("Teacher ID already exists."); return;
             }
@@ -174,7 +234,7 @@ public class ProfileSelectScene extends SubScene {
             }).start();
         });
 
-        showDialog(builder.buildAddDialog(tfId, tfName, pfPass, pfConfirm, cbCourse, cbSection, err, btnSave, btnCancel));
+        showDialog(builder.buildAddDialog(tfId, tfName, pfPass, pfConfirm, combos, err, btnSave, btnCancel));
     }
 
     private void showViewDialog() {
