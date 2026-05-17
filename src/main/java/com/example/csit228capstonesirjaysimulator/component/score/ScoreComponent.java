@@ -88,7 +88,21 @@ public class ScoreComponent {
     }
 
 
-
+    public void distractorResolved() {
+        Platform.runLater(() -> {
+            synchronized (LOCK) {
+                updateMissionsOnDistractorResolved();
+            }
+        });
+    }
+    private void updateMissionsOnDistractorResolved() {
+        List<Mission<?>> missions = getMissions();
+        if (missions == null) return;
+        for (Mission<?> m : missions) {
+            if (m.getMissionId() == 5)
+                ((Mission<Integer>) m).increment();
+        }
+    }
 
     private void updateMissionsOnCheaterCaught() {
         List<Mission<?>> missions = getMissions();

@@ -125,7 +125,6 @@ public class DatabaseConnection {
                 "('Score over 10000 in one session',          'INTEGER', 10000)",
                 "('Achieve a score multiplier of 3x',         'BOOLEAN', 1)",
                 "('Achieve a score multiplier of 5x',         'BOOLEAN', 1)",
-                "('Complete a session without losing a life', 'BOOLEAN', 1)",
         };
 
         for (String row : seeds) {

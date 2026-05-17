@@ -36,6 +36,9 @@ public class DistractingState extends StudentState {
             AudioManager.getInstance().playSound("anywho1.wav");
 
             FXGL.getAudioPlayer().stopAllMusic();
+
+            scoreComponent.distractorResolved();
+
             // Return to the distractor's specific idle state
             getStudent().changeState(new DistractIdleState(getStudent()));
         } else {

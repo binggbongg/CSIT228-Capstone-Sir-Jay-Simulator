@@ -618,28 +618,57 @@ public class ProfileSelectScene extends SubScene {
 
     private HBox buildMissionRow(MissionProgressRow row) {
         Color barColor = row.completed() ? Color.LIMEGREEN : Color.GOLD;
-        double pct = row.type().equals("BOOLEAN")
-                ? (row.completed() ? 1.0 : 0.0)
-                : Math.min(1.0, (double) row.currentValue() / Math.max(1, row.targetValue()));
 
-        Rectangle track = new Rectangle(140, 8, Color.rgb(60, 60, 60));
-        track.setArcWidth(4); track.setArcHeight(4);
-        Rectangle fill = new Rectangle(140 * pct, 8, barColor);
-        fill.setArcWidth(4); fill.setArcHeight(4);
+        double pct;
+        if ("BOOLEAN".equalsIgnoreCase(row.type())) {
+            pct = row.completed() ? 1.0 : 0.0;
+        } else {
+            pct = row.targetValue() == 0
+                    ? 1.0
+                    : Math.min(1.0, (double) row.currentValue() / row.targetValue());
+        }
 
-        StackPane bar = new StackPane(track, fill);
-        StackPane.setAlignment(fill, Pos.CENTER_LEFT);
+        final double BAR_TOTAL = 140.0;
+
+        javafx.scene.layout.Pane barPane = new javafx.scene.layout.Pane();
+        barPane.setPrefSize(BAR_TOTAL, 8);
+        barPane.setMaxSize(BAR_TOTAL, 8);
+        barPane.setMinSize(BAR_TOTAL, 8);
+
+        Rectangle track = new Rectangle(BAR_TOTAL, 8, Color.rgb(60, 60, 60));
+        track.setArcWidth(4);
+        track.setArcHeight(4);
+        track.setLayoutX(0);
+        track.setLayoutY(0);
+
+        double fillWidth = BAR_TOTAL * pct;
+        Rectangle fill = new Rectangle(Math.max(fillWidth, 0.001), 8, barColor);
+        fill.setArcWidth(4);
+        fill.setArcHeight(4);
+        fill.setLayoutX(0);
+        fill.setLayoutY(0);
+
+        barPane.getChildren().addAll(track, fill);
+
+
+        String progressLabel;
+        if ("BOOLEAN".equalsIgnoreCase(row.type())) {
+            progressLabel = row.completed() ? "✓" : "✗";
+        } else {
+            progressLabel = row.currentValue() + " / " + row.targetValue()
+                    + "  (" + (int)(pct * 100) + "%)";
+        }
 
         Text desc = new Text(row.description());
         desc.setFill(row.completed() ? Color.LIMEGREEN : Color.LIGHTGRAY);
         desc.setFont(Font.font("Arial", FontWeight.NORMAL, 11));
         desc.setWrappingWidth(160);
 
-        Text prog = new Text(row.progressText());
+        Text prog = new Text(progressLabel);
         prog.setFill(barColor);
         prog.setFont(Font.font("Arial", FontWeight.BOLD, 11));
 
-        VBox left = new VBox(3, desc, bar);
+        VBox left = new VBox(3, desc, barPane);
         left.setAlignment(Pos.CENTER_LEFT);
 
         HBox rowBox = new HBox(10, left, prog);

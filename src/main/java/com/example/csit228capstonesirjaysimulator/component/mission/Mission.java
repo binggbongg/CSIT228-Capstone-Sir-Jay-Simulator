@@ -18,13 +18,20 @@ public class Mission<T extends Comparable<T>> {
 
 
     public synchronized void setCurrent(T value) {
-        this.current = value;
+        if (value instanceof Integer) {
+            int capped = Math.min((Integer) value, (Integer) target);
+            this.current = (T) Integer.valueOf(capped);
+        } else {
+            this.current = value;
+        }
         evaluateCompletion();
     }
 
     public synchronized void increment() {
         if (current instanceof Integer) {
-            current = (T) Integer.valueOf(((Integer) current) + 1);
+            int next = ((Integer) current) + 1;
+            int tgt  = (Integer) target;
+            current  = (T) Integer.valueOf(Math.min(next, tgt));
             evaluateCompletion();
         }
     }
