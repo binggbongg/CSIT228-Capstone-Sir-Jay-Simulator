@@ -14,44 +14,61 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.effect.GaussianBlur;
 import javafx.util.Duration;
 
 public class MainMenuApp extends FXGLMenu {
-    public MainMenuApp(){
+
+    private ImageView bg, logoView, btnPlay, btnLeaderboard, btnExit;
+    private SequentialTransition introAnimation;
+
+    public MainMenuApp() {
         super(MenuType.MAIN_MENU);
 
-        Image image = new Image("assets/textures/bg_main_menu.png");
-        ImageView bg = new ImageView(image);
+        initUI();
+        initListeners();
+        initAnimations();
+
+        introAnimation.play();
+    }
+
+    private void initUI() {
+        bg = new ImageView(new Image("assets/textures/bg_main_menu.png"));
         bg.setFitHeight(FXGL.getAppHeight());
         bg.setFitWidth(FXGL.getAppWidth());
 
-        Image logo = new Image("assets/textures/logo.png");
-        ImageView logoView = new ImageView(logo);
+        logoView = new ImageView(new Image("assets/textures/logo.png"));
         logoView.setFitWidth(650);
         logoView.setPreserveRatio(true);
+        logoView.setScaleX(0.0);
+        logoView.setScaleY(0.0);
 
-        getContentRoot().getChildren().add(bg);
+        btnPlay = createMenuButton("assets/textures/button_play.png");
+        btnLeaderboard = createMenuButton("assets/textures/button_leaderboard.png");
+        btnExit = createMenuButton("assets/textures/button_exit.png");
 
-        Image playImg = new Image("assets/textures/button_play.png");
-        Image leaderboardImg = new Image("assets/textures/button_leaderboard.png");
-        Image exitImg = new Image("assets/textures/button_exit.png");
+        HBox buttonBox = new HBox(20, btnLeaderboard, btnPlay, btnExit);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        ImageView btnPlay = new ImageView(playImg);
-        ImageView btnLeaderboard = new ImageView(leaderboardImg);
-        ImageView btnExit = new ImageView(exitImg);
+        VBox centerLayout = new VBox(40, logoView, buttonBox);
+        centerLayout.setAlignment(Pos.CENTER);
 
-        btnPlay.setFitWidth(200);
-        btnPlay.setPreserveRatio(true);
-        btnLeaderboard.setFitWidth(200);
-        btnLeaderboard.setPreserveRatio(true);
-        btnExit.setFitWidth(200);
-        btnExit.setPreserveRatio(true);
+        StackPane rootStack = new StackPane(centerLayout);
+        rootStack.setPrefSize(FXGL.getAppWidth(), FXGL.getAppHeight());
 
-        btnPlay.setVisible(false);
-        btnLeaderboard.setVisible(false);
-        btnExit.setVisible(false);
+        getContentRoot().getChildren().addAll(bg, rootStack);
+    }
 
-        btnPlay.setOnMouseClicked( e -> {
+    private ImageView createMenuButton(String path) {
+        ImageView iv = new ImageView(new Image(path));
+        iv.setFitWidth(200);
+        iv.setPreserveRatio(true);
+        iv.setVisible(false);
+        return iv;
+    }
+
+    private void initListeners() {
+        btnPlay.setOnMouseClicked(e -> {
             AudioManager.getInstance().stopMusic("classroom.wav");
             btnPlay.getParent().requestFocus();
 
@@ -59,71 +76,48 @@ public class MainMenuApp extends FXGLMenu {
                 IntroCutScene cutScene = new IntroCutScene(() -> fireNewGame());
                 FXGL.getSceneService().pushSubScene(cutScene);
             }));
-
         });
 
         btnLeaderboard.setOnMouseClicked(e -> {
-
-            // Running database status check in a background thread to avoid blocking the UI
-            // Using Platform.runLater to safely update the scene once the check completes
+            // using another thread to check on db to minimize ui lag
             new Thread(() -> {
-                if (DatabaseConnection.checkStatus()) {
-                    Platform.runLater(() -> {
+                boolean online = DatabaseConnection.checkStatus();
+                Platform.runLater(() -> {
+                    if (online) {
+                        getContentRoot().setEffect(new GaussianBlur(50));
                         FXGL.getSceneService().pushSubScene(new LeaderboardScene(getContentRoot()));
-                    });
-                } else {
-                    Platform.runLater(() -> {
+                    } else {
                         FXGL.getSceneService().pushSubScene(new DatabaseErrorScene());
-                    });
-                }
+                    }
+                });
             }).start();
         });
 
         btnExit.setOnMouseClicked(e -> fireExit());
+    }
 
-        HBox menuBox = new HBox(20, btnLeaderboard, btnPlay, btnExit);
-        menuBox.setAlignment(Pos.CENTER);
-
-        VBox rootBox = new VBox(40, logoView, menuBox);
-        rootBox.setAlignment(Pos.CENTER);
-
-        StackPane stack = new StackPane(rootBox);
-        stack.setPrefSize(FXGL.getAppWidth(), FXGL.getAppHeight());
-        stack.setAlignment(Pos.CENTER);
-
-        getContentRoot().getChildren().add(stack);
-
-        logoView.setScaleX(0.0);
-        logoView.setScaleY(0.0);
-
+    private void initAnimations() {
         ScaleTransition grow = new ScaleTransition(Duration.seconds(0.8), logoView);
         grow.setFromX(0.0);
         grow.setFromY(0.0);
         grow.setToX(1.0);
         grow.setToY(1.0);
-        grow.setInterpolator(Interpolator.LINEAR);
 
-        ScaleTransition bounce = new ScaleTransition(Duration.seconds(.6), logoView);
-        bounce.setFromX(1.0);
-        bounce.setFromY(1.0);
+        ScaleTransition bounce = new ScaleTransition(Duration.seconds(0.6), logoView);
         bounce.setToX(1.2);
         bounce.setToY(1.2);
         bounce.setAutoReverse(true);
         bounce.setCycleCount(4);
         bounce.setInterpolator(Interpolator.EASE_OUT);
 
-        SequentialTransition intro = new SequentialTransition(grow, bounce);
-
-        Music music = FXGL.getAssetLoader().loadMusic("intro_music.wav");
-
-        intro.setOnFinished(e -> {
+        introAnimation = new SequentialTransition(grow, bounce);
+        introAnimation.setOnFinished(e -> {
             btnPlay.setVisible(true);
             btnLeaderboard.setVisible(true);
             btnExit.setVisible(true);
         });
 
+        Music music = FXGL.getAssetLoader().loadMusic("intro_music.wav");
         FXGL.getAudioPlayer().playMusic(music);
-
-        intro.play();
     }
 }

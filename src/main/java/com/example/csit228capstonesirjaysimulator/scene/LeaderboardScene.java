@@ -27,6 +27,10 @@ public class LeaderboardScene extends SubScene {
 
     public LeaderboardScene(Node parentRoot) {
         this.parentRoot = parentRoot;
+        initUI();
+    }
+
+    private void initUI(){
 
         ImageView bg = new ImageView(new Image("assets/textures/bg_polka_dot.jpg"));
         bg.setOpacity(.25);
