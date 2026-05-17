@@ -30,7 +30,10 @@ public class PauseScene extends SubScene {
         ImageView menuBtn = new ImageView(menuImg);
         menuBtn.setFitWidth(200);
         menuBtn.setPreserveRatio(true);
-        menuBtn.setOnMouseClicked(e -> FXGL.getGameController().gotoMainMenu());
+        menuBtn.setOnMouseClicked(e -> {
+            FXGL.getGameController().gotoMainMenu();
+            AudioManager.getInstance().playMusic("classroom.wav");
+        });
 
         VBox vbox = new VBox(20, resumeBtn, menuBtn);
         vbox.setAlignment(Pos.CENTER);

@@ -4,6 +4,7 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.audio.Music;
 import com.almasb.fxgl.dsl.FXGL;
+import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.effect.GaussianBlur;
@@ -102,13 +103,19 @@ public class MainMenuApp extends FXGLMenu {
 
         SequentialTransition intro = new SequentialTransition(grow, bounce);
 
+        Music music = FXGL.getAssetLoader().loadMusic("intro_music.wav");
+
         intro.setOnFinished(e -> {
             btnPlay.setVisible(true);
             btnLeaderboard.setVisible(true);
             btnExit.setVisible(true);
+
+            FXGL.getAudioPlayer().stopMusic(music);
+
+            AudioManager.getInstance().playMusic("classroom.wav");
+
         });
 
-        Music music = FXGL.getAssetLoader().loadMusic("intro_music.wav");
         FXGL.getAudioPlayer().playMusic(music);
 
         intro.play();
