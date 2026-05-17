@@ -255,7 +255,13 @@ public class GameLevelApp extends GameApplication {
 
     @Override
     protected void initGame() {
-//        initAssets(); // Preload assets to avoid latency during gameplay
+
+        try {
+            Thread.sleep(1500); //artificial delay for loading screen
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         AudioManager.getInstance();
         AudioManager.getInstance().setMusicVolume(0.5);
         AudioManager.getInstance().setSoundVolume(1);
