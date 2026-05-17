@@ -119,10 +119,9 @@ public class GameLevelApp extends GameApplication {
         Image dashboardImg = new Image("assets/textures/game-screen_dashboard.png");
         ImageView gameDashboard = new ImageView(dashboardImg);
 
-        gameDashboard.setFitWidth(600);
+        gameDashboard.setFitWidth(300);
         gameDashboard.setPreserveRatio(true);
-        gameDashboard.setTranslateX(-30);
-        gameDashboard.setTranslateY(-20);
+        //gameDashboard.setTranslateY(-20);
 
         getGameScene().addUINode(gameDashboard);
 
@@ -146,30 +145,30 @@ public class GameLevelApp extends GameApplication {
         getGameScene().addUINode(scoreVarText);
 
         Text livesText = new Text("LIVES");
-        livesText.setTranslateX(200);
-        livesText.setTranslateY(125);
+        livesText.setTranslateX(50);
+        livesText.setTranslateY(186);
         livesText.setFill(Color.BLACK);
         livesText.setFont(jelleeBody);
         getGameScene().addUINode(livesText);
 
         Text livesVarText = new Text();
-        livesVarText.setTranslateX(200);
-        livesVarText.setTranslateY(150);
+        livesVarText.setTranslateX(50);
+        livesVarText.setTranslateY(211);
         livesVarText.setFill(Color.BLACK);
         livesVarText.setFont(jelleeHeading);
         livesVarText.textProperty().bind(getip("lives").asString());
         getGameScene().addUINode(livesVarText);
 
         Text multText = new Text("MULTIPLIER");
-        multText.setTranslateX(300);
-        multText.setTranslateY(125);
+        multText.setTranslateX(50);
+        multText.setTranslateY(241);
         multText.setFill(Color.BLACK);
         multText.setFont(jelleeBody);
         getGameScene().addUINode(multText);
 
         Text multVarText = new Text();
-        multVarText.setTranslateX(300);
-        multVarText.setTranslateY(150);
+        multVarText.setTranslateX(50);
+        multVarText.setTranslateY(266);
         multVarText.setFill(Color.BLACK);
         multVarText.setFont(jelleeHeading);
         multVarText.textProperty().bind(getip("mult").asString());
@@ -183,7 +182,7 @@ public class GameLevelApp extends GameApplication {
         streakIndicator = new ImageView(streakIconNormal);
         streakIndicator.setFitWidth(80);
         streakIndicator.setPreserveRatio(true);
-        streakIndicator.setTranslateX(400);
+        streakIndicator.setTranslateX(150);
         streakIndicator.setTranslateY(100);
 
         getGameScene().addUINode(streakIndicator);
