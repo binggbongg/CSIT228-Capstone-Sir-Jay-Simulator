@@ -95,7 +95,14 @@ public class IntroCutScene extends SubScene {
     }
 
     private void initUI(){
-        background = new ImageView(new Image("assets/textures/studentView.png"));
+        String bgPath;
+        if ("CS244".equals(professorCourse)) {
+            bgPath = "assets/textures/DAA_bg.png";
+        } else {
+            bgPath = "assets/textures/OOP2_bg.png";
+        }
+
+        background = new ImageView(new Image(bgPath));
         background.setFitHeight(720);
         background.setFitWidth(1280);
 
