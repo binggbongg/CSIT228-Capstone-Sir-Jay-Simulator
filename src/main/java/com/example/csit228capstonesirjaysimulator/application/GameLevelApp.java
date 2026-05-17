@@ -13,6 +13,7 @@ import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
 import com.example.csit228capstonesirjaysimulator.scene.PauseScene;
+import com.example.csit228capstonesirjaysimulator.scene.TutorialScene;
 import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -33,8 +34,6 @@ import static com.almasb.fxgl.dsl.FXGL.getInput;
 import static com.almasb.fxgl.dsl.FXGL.onBtnDown;
 import static com.almasb.fxgl.dsl.FXGL.spawn;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
-
-
 
 import com.example.csit228capstonesirjaysimulator.database.Sessionstats;
 import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
@@ -188,6 +187,36 @@ public class GameLevelApp extends GameApplication {
         streakIndicator.setTranslateY(100);
 
         getGameScene().addUINode(streakIndicator);
+
+        Image buttonTImg = new Image("assets/textures/button-T.png");
+        ImageView buttonT = new ImageView(buttonTImg);
+        buttonT.setFitWidth(50);
+        buttonT.setPreserveRatio(true);
+        buttonT.setTranslateX(50);
+        buttonT.setTranslateY(560);
+        getGameScene().addUINode(buttonT);
+
+        Text openTutorialText = new Text("Open tutorial");
+        openTutorialText.setTranslateX(120);
+        openTutorialText.setTranslateY(600);
+        openTutorialText.setFill(Color.WHITE);
+        openTutorialText.setFont(jelleeHeading);
+        getGameScene().addUINode(openTutorialText);
+
+        Image buttonEImg = new Image("assets/textures/button-E.png");
+        ImageView buttonE = new ImageView(buttonEImg);
+        buttonE.setFitWidth(50);
+        buttonE.setPreserveRatio(true);
+        buttonE.setTranslateX(50);
+        buttonE.setTranslateY(630);
+        getGameScene().addUINode(buttonE);
+
+        Text shushText = new Text("Shush students");
+        shushText.setTranslateX(120);
+        shushText.setTranslateY(660);
+        shushText.setFill(Color.WHITE);
+        shushText.setFont(jelleeHeading);
+        getGameScene().addUINode(shushText);
     }
 
     /**
@@ -407,10 +436,18 @@ public class GameLevelApp extends GameApplication {
             }
         };
 
+        UserAction openTutorial = new UserAction("Open Tutorial") {
+            @Override
+            protected void onAction() {
+                FXGL.getSceneService().pushSubScene(new TutorialScene());
+            }
+        };
+
         input.addAction(switchScreenLeft, KeyCode.A);
         input.addAction(switchScreenRight, KeyCode.D);
         input.addAction(shushStudents, KeyCode.E);
         input.addAction(pauseScreen, KeyCode.ESCAPE);
+        input.addAction(openTutorial, KeyCode.T);
     }
 
     private void handleMouseClick() {
