@@ -2,7 +2,6 @@ package com.example.csit228capstonesirjaysimulator.database;
 
 import com.example.csit228capstonesirjaysimulator.entity.ScoreRecord;
 import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

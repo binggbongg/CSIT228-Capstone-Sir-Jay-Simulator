@@ -10,7 +10,6 @@ public class SuspiciousState extends StudentState {
     public SuspiciousState(StudentComponent student){
         super(student);
         this.duration = Duration.seconds(FXGLMath.random(5, 10));
-        //student.setHue(0.2); // rainbowdash turn purple ish idk
         student.playSuspiciousAnimation();
     }
 
@@ -23,9 +22,8 @@ public class SuspiciousState extends StudentState {
 
     @Override
     public void onAction() {
-        System.out.println("student not cheating! state is suspicious");
         AudioManager.getInstance().playSound("mahbadmahbad2.wav");
-        //Create new thread to update the score
+        //Create a new thread to update the score
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();
 

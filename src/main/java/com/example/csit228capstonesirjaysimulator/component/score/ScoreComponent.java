@@ -3,7 +3,6 @@ package com.example.csit228capstonesirjaysimulator.component.score;
 import com.almasb.fxgl.dsl.FXGL;
 import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
 import javafx.application.Platform;
-
 import java.util.List;
 
 public class ScoreComponent {
@@ -61,7 +60,6 @@ public class ScoreComponent {
             }
         });
     }
-
 
     private void onCheaterCaught() {
         FXGL.inc("sessionCheatersCaught", +1);

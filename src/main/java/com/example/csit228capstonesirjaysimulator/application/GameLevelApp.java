@@ -10,6 +10,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.example.csit228capstonesirjaysimulator.component.student.DistractIdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.IdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
+import com.example.csit228capstonesirjaysimulator.database.UserDatabaseService;
 import com.example.csit228capstonesirjaysimulator.entity.EntityType;
 import com.example.csit228capstonesirjaysimulator.entity.MyEntityFactory;
 import com.example.csit228capstonesirjaysimulator.scene.FinishScene;
@@ -24,7 +25,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,8 +63,6 @@ public class GameLevelApp extends GameApplication {
         gameSettings.setHeight(720);
         gameSettings.setWidth(1280);
         gameSettings.setTitle("Sir Serato Simulator");
-        gameSettings.setDeveloperMenuEnabled(true);
-        // turn developer menu on for debugging stuff
         gameSettings.setMainMenuEnabled(true);
         gameSettings.setMenuKey(KeyCode.F12);
         gameSettings.setSceneFactory(new MenuFactory());
@@ -123,7 +121,6 @@ public class GameLevelApp extends GameApplication {
 
         gameDashboard.setFitWidth(300);
         gameDashboard.setPreserveRatio(true);
-        //gameDashboard.setTranslateY(-20);
 
         getGameScene().addUINode(gameDashboard);
 
@@ -275,7 +272,8 @@ public class GameLevelApp extends GameApplication {
 
         sessionStats = new Sessionstats();
         sessionStart = Instant.now().getEpochSecond();
-        sessionMissions = MissionRepository.getInstance().loadAllMissions();
+
+        sessionMissions = MissionRepository.getInstance().loadAllMissions(UserDatabaseService.getInstance().getCurrentUser().getTeacherId());
 
         FXGL.getWorldProperties().setValue("sessionMissions", sessionMissions);
 
@@ -308,7 +306,6 @@ public class GameLevelApp extends GameApplication {
 
     private void updateRoomView(boolean isRightSide) {
         if (FXGL.getb("isLocked")) {
-            System.out.println("Movement locked! Help the student first.");
             return;
         }
 
@@ -374,11 +371,9 @@ public class GameLevelApp extends GameApplication {
         double startY = 590;
 
         for (int r = 0; r < 3; r++) {
-            // Calculate the Y for this specific row once
             double rowY = startY - (r * rowSpacing);
 
             for (int c = 0; c < 3; c++) {
-                // Calculate the X for this specific column
                 double colX = startX + (c * colSpacing);
 
                 spawn("chair", new SpawnData(colX, rowY));
@@ -410,7 +405,6 @@ public class GameLevelApp extends GameApplication {
 
     @Override
     protected void initInput() {
-        // Explicitly call the handleMouseClick method inside a void lambda
         onBtnDown(MouseButton.PRIMARY, () -> {
             System.out.println("Mouse is clicking");
             handleMouseClick();
@@ -500,7 +494,4 @@ public class GameLevelApp extends GameApplication {
             FXGL.set("isLocked", false);
         }
     }
-
-
-
 }

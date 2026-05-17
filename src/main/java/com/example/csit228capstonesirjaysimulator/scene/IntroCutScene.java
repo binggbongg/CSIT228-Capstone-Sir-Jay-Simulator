@@ -25,11 +25,11 @@ public class IntroCutScene extends SubScene {
 
     private Runnable onFinished;
 
-    private ImageView background, ppt, sirJay, skipButton;
+    private ImageView background, imgPpt, imgSirJay, btnSkip;
 
-    private StackPane sirBubble, treBubble, hertzBubble, coolAndNormalBubble;
+    private StackPane sirBubble, studentBubble1, studentBubble2, coolAndNormalBubble;
 
-    private Text sirText, treText, hertzText, coolAndNormalText, clickEnterText;
+    private Text sirText, student1Text, student2Text, coolAndNormalText, clickEnterText;
 
     private Image imgNormalSir, imgSirJudgy, imgSirTalking;
     private Image imgPptQuiz;
@@ -51,7 +51,7 @@ public class IntroCutScene extends SubScene {
 
         initUI();
 
-        skipButton.setOnMouseClicked(e -> {cleanUpAudio();});
+        btnSkip.setOnMouseClicked(e -> {cleanUpAudio();});
 
         this.getInput().addAction(new UserAction("Advance") {
             @Override
@@ -124,22 +124,22 @@ public class IntroCutScene extends SubScene {
 
         imgSkipButton = new Image("assets/textures/button-skip.png");
 
-        ppt = new ImageView(daaTitle);
-        sirJay = new ImageView(imgNormalSir);
-        skipButton = new ImageView(imgSkipButton);
+        imgPpt = new ImageView(daaTitle);
+        imgSirJay = new ImageView(imgNormalSir);
+        btnSkip = new ImageView(imgSkipButton);
 
-        ppt.setFitHeight(180);
-        ppt.setFitWidth(323);
+        imgPpt.setFitHeight(180);
+        imgPpt.setFitWidth(323);
 
-        sirJay.setFitHeight(380);
-        sirJay.setFitWidth(250);
+        imgSirJay.setFitHeight(380);
+        imgSirJay.setFitWidth(250);
 
-        skipButton.setFitWidth(130);
-        skipButton.setPreserveRatio(true);
+        btnSkip.setFitWidth(130);
+        btnSkip.setPreserveRatio(true);
 
         sirText = new Text("How's your day everybody?");
-        treText = new Text("Wait sa sir!");
-        hertzText = new Text("One-fourth sir?");
+        student1Text = new Text("Wait sa sir!");
+        student2Text = new Text("One-fourth sir?");
         coolAndNormalText = new Text("Cool and Normal!");
         coolAndNormalText.setFont(Font.font("Arial", 36));
 
@@ -153,32 +153,32 @@ public class IntroCutScene extends SubScene {
         clickEnterText.setTranslateY(650);
 
         sirBubble = makeSpeechBubble(new Rectangle(250, 50, Color.WHITE), sirText, 16);
-        treBubble = makeSpeechBubble(new Rectangle(100, 50, Color.WHITE), treText, 16);
-        hertzBubble = makeSpeechBubble(new Rectangle(140, 50, Color.WHITE), hertzText, 16);
+        studentBubble1 = makeSpeechBubble(new Rectangle(100, 50, Color.WHITE), student1Text, 16);
+        studentBubble2 = makeSpeechBubble(new Rectangle(140, 50, Color.WHITE), student2Text, 16);
         coolAndNormalBubble = makeSpeechBubble(new Rectangle(1200, 100, Color.WHITE), coolAndNormalText, 36);
 
-        ppt.setTranslateX(470);
-        ppt.setTranslateY(250);
-        ppt.setVisible(false);
+        imgPpt.setTranslateX(470);
+        imgPpt.setTranslateY(250);
+        imgPpt.setVisible(false);
 
-        sirJay.setTranslateX(1100);
-        sirJay.setTranslateY(340);
-        sirJay.setVisible(false);
+        imgSirJay.setTranslateX(1100);
+        imgSirJay.setTranslateY(340);
+        imgSirJay.setVisible(false);
 
         sirBubble.setTranslateX(750);
         sirBubble.setTranslateY(180);
 
-        treBubble.setTranslateX(100);
-        treBubble.setTranslateY(600);
+        studentBubble1.setTranslateX(100);
+        studentBubble1.setTranslateY(600);
 
-        hertzBubble.setTranslateX(1000);
-        hertzBubble.setTranslateY(600);
+        studentBubble2.setTranslateX(1000);
+        studentBubble2.setTranslateY(600);
 
         coolAndNormalBubble.setTranslateX(50);
         coolAndNormalBubble.setTranslateY(575);
 
-        skipButton.setTranslateX(1100);
-        skipButton.setTranslateY(40);
+        btnSkip.setTranslateX(1100);
+        btnSkip.setTranslateY(40);
 
         topCurtain = new Rectangle(1280, 360, Color.BLACK);
         bottomCurtain = new Rectangle(1280, 360, Color.BLACK);
@@ -186,7 +186,7 @@ public class IntroCutScene extends SubScene {
         topCurtain.setTranslateY(0);
         bottomCurtain.setTranslateY(360);
 
-        getContentRoot().getChildren().addAll(background, ppt, sirJay,  sirBubble, treBubble, hertzBubble, coolAndNormalBubble, skipButton, clickEnterText, topCurtain, bottomCurtain);
+        getContentRoot().getChildren().addAll(background, imgPpt, imgSirJay,  sirBubble, studentBubble1, studentBubble2, coolAndNormalBubble, btnSkip, clickEnterText, topCurtain, bottomCurtain);
     }
 
     @Override
@@ -212,6 +212,7 @@ public class IntroCutScene extends SubScene {
         return stack;
     }
 
+    // done to prevent spamming of enter key during cut scene
     private void applyInputDelay(double seconds) {
         isAnimating = true;
         PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
@@ -271,14 +272,14 @@ public class IntroCutScene extends SubScene {
                 sirBubble.setVisible(true);
 
                 if(professorCourse.equals("CS244")){
-                    ppt.setImage(daaTitle);
+                    imgPpt.setImage(daaTitle);
                     playSound("daa_intro.wav");
                 } else {
-                    ppt.setImage(oopTitle);
+                    imgPpt.setImage(oopTitle);
                     playSound("oop_intro.wav");
                 }
 
-                ppt.setVisible(true);
+                imgPpt.setVisible(true);
                 currentSceneStep++;
                 applyInputDelay(1.3);
                 break;
@@ -293,7 +294,7 @@ public class IntroCutScene extends SubScene {
                 break;
 
             case 6:
-                ppt.setImage(imgPptQuiz);
+                imgPpt.setImage(imgPptQuiz);
                 sirText.setText("Quiz! Get one-fourth sheet of paper.");
 
                 playSound("quiz.wav");
@@ -307,10 +308,10 @@ public class IntroCutScene extends SubScene {
 
             case 7:
                 sirBubble.setVisible(false);
-                treBubble.setVisible(true);
+                studentBubble1.setVisible(true);
 
-                sirJay.setImage(imgSirJudgy);
-                sirJay.setScaleX(-1);
+                imgSirJay.setImage(imgSirJudgy);
+                imgSirJay.setScaleX(-1);
                 playSound("waitsasir.wav");
 
                 currentSceneStep++;
@@ -318,10 +319,10 @@ public class IntroCutScene extends SubScene {
                 break;
 
             case 8:
-                treBubble.setVisible(false);
-                hertzBubble.setVisible(true);
+                studentBubble1.setVisible(false);
+                studentBubble2.setVisible(true);
 
-                sirJay.setScaleX(1);
+                imgSirJay.setScaleX(1);
                 playSound("onefourth.wav");
 
                 currentSceneStep++;
@@ -329,7 +330,7 @@ public class IntroCutScene extends SubScene {
                 break;
 
             case 9:
-                hertzBubble.setVisible(false);
+                studentBubble2.setVisible(false);
                 cleanUpAudio();
                 break;
         }
@@ -360,14 +361,14 @@ public class IntroCutScene extends SubScene {
 
         mouthFlicker = new Timeline(
                 new KeyFrame(Duration.seconds(0.10), e -> {
-                    if (sirJay.getImage() == imgNormalSir) {
-                        sirJay.setImage(imgSirTalking);
-                        sirJay.setFitHeight(380);
-                        sirJay.setFitWidth(250);
+                    if (imgSirJay.getImage() == imgNormalSir) {
+                        imgSirJay.setImage(imgSirTalking);
+                        imgSirJay.setFitHeight(380);
+                        imgSirJay.setFitWidth(250);
                     } else {
-                        sirJay.setImage(imgNormalSir);
-                        sirJay.setFitHeight(380);
-                        sirJay.setFitWidth(250);
+                        imgSirJay.setImage(imgNormalSir);
+                        imgSirJay.setFitHeight(380);
+                        imgSirJay.setFitWidth(250);
                     }
                 })
         );
@@ -376,18 +377,18 @@ public class IntroCutScene extends SubScene {
         playMusic("oop_discussion.wav");
 
         pptTimeline = new Timeline(
-                new KeyFrame(Duration.ZERO, e -> ppt.setImage(oopSlide1)),
+                new KeyFrame(Duration.ZERO, e -> imgPpt.setImage(oopSlide1)),
 
-                new KeyFrame(Duration.seconds(4.0), e -> ppt.setImage(oopSlide2)),
+                new KeyFrame(Duration.seconds(4.0), e -> imgPpt.setImage(oopSlide2)),
 
-                new KeyFrame(Duration.seconds(8.5), e -> ppt.setImage(oopSlide3))
+                new KeyFrame(Duration.seconds(8.5), e -> imgPpt.setImage(oopSlide3))
         );
         pptTimeline.play();
 
         lectureTimer = new PauseTransition(Duration.seconds(10.0));
         lectureTimer.setOnFinished(e -> {
             mouthFlicker.stop();
-            sirJay.setImage(imgNormalSir);
+            imgSirJay.setImage(imgNormalSir);
             isAnimating = false;
             currentSceneStep++;
         });
@@ -400,14 +401,14 @@ public class IntroCutScene extends SubScene {
 
         mouthFlicker = new Timeline(
                 new KeyFrame(Duration.seconds(0.15), e -> {
-                    if (sirJay.getImage() == imgNormalSir) {
-                        sirJay.setImage(imgSirTalking);
-                        sirJay.setFitHeight(380);
-                        sirJay.setFitWidth(250);
+                    if (imgSirJay.getImage() == imgNormalSir) {
+                        imgSirJay.setImage(imgSirTalking);
+                        imgSirJay.setFitHeight(380);
+                        imgSirJay.setFitWidth(250);
                     } else {
-                        sirJay.setImage(imgNormalSir);
-                        sirJay.setFitHeight(380);
-                        sirJay.setFitWidth(250);
+                        imgSirJay.setImage(imgNormalSir);
+                        imgSirJay.setFitHeight(380);
+                        imgSirJay.setFitWidth(250);
                     }
                 })
         );
@@ -416,18 +417,18 @@ public class IntroCutScene extends SubScene {
         playMusic("daa_discussion.mp3");
 
         pptTimeline = new Timeline(
-                new KeyFrame(Duration.ZERO, e -> ppt.setImage(daaSlide1)),
+                new KeyFrame(Duration.ZERO, e -> imgPpt.setImage(daaSlide1)),
 
-                new KeyFrame(Duration.seconds(4.0), e -> ppt.setImage(daaSlide2)),
+                new KeyFrame(Duration.seconds(4.0), e -> imgPpt.setImage(daaSlide2)),
 
-                new KeyFrame(Duration.seconds(8.5), e -> ppt.setImage(daaSlide3))
+                new KeyFrame(Duration.seconds(8.5), e -> imgPpt.setImage(daaSlide3))
         );
         pptTimeline.play();
 
         lectureTimer = new PauseTransition(Duration.seconds(13.0));
         lectureTimer.setOnFinished(e -> {
             mouthFlicker.stop();
-            sirJay.setImage(imgNormalSir);
+            imgSirJay.setImage(imgNormalSir);
             isAnimating = false;
             currentSceneStep++;
         });
@@ -439,10 +440,10 @@ public class IntroCutScene extends SubScene {
     private void startSirWalk(){
         isAnimating = true;
 
-        sirJay.setTranslateX(1100);
-        sirJay.setTranslateY(340);
+        imgSirJay.setTranslateX(1100);
+        imgSirJay.setTranslateY(340);
 
-        bobbing = new TranslateTransition(Duration.seconds(0.2), sirJay);
+        bobbing = new TranslateTransition(Duration.seconds(0.2), imgSirJay);
         bobbing.setFromY(340);
         bobbing.setToY(330);
         bobbing.setCycleCount(Animation.INDEFINITE);
@@ -451,18 +452,18 @@ public class IntroCutScene extends SubScene {
 
         delay = new PauseTransition(Duration.seconds(1.5));
         delay.setOnFinished(e -> {
-            sirJay.setVisible(true);
+            imgSirJay.setVisible(true);
         });
         delay.play();
 
-        walk = new TranslateTransition(Duration.seconds(3.5), sirJay);
+        walk = new TranslateTransition(Duration.seconds(3.5), imgSirJay);
         walk.setFromX(1100);
         walk.setToX(750);
         walk.setInterpolator(Interpolator.EASE_OUT);
 
         walk.setOnFinished(ev -> {
             bobbing.stop();
-            sirJay.setTranslateY(340);
+            imgSirJay.setTranslateY(340);
             isAnimating = false;
             advanceScene();
         });
@@ -474,6 +475,4 @@ public class IntroCutScene extends SubScene {
         });
         delay2.play();
     }
-
-
 }

@@ -1,7 +1,6 @@
 package com.example.csit228capstonesirjaysimulator.database;
 
 import com.example.csit228capstonesirjaysimulator.component.mission.Mission;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +14,35 @@ public class MissionRepository {
         return instance;
     }
 
-    public List<Mission<?>> loadAllMissions() {
+    public List<Mission<?>> loadAllMissions(String teacherId) {
         List<Mission<?>> list = new ArrayList<>();
-        String sql = "SELECT id, description, type, target_value FROM missions ORDER BY id";
+
+        String sql = "SELECT m.id, m.description, m.type, m.target_value, " +
+                "mp.current_value, mp.completed " +
+                "FROM missions m " +
+                "LEFT JOIN mission_progress mp ON m.id = mp.mission_id AND mp.teacher_id = ? " +
+                "ORDER BY m.id";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement st = conn.prepareStatement(sql);
-             ResultSet rs = st.executeQuery()) {
+             PreparedStatement st = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                int    id     = rs.getInt("id");
-                String desc   = rs.getString("description");
-                String type   = rs.getString("type");
-                int    target = rs.getInt("target_value");
+            st.setString(1, teacherId);
 
-                if ("BOOLEAN".equalsIgnoreCase(type)) {
-                    list.add(new Mission<>(id, desc, Boolean.TRUE, Boolean.FALSE));
-                } else {
-                    list.add(new Mission<>(id, desc, target, 0));
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String desc = rs.getString("description");
+                    String type = rs.getString("type");
+                    int target = rs.getInt("target_value");
+
+                    int currentProgress = rs.getInt("current_value");
+                    boolean isCompleted = rs.getBoolean("completed");
+
+                    if ("BOOLEAN".equalsIgnoreCase(type)) {
+                        list.add(new Mission<>(id, desc, Boolean.TRUE, isCompleted));
+                    } else {
+                        list.add(new Mission<>(id, desc, target, currentProgress));
+                    }
                 }
             }
         } catch (SQLException e) {

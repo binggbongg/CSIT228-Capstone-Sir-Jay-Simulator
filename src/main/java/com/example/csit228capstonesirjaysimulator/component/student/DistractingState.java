@@ -1,6 +1,5 @@
 package com.example.csit228capstonesirjaysimulator.component.student;
 
-import com.almasb.fxgl.audio.Audio;
 import com.almasb.fxgl.dsl.FXGL;
 import com.example.csit228capstonesirjaysimulator.util.AudioManager;
 
@@ -12,7 +11,6 @@ public class DistractingState extends StudentState {
         student.setHue(0.2);
 
         student.playDistractAnimation();
-//        Music s = FXGL.getAssetLoader().loadMusic("distractor_sfx.wav");
         AudioManager.getInstance().playMusic("distractor_sfx.wav");
 
         FXGL.getWorldProperties().setValue("isLocked", true);
@@ -28,12 +26,9 @@ public class DistractingState extends StudentState {
         clicksRequired--;
         System.out.println("Student assisted! Clicks remaining: " + clicksRequired);
 
-        //getStudent().setHue(0.5 + (0.1 * (5 - clicksRequired)));
-
         if (clicksRequired <= 0) {
             System.out.println("Student satisfied. Room unlocked.");
             FXGL.getWorldProperties().setValue("isLocked", false);
-//            FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("correct.mp3"));
             AudioManager.getInstance().playSound("anywho1.wav");
             AudioManager.getInstance().stopMusic("distractor_sfx.wav");
 

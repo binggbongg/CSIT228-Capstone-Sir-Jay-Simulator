@@ -48,7 +48,6 @@ public class Mission<T extends Comparable<T>> {
     }
 
     public int     getMissionId()   { return missionId;   }
-    public String  getDescription() { return description; }
     public T       getTarget()      { return target;      }
     public synchronized T getCurrent()     { return current;     }
     public synchronized boolean isCompleted()   { return completed;   }

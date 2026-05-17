@@ -8,9 +8,7 @@ import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.texture.Texture;
-import com.example.csit228capstonesirjaysimulator.component.student.DistractIdleState;
 import com.example.csit228capstonesirjaysimulator.component.student.StudentComponent;
-import com.example.csit228capstonesirjaysimulator.component.student.IdleState;
 
 import java.util.*;
 

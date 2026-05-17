@@ -39,15 +39,17 @@ public class LeaderboardScene extends SubScene {
         rect.setStrokeWidth(2);
         rect.setEffect(new DropShadow(20, Color.BLACK));
 
+        Font jelleeFont = Font.loadFont(getClass().getResourceAsStream("/fonts/Jellee-Roman.ttf"), 36);
+
         Text title = new Text("TOP NOTCHERS");
-        title.setFont(Font.font("Verdana", FontWeight.BOLD, 36));
+        title.setFont(Font.font(jelleeFont.getFamily(), FontWeight.BOLD, jelleeFont.getSize()));
         title.setFill(Color.GOLD);
 
         HBox header = new HBox(70, new Text("RANK"), new Text("PROFESSOR"), new Text("SCORE"));
         header.setAlignment(Pos.CENTER);
         header.getChildren().forEach(node -> {
             ((Text) node).setFill(Color.LIGHTGRAY);
-            ((Text) node).setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            ((Text) node).setFont(Font.font(jelleeFont.getFamily(), FontWeight.BOLD, 14));
         });
         header.setPadding(new Insets(10, 0, 10, 0));
 
@@ -57,7 +59,7 @@ public class LeaderboardScene extends SubScene {
         refreshLeaderboard();
 
         Button btnBack = new Button("RETURN TO MENU");
-        btnBack.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        title.setFont(Font.font(jelleeFont.getFamily(), FontWeight.BOLD, 14));
         btnBack.setTextFill(Color.BLACK);
         btnBack.setBackground(new Background(new BackgroundFill(Color.GOLD, CornerRadii.EMPTY, Insets.EMPTY)));
         btnBack.setPadding(new Insets(10, 40, 10, 40));

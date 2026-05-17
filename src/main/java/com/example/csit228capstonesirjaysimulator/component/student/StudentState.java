@@ -2,8 +2,6 @@ package com.example.csit228capstonesirjaysimulator.component.student;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.time.LocalTimer;
-
-import com.example.csit228capstonesirjaysimulator.application.GameLevelApp;
 import com.example.csit228capstonesirjaysimulator.component.score.ScoreComponent;
 import javafx.util.Duration;
 
@@ -26,8 +24,4 @@ public abstract class StudentState {
 
     abstract void onUpdate(double tpf);
     abstract void onAction();
-
-//    public void playSound(String name){
-//        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound(name));
-//    }
 }

@@ -3,7 +3,6 @@ package com.example.csit228capstonesirjaysimulator.util;
 import com.almasb.fxgl.audio.Music;
 import com.almasb.fxgl.audio.Sound;
 import com.almasb.fxgl.dsl.FXGL;
-
 import java.util.HashMap;
 import java.util.Map;
 
