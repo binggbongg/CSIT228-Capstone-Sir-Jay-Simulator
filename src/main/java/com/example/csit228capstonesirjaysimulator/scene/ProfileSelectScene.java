@@ -181,6 +181,10 @@ public class ProfileSelectScene extends SubScene {
     }
 
 
+    private boolean isValidTeacherId(String id) {
+        return id.matches("\\d{2}-\\d{4}-\\d{2}");
+    }
+
     private void showPasswordDialogThenPlay() {
         if (selectedProfile == null) return;
         showConfirmIdentityDialog(selectedProfile, () -> {
@@ -530,7 +534,8 @@ public class ProfileSelectScene extends SubScene {
         dTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         dTitle.setFill(Color.GOLD);
 
-        TextField tfId   = dialogField("Teacher ID");
+        TextField tfId = dialogField("Teacher ID");
+        tfId.setPromptText("Teacher ID (00-0000-00)");
         TextField tfName = dialogField("Username");
 
         PasswordField pfPass = new PasswordField();
@@ -552,6 +557,28 @@ public class ProfileSelectScene extends SubScene {
         Button btnSave   = buildButton("SAVE");
         Button btnCancel = cancelButton(() -> overlayPane.setVisible(false));
 
+        tfId.textProperty().addListener((obs, oldVal, newVal) -> {
+
+            String digitsOnly = newVal.replaceAll("[^\\d]", "");
+
+            if (digitsOnly.length() > 8) {
+                digitsOnly = digitsOnly.substring(0, 8);
+            }
+
+            StringBuilder formatted = new StringBuilder();
+            for (int i = 0; i < digitsOnly.length(); i++) {
+                if (i == 2 || i == 6) formatted.append('-');
+                formatted.append(digitsOnly.charAt(i));
+            }
+
+            String result = formatted.toString();
+
+            if (!result.equals(newVal)) {
+                tfId.setText(result);
+                tfId.positionCaret(result.length());
+            }
+        });
+
         btnSave.setOnAction(e -> {
             String tid  = tfId.getText().trim();
             String user = tfName.getText().trim();
@@ -560,8 +587,27 @@ public class ProfileSelectScene extends SubScene {
             String pw   = pfPass.getText();
             String pw2  = pfConfirm.getText();
 
-            if (tid.isEmpty() || user.isEmpty() || crs == null || sec == null || pw.isEmpty()) {
-                err.setText("Please fill in all fields."); return;
+
+            if (tid.isEmpty()) {
+                err.setText("Teacher ID is required."); return;
+            }
+            if (!isValidTeacherId(tid)) {
+                err.setText("Teacher ID must follow format: 00-0000-00"); return;
+            }
+            if (user.isEmpty()) {
+                err.setText("Username is required."); return;
+            }
+            if (user.length() > 60) {
+                err.setText("Username must be 60 characters or less."); return;
+            }
+            if (crs == null || sec == null) {
+                err.setText("Please select a course and section."); return;
+            }
+            if (pw.isEmpty()) {
+                err.setText("Password is required."); return;
+            }
+            if (pw.length() < 8) {
+                err.setText("Password must be at least 8 characters."); return;
             }
             if (!pw.equals(pw2)) {
                 err.setText("Passwords do not match."); return;
@@ -572,8 +618,7 @@ public class ProfileSelectScene extends SubScene {
 
             UserProfile np = new UserProfile(tid, user, crs, sec, pw);
             new Thread(() -> {
-                boolean ok = UserDatabaseService.getInstance()
-                        .registerUser(tid, user, crs, sec, pw);
+                boolean ok = UserDatabaseService.getInstance().registerUser(tid, user, crs, sec, pw);
                 javafx.application.Platform.runLater(() -> {
                     if (ok) { profiles.add(np); refreshCards(); overlayPane.setVisible(false); }
                     else    { err.setText("DB error — check console."); }
