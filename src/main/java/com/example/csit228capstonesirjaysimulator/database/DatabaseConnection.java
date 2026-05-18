@@ -22,8 +22,6 @@ public class DatabaseConnection {
     }
 
     public static void initialize(){
-        System.out.println("Initializing database....");
-
         try{
             createDatabaseIfMissing();
             try (Connection conn = getConnection();
@@ -31,10 +29,8 @@ public class DatabaseConnection {
 
                 createTables(st);
                 seedMissions(st);
-                System.out.println("Database ready.");
             }
         }catch(SQLException e){
-            System.out.println("Initialization failed: "+ e.getMessage());
             e.printStackTrace();
         }
     }

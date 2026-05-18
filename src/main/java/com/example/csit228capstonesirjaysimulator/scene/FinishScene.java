@@ -140,7 +140,6 @@ public class FinishScene extends SubScene {
         } catch (Exception ignored) { }
 
         if (profile == null) {
-            System.out.println("No active profile");
             return;
         }
 
@@ -159,9 +158,7 @@ public class FinishScene extends SubScene {
 
 
         new Thread(() -> {
-            System.out.println("Saving session for " + teacherId + " …");
             UserDatabaseService.getInstance().saveSession(teacherId, ss, finalMissions);
-            System.out.println("Session saved.");
         }, "db-save-thread").start();
     }
 

@@ -29,7 +29,6 @@ public class IdleState extends StudentState {
 
     @Override
     public void onAction() {
-        System.out.println("student not cheating! state is idle");
         AudioManager.getInstance().playSound("whatdidijustdo2.wav");
         //Create a new thread to update the score
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));

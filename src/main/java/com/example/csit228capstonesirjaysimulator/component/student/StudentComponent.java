@@ -45,7 +45,6 @@ public class StudentComponent extends Component {
 
         entity.getViewComponent().addChild(texture);
         if (prefix.contains("trey")) {
-            System.out.println("changed tre back");
             changeState(new DistractIdleState(this));
         } else {
             changeState(new IdleState(this));

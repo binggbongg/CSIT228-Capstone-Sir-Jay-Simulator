@@ -24,10 +24,8 @@ public class DistractingState extends StudentState {
     @Override
     void onAction() {
         clicksRequired--;
-        System.out.println("Student assisted! Clicks remaining: " + clicksRequired);
 
         if (clicksRequired <= 0) {
-            System.out.println("Student satisfied. Room unlocked.");
             FXGL.getWorldProperties().setValue("isLocked", false);
             AudioManager.getInstance().playSound("anywho1.wav");
             AudioManager.getInstance().stopMusic("distractor_sfx.wav");

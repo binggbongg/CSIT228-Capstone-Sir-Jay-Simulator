@@ -86,8 +86,6 @@ public class AudioManager {
 
         // FXGL automatically syncs these specific string variables to its internal audio systems!
         FXGL.set("musicVolume", clampedVolume * 0.6); // Keep music a bit quieter
-
-        System.out.println("Music volume safely adjusted via FXGL Properties to: " + clampedVolume);
     }
 
     public void setSoundVolume (double volume) {
@@ -95,8 +93,6 @@ public class AudioManager {
 
         // FXGL automatically syncs these specific string variables to its internal audio systems!
         FXGL.set("soundVolume", clampedVolume);
-
-        System.out.println("Sound volume safely adjusted via FXGL Properties to: " + clampedVolume);
     }
 
     public void pauseMusic(String name){

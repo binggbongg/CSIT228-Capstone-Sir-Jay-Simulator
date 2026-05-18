@@ -406,7 +406,6 @@ public class GameLevelApp extends GameApplication {
     @Override
     protected void initInput() {
         onBtnDown(MouseButton.PRIMARY, () -> {
-            System.out.println("Mouse is clicking");
             handleMouseClick();
         });
 
@@ -465,7 +464,6 @@ public class GameLevelApp extends GameApplication {
             }
             // Check if the mouse point is inside the entity's current bounding box
             if (e.isVisible() && e.getBoundingBoxComponent().isWithin(x, y, x, y)) {
-                System.out.println("student is hit");
                 e.getComponent(StudentComponent.class).onProctorClick();
                 break;
             }
@@ -476,13 +474,11 @@ public class GameLevelApp extends GameApplication {
         // shush all students
         if(FXGL.geti("streak") > 6){
             AudioManager.getInstance().playSound("swearbymysword1.wav");
-            System.out.println("Shush is activated");
             for (Entity e : getGameWorld().getEntitiesByType(EntityType.STUDENT)) {
                 StudentComponent s = e.getComponent(StudentComponent.class);
                 if (s != null) {
                     // Check if this specific entity is a distractor by checking its asset prefix
                     if (s.getPrefix().contains("trey")) {
-                        System.out.println("changed the tre");
                         s.changeState(new DistractIdleState(s));
                     } else {
                         s.changeState(new IdleState(s));
