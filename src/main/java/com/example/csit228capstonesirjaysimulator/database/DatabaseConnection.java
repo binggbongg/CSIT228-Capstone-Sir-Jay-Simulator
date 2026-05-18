@@ -118,6 +118,11 @@ public class DatabaseConnection {
                 CONSTRAINT fk_session_user FOREIGN KEY (teacher_id) REFERENCES users(teacher_id) ON DELETE CASCADE
             )
         """);
+
+        try {
+            st.executeUpdate("ALTER TABLE users ADD COLUMN last_played TIMESTAMP NULL DEFAULT NULL");
+        } catch (SQLException ignored) {
+        }
     }
 
     private static void seedMissions(Statement st) throws SQLException {
