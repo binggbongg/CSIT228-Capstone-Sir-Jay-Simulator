@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import java.util.List;
 
 public class ScoreComponent {
+    // The line below serves as the thread synchronization lock, to prevent race conditions with updating the score or missions
+    // private to prevent external access, static for only ONE lock instance, final to prevent changes (or the lock becoming null)
     private static final Object LOCK = new Object();
     int mult = 1;
     final int success = 120, sharpEye = 267, fail = 150;
