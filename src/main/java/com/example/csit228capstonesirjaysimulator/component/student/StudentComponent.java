@@ -23,6 +23,7 @@ public class StudentComponent extends Component {
     @Override
     public void onAdded() {
         double speed = 2.0;
+        //calling the different sprites depending on what prefix was passed
         animIdle  = new AnimationChannel(FXGL.getAssetLoader().loadTexture(prefix+ "_idle_state.png").getImage(), 9, 189, 354, Duration.seconds(speed), 0, 2);
         animSus   = new AnimationChannel(FXGL.getAssetLoader().loadTexture(prefix+"_sus_state.png").getImage(),  9, 189, 354, Duration.seconds(speed), 0, 2);
         animCheat = new AnimationChannel(FXGL.getAssetLoader().loadTexture(prefix+"_cheat_state.png").getImage(), 9, 189, 354, Duration.seconds(speed), 0, 2);
@@ -43,6 +44,7 @@ public class StudentComponent extends Component {
                 new HitBox("BODY", new Point2D(offsetX, offsetY), BoundingShape.box(100, 170))
         );
 
+        //distractor entity
         entity.getViewComponent().addChild(texture);
         if (prefix.contains("trey")) {
             changeState(new DistractIdleState(this));

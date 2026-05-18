@@ -15,6 +15,7 @@ import java.util.*;
 public class MyEntityFactory implements EntityFactory {
     private List<String> listOfPrefixes = List.of("stud1", "stud2", "stud3", "stud4");
 
+    //randomized prefix function for calling different student sprites
     private String getRandomPrefix(){
         return listOfPrefixes.get(FXGL.random(0, listOfPrefixes.size()-1));
     }

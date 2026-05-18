@@ -30,7 +30,7 @@ public class CheatingState extends StudentState{
         //Create a new thread to update the score
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();
-        // reset it to idle
+        // reset it back to idle state
         getStudent().changeState(new IdleState(getStudent()));
     }
 }

@@ -32,7 +32,7 @@ public class DistractingState extends StudentState {
 
             scoreComponent.distractorResolved();
 
-            // Return to the distractor's specific idle state
+            // return to the distractor's specific idle state
             getStudent().changeState(new DistractIdleState(getStudent()));
         } else {
             AudioManager.getInstance().playSound("tap.mp3");

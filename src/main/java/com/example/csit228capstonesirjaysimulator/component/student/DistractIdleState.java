@@ -14,6 +14,7 @@ public class DistractIdleState extends StudentState {
         student.playIdleAnimation();
     }
 
+    //separate idle for the distractor entity
     @Override
     public void onUpdate(double tpf) {
         if (timer.elapsed(this.duration)) {
@@ -31,8 +32,10 @@ public class DistractIdleState extends StudentState {
 
     @Override
     void onAction() {
+        System.out.println("Wait im doing nothing im just idle-distractor!");
+//        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("wrong.mp3"));
         AudioManager.getInstance().playSound("notgood1.wav");
-        // Create new thread to update the score
+        // create new thread to update the score
         Thread t = new Thread(new UpdateScoreRunnable(scoreComponent,this));
         t.start();
     }
