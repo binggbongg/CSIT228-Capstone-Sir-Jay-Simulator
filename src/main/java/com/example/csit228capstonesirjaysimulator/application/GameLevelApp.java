@@ -66,7 +66,7 @@ public class GameLevelApp extends GameApplication {
         gameSettings.setMainMenuEnabled(true);
         gameSettings.setMenuKey(KeyCode.F12);
         gameSettings.setSceneFactory(new MenuFactory());
-        gameSettings.setAppIcon("sir_serato-icon.png");
+        gameSettings.setAppIcon("sir_serato_icon.png");
     }
 
     @Override
@@ -174,9 +174,9 @@ public class GameLevelApp extends GameApplication {
         getGameScene().addUINode(multVarText);
 
         // Streak indicator ImageView
-        streakIconNormal = new Image("assets/textures/sir_serato-icon.png");
-        streakIconAngry = new Image("assets/textures/sir_serato-icon-angry.png");
-        streakIconAngrier = new Image("assets/textures/sir_serato-icon-angrier.png");
+        streakIconNormal = new Image("assets/textures/sir_serato_icon.png");
+        streakIconAngry = new Image("assets/textures/sir_serato_icon_angry.png");
+        streakIconAngrier = new Image("assets/textures/sir_serato_icon_angrier.png");
 
         streakIndicator = new ImageView(streakIconNormal);
         streakIndicator.setFitWidth(80);
@@ -219,9 +219,9 @@ public class GameLevelApp extends GameApplication {
 
     /**
      * Updates the streak indicator image based on the current streak value.
-     * - streak > 6: sir_serato-icon-angrier.png
-     * - streak > 3: sir_serato-icon-angry.png
-     * - streak <= 3 (less than 6): sir_serato-icon.png
+     * - streak > 6: sir_serato_icon_angrier.png
+     * - streak > 3: sir_serato_icon_angry.png
+     * - streak <= 3 (less than 6): sir_serato_icon.png
      */
 
     private void updateStreakIndicator(int streak) {

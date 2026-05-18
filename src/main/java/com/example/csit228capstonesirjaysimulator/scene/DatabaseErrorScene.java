@@ -12,9 +12,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ *  allows the user to recover in case of missing database connection
+ */
+
 public class DatabaseErrorScene extends SubScene {
     private Text statusText;
-    private Button btnRetry;
+    private Button btnRetry, btnBack;
 
     public DatabaseErrorScene() {
         Rectangle bg = new Rectangle(1280, 720, Color.rgb(0, 0, 0, 0.9));
@@ -33,9 +37,13 @@ public class DatabaseErrorScene extends SubScene {
         btnRetry = new Button("RETRY CONNECTION");
         btnRetry.setFont(jelleeTextBody);
 
-        btnRetry.setOnAction(e -> attemptReconnect());
+        btnBack = new Button("BACK TO MENU");
+        btnBack.setFont(jelleeTextBody);
 
-        VBox layout = new VBox(30, title, statusText, btnRetry);
+        btnRetry.setOnAction(e -> attemptReconnect());
+        btnBack.setOnAction( e -> FXGL.getSceneService().popSubScene());
+
+        VBox layout = new VBox(30, title, statusText, btnRetry, btnBack);
         layout.setAlignment(Pos.CENTER);
         layout.setPrefSize(1280, 720);
 

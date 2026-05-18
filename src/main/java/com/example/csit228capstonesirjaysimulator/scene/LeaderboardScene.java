@@ -95,6 +95,7 @@ public class LeaderboardScene extends SubScene {
             listContainer.getChildren().add(row);
             rank++;
         }
+        //fills in the remaining rows
         while (rank <= 10){
             LeaderboardRow row = new LeaderboardRow(rank, "", 0);
             row.setAlignment(Pos.CENTER);

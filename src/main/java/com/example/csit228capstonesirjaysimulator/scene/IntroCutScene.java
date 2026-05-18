@@ -66,34 +66,6 @@ public class IntroCutScene extends SubScene {
         advanceScene();
     }
 
-    private void playMusic(String file) {
-        Music music = FXGL.getAssetLoader().loadMusic(file);
-        FXGL.getAudioPlayer().playMusic(music);
-    }
-
-    private void playSound(String file){
-        Sound sound = FXGL.getAssetLoader().loadSound(file);
-        FXGL.getAudioPlayer().playSound(sound);
-    }
-
-    private void cleanUpAudio(){
-        isExiting = true;
-        isAnimating = false;
-
-        FXGL.getGameTimer().clear();
-
-        if (mouthFlicker != null) mouthFlicker.stop();
-        if (lectureTimer != null) lectureTimer.stop();
-        if (walk != null) walk.stop();
-        if (bobbing != null) bobbing.stop();
-        if (pptTimeline != null) pptTimeline.stop();
-
-        FXGL.getAudioPlayer().stopAllMusic();
-        FXGL.getAudioPlayer().stopAllSounds();
-
-        onFinished.run();
-    }
-
     private void initUI(){
         String bgPath;
         if ("CS244".equals(professorCourse)) {
@@ -193,31 +165,6 @@ public class IntroCutScene extends SubScene {
     public void onCreate() {
         this.getContentRoot().setFocusTraversable(true);
         this.getContentRoot().requestFocus();
-    }
-
-    StackPane makeSpeechBubble(Rectangle shape, Text label, int fontSize){
-        shape.setArcWidth(20);
-        shape.setArcHeight(20);
-
-        Font customFont = Font.loadFont(
-                getClass().getResourceAsStream("/fonts/Jellee-Roman.otf"),
-                fontSize
-        );
-
-        label.setFont(customFont);
-        label.setFill(Color.BLACK);
-
-        StackPane stack = new StackPane(shape, label);
-        stack.setVisible(false);
-        return stack;
-    }
-
-    // done to prevent spamming of enter key during cut scene
-    private void applyInputDelay(double seconds) {
-        isAnimating = true;
-        PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
-        delay.setOnFinished(e -> isAnimating = false);
-        delay.play();
     }
 
     private void advanceScene(){
@@ -335,6 +282,8 @@ public class IntroCutScene extends SubScene {
                 break;
         }
     }
+
+    // animation helpers
 
     private void openCurtains() {
         isAnimating = true;
@@ -474,5 +423,61 @@ public class IntroCutScene extends SubScene {
             walk.play();
         });
         delay2.play();
+    }
+
+    //helper methods
+
+    private void playMusic(String file) {
+        Music music = FXGL.getAssetLoader().loadMusic(file);
+        FXGL.getAudioPlayer().playMusic(music);
+    }
+
+    private void playSound(String file){
+        Sound sound = FXGL.getAssetLoader().loadSound(file);
+        FXGL.getAudioPlayer().playSound(sound);
+    }
+
+    //stops audio from persisting despite screen closing
+    private void cleanUpAudio(){
+        isExiting = true;
+        isAnimating = false;
+
+        FXGL.getGameTimer().clear();
+
+        if (mouthFlicker != null) mouthFlicker.stop();
+        if (lectureTimer != null) lectureTimer.stop();
+        if (walk != null) walk.stop();
+        if (bobbing != null) bobbing.stop();
+        if (pptTimeline != null) pptTimeline.stop();
+
+        FXGL.getAudioPlayer().stopAllMusic();
+        FXGL.getAudioPlayer().stopAllSounds();
+
+        onFinished.run();
+    }
+
+    StackPane makeSpeechBubble(Rectangle shape, Text label, int fontSize){
+        shape.setArcWidth(20);
+        shape.setArcHeight(20);
+
+        Font customFont = Font.loadFont(
+                getClass().getResourceAsStream("/fonts/Jellee-Roman.otf"),
+                fontSize
+        );
+
+        label.setFont(customFont);
+        label.setFill(Color.BLACK);
+
+        StackPane stack = new StackPane(shape, label);
+        stack.setVisible(false);
+        return stack;
+    }
+
+    // prevents spamming of enter key during the cut scene
+    private void applyInputDelay(double seconds) {
+        isAnimating = true;
+        PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
+        delay.setOnFinished(e -> isAnimating = false);
+        delay.play();
     }
 }

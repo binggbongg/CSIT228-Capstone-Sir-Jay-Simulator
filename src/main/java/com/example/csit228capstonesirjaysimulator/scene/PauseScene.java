@@ -12,6 +12,7 @@ public class PauseScene extends SubScene {
 
     public PauseScene() {
         AudioManager.getInstance().pauseMusic("chocolate-milk.mp3");
+        AudioManager.getInstance().pauseMusic("distractor_sfx.wav");
 
         Image bgImg = new Image("assets/textures/bg_polka_dot.jpg");
         Image resumeImg = new Image("assets/textures/button_resume.png");
@@ -25,6 +26,7 @@ public class PauseScene extends SubScene {
         resumeBtn.setPreserveRatio(true);
         resumeBtn.setOnMouseClicked(e -> {
             AudioManager.getInstance().resumeMusic("chocolate-milk.mp3");
+            AudioManager.getInstance().resumeMusic("distractor_sfx.wav");
             FXGL.getSceneService().popSubScene();
         });
 

@@ -10,13 +10,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * overrides the default loading screen and adds a custom one
+ */
+
 public class CustomLoadingScene extends LoadingScene {
     public CustomLoadingScene(){
+
+        // initializes the background and the logo
         ImageView bg = new ImageView(new Image("assets/textures/bg_polka_dot.jpg"));
-        ImageView logo = new ImageView(new Image("assets/textures/sir_serato-icon.png"));
+        ImageView logo = new ImageView(new Image("assets/textures/sir_serato_icon.png"));
         logo.setFitWidth(300);
         logo.setPreserveRatio(true);
 
+        // animates logo side to side
         RotateTransition sway = new RotateTransition(Duration.seconds(1.0), logo);
         sway.setFromAngle(-15);
         sway.setToAngle(15);

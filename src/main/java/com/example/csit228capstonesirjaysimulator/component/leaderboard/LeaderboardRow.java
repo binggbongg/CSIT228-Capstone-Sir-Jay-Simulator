@@ -7,6 +7,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * creates the individual rows for the leaderboard
+ */
+
 public class LeaderboardRow extends HBox {
 
     public LeaderboardRow(int rank, String name, int score) {

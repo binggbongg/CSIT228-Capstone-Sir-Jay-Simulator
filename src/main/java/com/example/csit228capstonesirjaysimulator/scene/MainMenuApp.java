@@ -69,17 +69,27 @@ public class MainMenuApp extends FXGLMenu {
 
     private void initListeners() {
         btnPlay.setOnMouseClicked(e -> {
-            AudioManager.getInstance().stopMusic("classroom.wav");
-            btnPlay.getParent().requestFocus();
+            // using another thread to check on the status of the database to minimize ui lag
+            new Thread(() -> {
+                boolean online = DatabaseConnection.checkStatus();
+                Platform.runLater(() -> {
+                    if (online) {
+                        AudioManager.getInstance().stopMusic("classroom.wav");
+                        btnPlay.getParent().requestFocus();
 
-            FXGL.getSceneService().pushSubScene(new ProfileSelectScene(getContentRoot(), () -> {
-                IntroCutScene cutScene = new IntroCutScene(() -> fireNewGame());
-                FXGL.getSceneService().pushSubScene(cutScene);
-            }));
+                        FXGL.getSceneService().pushSubScene(new ProfileSelectScene(getContentRoot(), () -> {
+                            IntroCutScene cutScene = new IntroCutScene(() -> fireNewGame());
+                            FXGL.getSceneService().pushSubScene(cutScene);
+                        }));
+                    } else {
+                        FXGL.getSceneService().pushSubScene(new DatabaseErrorScene());
+                    }
+                });
+            }).start();
         });
 
         btnLeaderboard.setOnMouseClicked(e -> {
-            // using another thread to check on db to minimize ui lag
+            // using another thread to check on the status of the database to minimize ui lag
             new Thread(() -> {
                 boolean online = DatabaseConnection.checkStatus();
                 Platform.runLater(() -> {
